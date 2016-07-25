@@ -1213,7 +1213,7 @@ function fsn_get_masthead_gallery_item($atts = false, $content = false) {
 					$output .= '<div class="masthead-item-content">';
 						$item_content_output = '';
 						$item_content_output .= !empty($gallery_item_headline) ? '<h2 class="gallery-item-headline">' . $gallery_item_headline . '</h2>' : '';
-						$item_content_output .= !empty($gallery_item_subheadline) ? '<h4 class="gallery-item-subheadline">' . $gallery_item_subheadline . '</h4>' : ''; 
+						$item_content_output .= !empty($gallery_item_subheadline) ? '<h3 class="gallery-item-subheadline">' . $gallery_item_subheadline . '</h3>' : ''; 
 						$item_content_output .= !empty($gallery_item_description) ? '<div class="gallery-item-desc">'. do_shortcode($gallery_item_description) .'</div>' : '';
 						if (!empty($button_object)) {
 							$button_classes = apply_filters('fsn_masthead_button_class', 'gallery-item-button', $atts);
@@ -1302,7 +1302,7 @@ function fsn_get_masthead_gallery_item($atts = false, $content = false) {
 				$output .= '<div class="masthead-item-content">';
 					$item_content_output = '';
 					$item_content_output .= !empty($gallery_item_headline) ? '<h2 class="gallery-item-headline">' . $gallery_item_headline . '</h2>' : '';
-					$item_content_output .= !empty($gallery_item_subheadline) ? '<h4 class="gallery-item-subheadline">' . $gallery_item_subheadline . '</h4>' : ''; 
+					$item_content_output .= !empty($gallery_item_subheadline) ? '<h3 class="gallery-item-subheadline">' . $gallery_item_subheadline . '</h3>' : ''; 
 					$item_content_output .= !empty($gallery_item_description) ? '<div class="gallery-item-desc">'. do_shortcode($gallery_item_description) .'</div>' : '';
 					if (!empty($button_object)) {
 						$button_classes = apply_filters('fsn_masthead_button_class', 'gallery-item-button', $atts);
