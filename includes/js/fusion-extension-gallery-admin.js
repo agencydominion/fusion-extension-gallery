@@ -289,6 +289,11 @@ function galleryItemShortcodes() {
 			}
 								
 			if (newParamValue != '') {
+				if (jQuery(this).hasClass('encode-base64')) {
+					newParamValue = btoa(newParamValue);
+				} else if (jQuery(this).hasClass('encode-url')) {
+					newParamValue = encodeURIComponent(newParamValue);
+				}
 				newParamValue = fsnCustomEntitiesEncode(newParamValue);
 				shortcodesString += ' '+ paramName +'="'+ newParamValue +'"';
 				
