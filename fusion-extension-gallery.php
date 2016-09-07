@@ -59,6 +59,10 @@ class FusionExtensionGallery	{
 		if ( ($hook_suffix == 'post.php' || $hook_suffix == 'post-new.php') && (!empty($fsn_post_types) && is_array($fsn_post_types) && in_array($post->post_type, $fsn_post_types)) ) {
 			wp_enqueue_script( 'fsn_gallery_admin', plugin_dir_url( __FILE__ ) . 'includes/js/fusion-extension-gallery-admin.js', array('jquery'), '1.0.0', true );
 			wp_enqueue_style( 'fsn_gallery_admin', plugin_dir_url( __FILE__ ) . 'includes/css/fusion-extension-gallery-admin.css', false, '1.0.0' );
+			wp_localize_script( 'fsn_gallery_admin', 'fsnExtGalleryJS', array(
+					'fsnEditGalleryNonce' => wp_create_nonce('fsn-admin-edit-gallery')
+				)
+			);
 		}
 	}
 	

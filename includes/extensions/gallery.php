@@ -98,6 +98,13 @@ class FusionGallery	{
 	 */
 	 
 	public function load_gallery_layout() {
+		//verify nonce
+		check_ajax_referer( 'fsn-admin-edit-gallery', 'security' );
+		
+		//verify capabilities
+		if ( !current_user_can( 'edit_post', $_POST['post_id'] ) )
+			die( '-1' );
+			
 		global $fsn_gallery_layouts;
 		$gallery_layout = $_POST['gallery_layout'];
 		
