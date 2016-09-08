@@ -172,7 +172,7 @@ function fsnUpdateGalleryLayout() {
 //add gallery item
 jQuery(document).ready(function() {	
 	jQuery('body').on('click', '.add-gallery-item', function(e) {
-	
+		var postID = jQuery('input#post_ID').val();
 		var galleryItemsContainer = jQuery(this).siblings('.gallery-sort');
 		
 		var galleryLayout = jQuery('[name="gallery_layout"]').val();
@@ -180,7 +180,9 @@ jQuery(document).ready(function() {
 		e.preventDefault();
 		var data = {
 			action: 'gallery_add_item',
-			gallery_layout: galleryLayout
+			gallery_layout: galleryLayout,
+			post_id: postID,
+			security: fsnExtGalleryJS.fsnEditGalleryNonce
 		};
 		jQuery.post(ajaxurl, data, function(response) {
 			galleryItemsContainer.append(response);
