@@ -1010,18 +1010,15 @@ add_action( 'wp_ajax_nopriv_gallery-lazy-load', 'fsn_get_gallery_image' );
 add_action( 'wp_ajax_gallery-lazy-load', 'fsn_get_gallery_image' );
  
 function fsn_get_gallery_image() {
-	do_action('fsn_before_get_gallery_image');
     // get the submitted parameters
     $viewport = $_POST['viewport'];
     $image_size_desktop = $_POST['imageSizeDesktop'];
     $image_size_mobile = $_POST['imageSizeMobile'];
     $attachmentID = $_POST['attachmentID'];
     $classes = $_POST['classes'];
-	$attachment = get_post($attachmentID);
 	//load dynamic image
 	$load_desktop_size = $viewport == 'desktop' ? true : false;
-	$image_element = fsn_get_dynamic_image($attachment->ID, $classes, $image_size_desktop, $image_size_mobile, $load_desktop_size);
-	do_action('fsn_after_get_gallery_image');
+	$image_element = fsn_get_dynamic_image($attachmentID, $classes, $image_size_desktop, $image_size_mobile, $load_desktop_size);
 	
     echo $image_element;
  
