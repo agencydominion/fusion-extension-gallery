@@ -102,11 +102,11 @@ class FusionGallery	{
 		check_ajax_referer( 'fsn-admin-edit-gallery', 'security' );
 		
 		//verify capabilities
-		if ( !current_user_can( 'edit_post', $_POST['post_id'] ) )
+		if ( !current_user_can( 'edit_post', intval($_POST['post_id']) ) )
 			die( '-1' );
 			
 		global $fsn_gallery_layouts;
-		$gallery_layout = $_POST['gallery_layout'];
+		$gallery_layout = sanitize_text_field($_POST['gallery_layout']);
 		
 		if (!empty($fsn_gallery_layouts) && !empty($gallery_layout)) {
 			$response_array = array();
@@ -439,7 +439,7 @@ class FusionGallery	{
 		//if running AJAX, get action being run
 		if (defined('DOING_AJAX') || DOING_AJAX) {
 			if (!empty($_POST['action'])) {
-				$ajax_action = $_POST['action'];
+				$ajax_action = sanitize_text_field($_POST['action']);
 			}
 		}
 		
@@ -513,11 +513,11 @@ class FusionGallery	{
 		check_ajax_referer( 'fsn-admin-edit-gallery', 'security' );
 		
 		//verify capabilities
-		if ( !current_user_can( 'edit_post', $_POST['post_id'] ) )
+		if ( !current_user_can( 'edit_post', intval($_POST['post_id']) ) )
 			die( '-1' );
 			
 		global $fsn_gallery_layouts;
-		$gallery_layout = $_POST['gallery_layout'];
+		$gallery_layout = sanitize_text_field($_POST['gallery_layout']);
 		$uniqueID = uniqid();
 		echo '<div class="gallery-item">';		
 			echo '<div class="gallery-item-details">';
@@ -1011,11 +1011,11 @@ add_action( 'wp_ajax_gallery-lazy-load', 'fsn_get_gallery_image' );
  
 function fsn_get_gallery_image() {
     // get the submitted parameters
-    $viewport = $_POST['viewport'];
-    $image_size_desktop = $_POST['imageSizeDesktop'];
-    $image_size_mobile = $_POST['imageSizeMobile'];
-    $attachmentID = $_POST['attachmentID'];
-    $classes = $_POST['classes'];
+    $viewport = sanitize_text_field($_POST['viewport']);
+    $image_size_desktop = sanitize_text_field($_POST['imageSizeDesktop']);
+    $image_size_mobile = sanitize_text_field($_POST['imageSizeMobile']);
+    $attachmentID = intval($_POST['attachmentID']);
+    $classes = sanitize_text_field($_POST['classes']);
 	//load dynamic image
 	$load_desktop_size = $viewport == 'desktop' ? true : false;
 	$image_element = fsn_get_dynamic_image($attachmentID, $classes, $image_size_desktop, $image_size_mobile, $load_desktop_size);
