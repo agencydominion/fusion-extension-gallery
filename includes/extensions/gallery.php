@@ -282,11 +282,6 @@ class FusionGallery	{
 				'recent' => __('Most Recent', 'fusion-extension-gallery'),
 				'alpha' => __('Alphabetical', 'fusion-extension-gallery')
 			);
-			if (class_exists('FusionCorePageViews')) {
-				$smart_order_options['popular_week'] = __('Most Popular This Week', 'fusion-extension-gallery');
-				$smart_order_options['popular_month'] = __('Most Popular This Month', 'fusion-extension-gallery');
-				$smart_order_options['popular_alltime'] = __('Most Popular All Time', 'fusion-extension-gallery');
-			}
 			$smart_order_options = apply_filters('fsn_smart_gallery_order_options', $smart_order_options);
 			
 			$smart_params = array(
@@ -1636,18 +1631,6 @@ function fsn_get_carousel_smart_gallery_items($atts = false) {
 	switch($item_order) {
 		case 'recent':
 			$query_args['orderby'] = 'date';
-			break;
-		case 'popular_week':
-			$query_args['meta_key'] = '_fsn_views_week_int';
-			$query_args['orderby'] = 'meta_value_num';
-			break;
-		case 'popular_month':
-			$query_args['meta_key'] = '_fsn_views_month_int';
-			$query_args['orderby'] = 'meta_value_num';
-			break;
-		case 'popular_alltime':
-			$query_args['meta_key'] = '_fsn_views_alltime';
-			$query_args['orderby'] = 'meta_value_num';
 			break;
 		case 'alpha':
 			$query_args['orderby'] = 'title';
