@@ -402,7 +402,7 @@ class FusionGallery	{
 		
 		if (!empty($gallery_layout)) {
 			$output .= '<div class="fsn-gallery '. fsn_style_params_class($atts) .'">';
-				$callback_function = 'fsn_get_'. $gallery_layout .'_gallery';
+				$callback_function = 'fsn_get_'. sanitize_text_field($gallery_layout) .'_gallery';
 				//before gallery action hook
 				ob_start();
 				do_action('fsn_before_gallery', $atts);
@@ -493,7 +493,7 @@ class FusionGallery	{
 			
 		} else {
 			$output = '';
-			$callback_function = 'fsn_get_'. $selected_layout .'_gallery_item';
+			$callback_function = 'fsn_get_'. sanitize_text_field($selected_layout) .'_gallery_item';
 			$output .= call_user_func($callback_function, $atts, $content);
 		}
 		
