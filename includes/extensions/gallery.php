@@ -431,7 +431,7 @@ class FusionGallery	{
 		$selected_layout = $atts['gallery_layout'];
 		
 		//if running AJAX, get action being run
-		if (defined('DOING_AJAX') || DOING_AJAX) {
+		if (defined('DOING_AJAX') && DOING_AJAX) {
 			if (!empty($_POST['action'])) {
 				$ajax_action = sanitize_text_field($_POST['action']);
 			}
@@ -1415,7 +1415,7 @@ function fsn_get_inline_gallery($atts = false, $content = false) {
 				$output .= do_shortcode($content);
 				
 				//set slides content as JS variable
-				$deferred_output .= '<ul class="slides">';
+				$deferred_output = '<ul class="slides">';
 					$fsn_inline_switch = 'main_image';
 					$fsn_inline_item_counter = 0;
 					$deferred_output .= do_shortcode($content);
