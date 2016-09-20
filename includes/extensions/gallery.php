@@ -1682,7 +1682,7 @@ function fsn_get_carousel_gallery_item($atts = false, $content = false) {
 	//linked piece of content
 	if (!empty($atts['item_type']) && !empty($atts['item_attached'])) {
 		$atts['item_id'] = $atts['item_attached'];
-		$atts['item_button'] = json_encode((object) array('link' => get_permalink($atts['item_attached']), 'label' => 'Learn more'));
+		$atts['item_button'] = json_encode((object) array('link' => get_permalink($atts['item_attached']), 'label' => 'Learn more', 'type' => 'internal'));
 		$atts['image_id'] = get_post_thumbnail_id($atts['item_attached']);
 		if (empty($atts['item_headline'])) {
 			$atts['item_headline'] = get_the_title($atts['item_attached']);
