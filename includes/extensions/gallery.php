@@ -1716,7 +1716,7 @@ function fsn_get_carousel_gallery_item($atts = false, $content = false) {
 	}
 	
 	$gallery_item_headline = $atts['item_headline'];
-	$gallery_item_description = $atts['item_description'];
+	$gallery_item_description = !empty($atts['item_description']) ? $atts['item_description'] : '';
 	$gallery_item_button = $atts['item_button'];
 	if (!empty($gallery_item_button)) {
 		$button_object = fsn_get_button_object($gallery_item_button);
