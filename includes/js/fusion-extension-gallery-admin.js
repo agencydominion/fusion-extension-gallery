@@ -323,9 +323,9 @@ function galleryItemShortcodes() {
 //For select2 fields inside gallery layouts and items
 jQuery(document).ready(function() {	
 	jQuery('body').on('fsnGalleryUpdated', function(e) {
-		initSelect2Fields();
+		fsnInitPostSelect();
 	});
 	jQuery('body').on('fsnAddGalleryItem', function(e) {
-		initSelect2Fields();
+		fsnInitPostSelect();
 	});
 });
