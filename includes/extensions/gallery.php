@@ -809,15 +809,6 @@ class FusionGallery	{
 			unset($post_types['notification']);	
 		}
 		
-		//get all post items
-		$all_items = fsn_get_post_ids_titles_by_type($post_types);
-					
-		$all_items_options = array();
-		$all_items_options[''] = ''; //blank so that chosen will allow deselect on single selects
-		foreach($all_items as $item) {
-		    $all_items_options[$item['id']] = $item['post_title'];
-		}
-		
 		//carousel layout
 		$carousel_layout = array(
 			'name' => __('Carousel', 'fusion-extension-gallery'),
@@ -936,10 +927,9 @@ class FusionGallery	{
 					'help' => __('Choose whether to link to existing site content or to add a new hand made item.', 'fusion-extension-gallery')
 				),
 				array(
-					'type' => 'select',
+					'type' => 'select_post',
 					'param_name' => 'item_attached',
-					'class' => 'chosen',
-					'options' => $all_items_options,
+					'post_type' => $post_types,
 					'label' => __('Attached Content', 'fusion-extension-gallery'),
 					'dependency' => array(
 						'param_name' => 'item_type',

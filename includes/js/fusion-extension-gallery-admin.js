@@ -320,13 +320,12 @@ function galleryItemShortcodes() {
 	galleryInput.val(shortcodesString);
 }
 
-//For chosen fields inside gallery items
+//For select2 fields inside gallery layouts and items
 jQuery(document).ready(function() {	
+	jQuery('body').on('fsnGalleryUpdated', function(e) {
+		initSelect2Fields();
+	});
 	jQuery('body').on('fsnAddGalleryItem', function(e) {
-		jQuery('.chosen select').chosen({
-			allow_single_deselect: true,
-			width: '100%',
-			placeholder_text_single : 'Choose an option.'
-		});
+		initSelect2Fields();
 	});
 });
