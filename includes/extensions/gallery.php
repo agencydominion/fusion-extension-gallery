@@ -1702,12 +1702,12 @@ function fsn_get_carousel_gallery_item($atts = false, $content = false) {
 		do_action('fsn_after_get_carousel_item_attachment');
 		$image_output .= ob_get_clean();
 	} else {
-		$image_output = apply_filters('fsn_carousel_image_fallback', '', $atts['item_id']);
+		$image_output = apply_filters('fsn_carousel_image_fallback', '', !empty($atts['item_id']) ? $atts['item_id'] : '');
 	}
 	
-	$gallery_item_headline = $atts['item_headline'];
+	$gallery_item_headline = !empty($atts['item_headline']) ? $atts['item_headline'] : '';
 	$gallery_item_description = !empty($atts['item_description']) ? $atts['item_description'] : '';
-	$gallery_item_button = $atts['item_button'];
+	$gallery_item_button = !empty($atts['item_button']) ? $atts['item_button'] : '';
 	if (!empty($gallery_item_button)) {
 		$button_object = fsn_get_button_object($gallery_item_button);
 	}
@@ -1720,8 +1720,9 @@ function fsn_get_carousel_gallery_item($atts = false, $content = false) {
 				$output .= !empty($button_object) ? '</a>' : '</div>';
 			}												
 			$output .= '<div class="carousel-item-detail">';
+				$carousel_item_content_output = '';
 				if (!empty($gallery_item_headline) && $fsn_carousel_view_options['headline'] === true) {
-					$carousel_item_content_output = '<'. $fsn_carousel_view_options['headline_size'] .'>'. (!empty($button_object) ? '<a'. fsn_get_button_anchor_attributes($button_object) .'>' : '') . esc_html($gallery_item_headline) . (!empty($button_object) ? '</a>' : '') .'</'. $fsn_carousel_view_options['headline_size'] .'>';
+					$carousel_item_content_output .= '<'. $fsn_carousel_view_options['headline_size'] .'>'. (!empty($button_object) ? '<a'. fsn_get_button_anchor_attributes($button_object) .'>' : '') . esc_html($gallery_item_headline) . (!empty($button_object) ? '</a>' : '') .'</'. $fsn_carousel_view_options['headline_size'] .'>';
 				}
 				$carousel_item_content_output .= !empty($gallery_item_description) && $fsn_carousel_view_options['description'] === true ? do_shortcode($gallery_item_description) : '';
 				if (!empty($button_object) && $fsn_carousel_view_options['button'] === true) {
