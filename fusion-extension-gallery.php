@@ -73,7 +73,7 @@ class FusionExtensionGallery	{
 	 *
 	 */
 	 
-	 public function front_enqueue_scripts_styles() {
+	public function front_enqueue_scripts_styles() {
 		//scripts
 		wp_register_script('flexslider', plugin_dir_url( __FILE__ ) .'includes/utilities/flexslider/jquery.flexslider-min.js', array('jquery'), '2.6.0', true);
 		wp_register_script('photoswipe_core', plugin_dir_url( __FILE__ ) .'includes/utilities/photoswipe/photoswipe.min.js', array('jquery'), '4.0.3', true);
@@ -81,13 +81,10 @@ class FusionExtensionGallery	{
 		wp_register_script( 'video_js', plugin_dir_url( __FILE__ ) . 'includes/utilities/video-js/video.js', array('jquery'), '4.11.2', true );
 		wp_register_script( 'fsn_gallery', plugin_dir_url( __FILE__ ) . 'includes/js/fusion-extension-gallery.js', array('jquery','flexslider','fsn_core'), '1.0.0', true );
 		//styles
-		global $post;
-		if (has_shortcode($post->post_content, 'fsn_gallery')) {
-			wp_enqueue_style('flexslider', plugin_dir_url( __FILE__ ) .'includes/utilities/flexslider/flexslider.css');
-			wp_enqueue_style('photoswipe', plugin_dir_url( __FILE__ ) .'includes/utilities/photoswipe/photoswipe.css');
-			wp_enqueue_style('photoswipe_skin', plugin_dir_url( __FILE__ ) .'includes/utilities/photoswipe/default-skin/default-skin.css');				wp_enqueue_style( 'video_js', plugin_dir_url( __FILE__ ) . 'includes/utilities/video-js/video-js.min.css', false, '4.11.2' );
-			wp_enqueue_style( 'fsn_gallery', plugin_dir_url( __FILE__ ) . 'includes/css/fusion-extension-gallery.css', false, '1.0.0' );	 
-		}
+		wp_enqueue_style('flexslider', plugin_dir_url( __FILE__ ) .'includes/utilities/flexslider/flexslider.css');
+		wp_enqueue_style('photoswipe', plugin_dir_url( __FILE__ ) .'includes/utilities/photoswipe/photoswipe.css');
+		wp_enqueue_style('photoswipe_skin', plugin_dir_url( __FILE__ ) .'includes/utilities/photoswipe/default-skin/default-skin.css');				wp_enqueue_style( 'video_js', plugin_dir_url( __FILE__ ) . 'includes/utilities/video-js/video-js.min.css', false, '4.11.2' );
+		wp_enqueue_style( 'fsn_gallery', plugin_dir_url( __FILE__ ) . 'includes/css/fusion-extension-gallery.css', false, '1.0.0' );	 
 		
 		//setup front end script for use with AJAX
 		wp_localize_script( 'fsn_gallery', 'fsnGalleryExtAjax', array(
