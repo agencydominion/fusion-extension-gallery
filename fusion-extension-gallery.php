@@ -5,7 +5,7 @@
  
 /**
  * Plugin Name: Fusion : Extension - Gallery
- * Plugin URI: http://www.agencydominion.com/fusion//
+ * Plugin URI: http://www.agencydominion.com/fusion/
  * Description: Gallery Extension Package for Fusion.
  * Version: 1.1.2
  * Author: Agency Dominion
