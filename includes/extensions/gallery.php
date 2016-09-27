@@ -431,6 +431,7 @@ class FusionGallery	{
 		$selected_layout = $atts['gallery_layout'];
 		
 		//if running AJAX, get action being run
+		$ajax_action = false;
 		if (defined('DOING_AJAX') && DOING_AJAX) {
 			if (!empty($_POST['action'])) {
 				$ajax_action = sanitize_text_field($_POST['action']);
