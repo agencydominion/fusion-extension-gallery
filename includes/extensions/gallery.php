@@ -110,31 +110,33 @@ class FusionGallery	{
 		
 		if (!empty($fsn_gallery_layouts) && !empty($gallery_layout)) {
 			$response_array = array();
-			foreach($fsn_gallery_layouts[$gallery_layout]['params'] as $param) {						
-				$param_value = '';
-				$param['section'] = !empty($param['section']) ? $param['section'] : 'general';
-				//check for dependency
-				$dependency = !empty($param['dependency']) ? true : false;
-				if ($dependency === true) {
-					$depends_on_field = $param['dependency']['param_name'];
-					$depends_on_not_empty = !empty($param['dependency']['not_empty']) ? $param['dependency']['not_empty'] : false;
-					if (!empty($param['dependency']['value']) && is_array($param['dependency']['value'])) {
-						$depends_on_value = json_encode($param['dependency']['value']);
-					} else if (!empty($param['dependency']['value'])) {
-						$depends_on_value = $param['dependency']['value'];
-					} else {
-						$depends_on_value = '';
+			if (!empty($fsn_gallery_layouts[$gallery_layout]['params'])) {
+				foreach($fsn_gallery_layouts[$gallery_layout]['params'] as $param) {						
+					$param_value = '';
+					$param['section'] = !empty($param['section']) ? $param['section'] : 'general';
+					//check for dependency
+					$dependency = !empty($param['dependency']) ? true : false;
+					if ($dependency === true) {
+						$depends_on_field = $param['dependency']['param_name'];
+						$depends_on_not_empty = !empty($param['dependency']['not_empty']) ? $param['dependency']['not_empty'] : false;
+						if (!empty($param['dependency']['value']) && is_array($param['dependency']['value'])) {
+							$depends_on_value = json_encode($param['dependency']['value']);
+						} else if (!empty($param['dependency']['value'])) {
+							$depends_on_value = $param['dependency']['value'];
+						} else {
+							$depends_on_value = '';
+						}
+						$dependency_callback = !empty($param['dependency']['callback']) ? $param['dependency']['callback'] : '';
+						$dependency_string = ' data-dependency-param="'. esc_attr($depends_on_field) .'"'. ($depends_on_not_empty === true ? ' data-dependency-not-empty="true"' : '') . (!empty($depends_on_value) ? ' data-dependency-value="'. esc_attr($depends_on_value) .'"' : '') . (!empty($dependency_callback) ? ' data-dependency-callback="'. esc_attr($dependency_callback) .'"' : '');
 					}
-					$dependency_callback = !empty($param['dependency']['callback']) ? $param['dependency']['callback'] : '';
-					$dependency_string = ' data-dependency-param="'. esc_attr($depends_on_field) .'"'. ($depends_on_not_empty === true ? ' data-dependency-not-empty="true"' : '') . (!empty($depends_on_value) ? ' data-dependency-value="'. esc_attr($depends_on_value) .'"' : '') . (!empty($dependency_callback) ? ' data-dependency-callback="'. esc_attr($dependency_callback) .'"' : '');
+					$param_output = '<div class="form-group gallery-layout'. ( !empty($param['class']) ? ' '. esc_attr($param['class']) : '' ) .'"'. ( $dependency === true ? $dependency_string : '' ) .'>';
+						$param_output .= FusionCore::get_input_field($param, $param_value);
+					$param_output .= '</div>';
+					$response_array[] = array(
+						'section' => $param['section'],
+						'output' => $param_output
+					);
 				}
-				$param_output = '<div class="form-group gallery-layout'. ( !empty($param['class']) ? ' '. esc_attr($param['class']) : '' ) .'"'. ( $dependency === true ? $dependency_string : '' ) .'>';
-					$param_output .= FusionCore::get_input_field($param, $param_value);
-				$param_output .= '</div>';
-				$response_array[] = array(
-					'section' => $param['section'],
-					'output' => $param_output
-				);
 			}
 		}
 		
@@ -445,23 +447,27 @@ class FusionGallery	{
 				$output .= '<div class="gallery-item-details">';
 					if (!empty($fsn_gallery_layouts[$selected_layout])) {
 						foreach($gallery_layouts[$selected_layout]['item_params'] as $param) {
-							$param_name = $param['param_name'];
-							if (array_key_exists($param_name, $atts)) {
-								$param_value = stripslashes($atts[$param_name]);
-								if (!empty($param['encode_base64'])) {
-									$param_value = wp_strip_all_tags($param_value);
-									$param_value = htmlentities(base64_decode($param_value));
-								} else if (!empty($param['encode_url'])) {
-									$param_value = wp_strip_all_tags($param_value);
-									$param_value = urldecode($param_value);
+							if (!empty($param['param_name'])) {
+								$param_name = $param['param_name'];
+								if (array_key_exists($param_name, $atts)) {
+									$param_value = stripslashes($atts[$param_name]);
+									if (!empty($param['encode_base64'])) {
+										$param_value = wp_strip_all_tags($param_value);
+										$param_value = htmlentities(base64_decode($param_value));
+									} else if (!empty($param['encode_url'])) {
+										$param_value = wp_strip_all_tags($param_value);
+										$param_value = urldecode($param_value);
+									}
+									//decode custom entities
+									$param_value = FusionCore::decode_custom_entities($param_value);
+								} else {
+									$param_value = '';
 								}
-								//decode custom entities
-								$param_value = FusionCore::decode_custom_entities($param_value);
 							} else {
 								$param_value = '';
 							}
 							$param['nested'] = true;
-							$param['param_name'] = $param['param_name']. '-paramid'. $uniqueID;
+							$param['param_name'] = (!empty($param['param_name']) ? $param['param_name'] : '') . '-paramid'. $uniqueID;
 							//check for dependency
 							$dependency = !empty($param['dependency']) ? true : false;
 							if ($dependency === true) {
@@ -518,7 +524,7 @@ class FusionGallery	{
 				if (!empty($fsn_gallery_layouts) && !empty($gallery_layout)) {
 					foreach($fsn_gallery_layouts[$gallery_layout]['item_params'] as $param) {						
 						$param_value = '';
-						$param['param_name'] = $param['param_name']. '-paramid'. $uniqueID;
+						$param['param_name'] = (!empty($param['param_name']) ? $param['param_name'] : '') . '-paramid'. $uniqueID;
 						$param['nested'] = true;
 						//check for dependency
 						$dependency = !empty($param['dependency']) ? true : false;
@@ -1324,7 +1330,7 @@ function fsn_get_masthead_gallery_item($atts = false, $content = false) {
 			$attachment = get_post($atts['image_id']);
 			$attachment_attrs = wp_get_attachment_image_src( $attachment->ID, 'hi-res' );
 			if (!empty($attachment_attrs)) {
-				$gallery_item_description = apply_filters('fsn_masthead_item_photoswipe_caption', $atts['item_description'], $atts);
+				$gallery_item_description = apply_filters('fsn_masthead_item_photoswipe_caption', (!empty($atts['item_description']) ? $atts['item_description'] : ''), $atts);
 				$fsn_masthead_photoswipe_array[] = array(
 					'src' => esc_url($attachment_attrs[0]),
 					'w' => esc_attr($attachment_attrs[1]),
