@@ -107,6 +107,7 @@ class FusionGallery	{
 			
 		global $fsn_gallery_layouts;
 		$gallery_layout = sanitize_text_field($_POST['gallery_layout']);
+		$response_array = array();
 		
 		if (!empty($fsn_gallery_layouts) && !empty($gallery_layout)) {
 			$response_array = array();
@@ -1335,7 +1336,7 @@ function fsn_get_masthead_gallery_item($atts = false, $content = false) {
 					'src' => esc_url($attachment_attrs[0]),
 					'w' => esc_attr($attachment_attrs[1]),
 					'h' => esc_attr($attachment_attrs[2]),
-					'title' => esc_attr($gallery_item_description)
+					'title' => $gallery_item_description
 				);
 			}
 		}
@@ -1463,7 +1464,7 @@ function fsn_get_inline_gallery_item($atts = false, $content = false) {
 			'src' => esc_url($attachment_attrs[0]),
 			'w' => esc_attr($attachment_attrs[1]),
 			'h' => esc_attr($attachment_attrs[2]),
-			'title' => esc_attr($gallery_item_description)
+			'title' => $gallery_item_description
 		);
 	} else if ($fsn_inline_switch == 'placeholder') {
 		if ($fsn_inline_item_counter === 0) {
