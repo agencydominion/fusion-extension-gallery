@@ -136,10 +136,10 @@ class FusionExtensionGallery	{
 				<div class="pswp__ui pswp__ui--hidden">
 					<div class="pswp__top-bar">
 						<div class="pswp__counter"></div>
-						<button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
-						<button class="pswp__button pswp__button--share" title="Share"></button>
-						<button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
-						<button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+						<button class="pswp__button pswp__button--close" title="<?php _e('Close (Esc)', 'fusion-extension-gallery'); ?>"></button>
+						<button class="pswp__button pswp__button--share" title="<?php _e('Share', 'fusion-extension-gallery'); ?>"></button>
+						<button class="pswp__button pswp__button--fs" title="<?php _e('Toggle fullscreen', 'fusion-extension-gallery'); ?>"></button>
+						<button class="pswp__button pswp__button--zoom" title="<?php _e('Zoom in/out', 'fusion-extension-gallery'); ?>"></button>
 						<div class="pswp__preloader">
 							<div class="pswp__preloader__icn">
 								<div class="pswp__preloader__cut">
@@ -151,8 +151,8 @@ class FusionExtensionGallery	{
 					<div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
 						<div class="pswp__share-tooltip"></div> 
 					</div>
-					<button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)"></button>
-					<button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)"></button>
+					<button class="pswp__button pswp__button--arrow--left" title="<?php _e('Previous (arrow left)', 'fusion-extension-gallery'); ?>"></button>
+					<button class="pswp__button pswp__button--arrow--right" title="<?php _e('Next (arrow right)', 'fusion-extension-gallery') ?>"></button>
 					<div class="pswp__caption">
 						<div class="pswp__caption__center"></div>
 					</div>
