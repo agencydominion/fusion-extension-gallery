@@ -44,7 +44,7 @@ function fsnUpdateGallery(event) {
 	var currentLayout = gallery.attr('data-layout');
 	var galleryItems = gallery.find('.gallery-item');
 	if (galleryItems.length > 0 && currentLayout != selectedLayout) {
-		var r = confirm('Changing the Gallery Layout will erase your current slides. Do you wish to continue?');
+		var r = confirm(fsnExtGalleryL10n.layout_change);
 		if (r == true) {
 			gallery.empty();
 			gallery.attr('data-layout', selectedLayout);
@@ -71,7 +71,7 @@ function fsnUpdateGalleryType(event) {
 	var gallery = jQuery('.gallery-sort');
 	var galleryItems = gallery.find('.gallery-item');
 	if (selectedType == 'smart' && galleryItems.length > 0) {
-		var r = confirm('Changing the Gallery Type to "Smart" will erase your current manual slides. Do you wish to continue?');
+		var r = confirm(fsnExtGalleryL10n.layout_change_smart);
 		if (r == true) {
 			gallery.empty();
 			//hide manual items
@@ -101,7 +101,7 @@ function fsnUpdateGalleryLayout() {
 	};
 	jQuery.post(ajaxurl, data, function(response) {		
 		if (response == '-1') {
-			alert('Oops, something went wrong. Please reload the page and try again.');
+			alert(fsnExtGalleryL10n.error);
 			return false;
 		}
 		
@@ -161,7 +161,7 @@ function fsnUpdateGalleryLayout() {
 			});
 		}
 		//initialize color pickers
-		jQuery('.ad-color-picker').wpColorPicker();
+		jQuery('.fsn-color-picker').wpColorPicker();
 		//set dependencies
 		setDependencies(modalSelector);
 		//trigger item added event
@@ -187,7 +187,7 @@ jQuery(document).ready(function() {
 		jQuery.post(ajaxurl, data, function(response) {
 			galleryItemsContainer.append(response);
 			//initialize color pickers
-			jQuery('.ad-color-picker').wpColorPicker();
+			jQuery('.fsn-color-picker').wpColorPicker();
 			//set dependencies
 			setDependencies(galleryItemsContainer);
 			//trigger item added event
@@ -228,10 +228,10 @@ jQuery(document).ready(function() {
 		var targetGalleryItem = jQuery(this).parents('.gallery-item');
 		if (targetGalleryItem.hasClass('collapse-active')) {
 			targetGalleryItem.removeClass('collapse-active');
-			trigger.text('collapse');
+			trigger.text(fsnExtGalleryL10n.gallery_item_collapse);
 		} else {
 			targetGalleryItem.addClass('collapse-active');
-			trigger.text('expand');
+			trigger.text(fsnExtGalleryL10n.gallery_item_expand);
 		}
 	});
 	//expand all
@@ -241,7 +241,7 @@ jQuery(document).ready(function() {
 		galleryItems.each(function() {
 			var galleryItem = jQuery(this);
 			galleryItem.removeClass('collapse-active');
-			galleryItem.find('.collapse-gallery-item').text('collapse');
+			galleryItem.find('.collapse-gallery-item').text(fsnExtGalleryL10n.gallery_item_collapse);
 		});
 	});
 	//collapse all
@@ -251,7 +251,7 @@ jQuery(document).ready(function() {
 		galleryItems.each(function() {
 			var galleryItem = jQuery(this);
 			galleryItem.addClass('collapse-active');
-			galleryItem.find('.collapse-gallery-item').text('expand');
+			galleryItem.find('.collapse-gallery-item').text(fsnExtGalleryL10n.gallery_item_expand);
 		});
 	});
 });

@@ -82,9 +82,9 @@ class FusionGallery	{
 			$input .= '<input type="hidden" class="form-control element-input content-field" name="'. esc_attr($param['param_name']) .'" value="'. esc_attr($param_value) .'">';
 
 		    //add item button
-		    $input .= '<a href="#" class="button add-gallery-item">Add Item</a>';
-		    $input .= '<a href="#" class="button expand-all-gallery-items">Expand All</a>';
-		    $input .= '<a href="#" class="button collapse-all-gallery-items">Collapse All</a>';
+		    $input .= '<a href="#" class="button add-gallery-item">'. __('Add Item', 'fusion-extension-gallery') .'</a>';
+		    $input .= '<a href="#" class="button expand-all-gallery-items">'. __('Expand All', 'fusion-extension-gallery') .'</a>';
+		    $input .= '<a href="#" class="button collapse-all-gallery-items">'. __('Collapse All', 'fusion-extension-gallery') .'</a>';
 			
 		}
 		
@@ -160,16 +160,18 @@ class FusionGallery	{
 		
 		if ($shortcode == 'fsn_gallery' && !empty($saved_values['gallery-layout']) && array_key_exists($saved_values['gallery-layout'], $fsn_gallery_layouts)) {
 			$saved_layout = $saved_values['gallery-layout'];
-			$params_to_add = $fsn_gallery_layouts[$saved_layout]['params'];
-			for ($i=0; $i < count($params_to_add); $i++) {
-				if (empty($params_to_add[$i]['class'])) {
-					$params_to_add[$i]['class'] = 'gallery-layout';
-				} else {
-					$params_to_add[$i]['class'] .= ' gallery-layout';
+			$params_to_add = !empty($fsn_gallery_layouts[$saved_layout]['params']) ? $fsn_gallery_layouts[$saved_layout]['params'] : '';
+			if (!empty($params_to_add)) {
+				for ($i=0; $i < count($params_to_add); $i++) {
+					if (empty($params_to_add[$i]['class'])) {
+						$params_to_add[$i]['class'] = 'gallery-layout';
+					} else {
+						$params_to_add[$i]['class'] .= ' gallery-layout';
+					}
 				}
+				//add layout params to initial load
+				array_splice($params, 1, 0, $params_to_add);
 			}
-			//add layout params to initial load
-			array_splice($params, 1, 0, $params_to_add);
 		}
 		
 		return $params;
@@ -489,8 +491,8 @@ class FusionGallery	{
 							$output .= '</div>';
 						}
 					}
-					$output .= '<a href="#" class="collapse-gallery-item">expand</a>';
-		    		$output .= '<a href="#" class="remove-gallery-item">remove</a>';
+					$output .= '<a href="#" class="collapse-gallery-item">'. __('expand', 'fusion-extension-gallery') .'</a>';
+		    		$output .= '<a href="#" class="remove-gallery-item">'. __('remove', 'fusion-extension-gallery') .'</a>';
 	    		$output .= '</div>';
 			$output .= '</div>';
 			
@@ -547,8 +549,8 @@ class FusionGallery	{
 						echo '</div>';
 					}
 				}
-				echo '<a href="#" class="collapse-gallery-item">collapse</a>';
-	    		echo '<a href="#" class="remove-gallery-item">remove</a>';
+				echo '<a href="#" class="collapse-gallery-item">'. __('collapse', 'fusion-extension-gallery') .'</a>';
+	    		echo '<a href="#" class="remove-gallery-item">'. __('remove', 'fusion-extension-gallery') .'</a>';
 			echo '</div>';
 		echo '</div>';
 		exit;
@@ -1166,7 +1168,7 @@ function fsn_get_masthead_gallery($atts = false, $content = false) {
 				<?php
 				$output .= ob_get_clean();
 				//controls
-				$output .= '<div class="masthead-controls controls-'. esc_attr($gallery_id) . (!empty($enable_fullscreen) ? ' fullscreen-enabled' : '') .'">'. (!empty($enable_fullscreen) ? '<div class="fullscreen-trigger" data-gallery-length="'. count($fsn_masthead_photoswipe_array) .'" aria-label="Open Gallery"><i class="material-icons">&#xE145;</i></div>' : '') .'<ul class="placeholder-controls flex-direction-nav"><li class="flex-nav-prev"><a href="#" class="flex-prev'. ($fsn_masthead_item_counter === 1 ? ' flex-disabled' : '') .'">Previous</a></li><li class="flex-nav-next"><a href="#" class="flex-next'. ($fsn_masthead_item_counter === 1 ? ' flex-disabled' : '') .'">Next</a></li></ul></div>';
+				$output .= '<div class="masthead-controls controls-'. esc_attr($gallery_id) . (!empty($enable_fullscreen) ? ' fullscreen-enabled' : '') .'">'. (!empty($enable_fullscreen) ? '<div class="fullscreen-trigger" data-gallery-length="'. count($fsn_masthead_photoswipe_array) .'" aria-label="'. __('Open Gallery', 'fusion-extension-gallery') .'"><i class="material-icons">&#xE145;</i></div>' : '') .'<ul class="placeholder-controls flex-direction-nav"><li class="flex-nav-prev"><a href="#" class="flex-prev'. ($fsn_masthead_item_counter === 1 ? ' flex-disabled' : '') .'">Previous</a></li><li class="flex-nav-next"><a href="#" class="flex-next'. ($fsn_masthead_item_counter === 1 ? ' flex-disabled' : '') .'">Next</a></li></ul></div>';
 			$output .= '</aside>';
 			ob_start();
 			do_action('fsn_after_masthead', $atts);
@@ -1428,7 +1430,7 @@ function fsn_get_inline_gallery($atts = false, $content = false) {
 				<?php
 				$output .= ob_get_clean();
 				//controls
-				$output .= '<div class="inline-controls controls-'. esc_attr($gallery_id) . (!empty($enable_fullscreen) ? ' fullscreen-enabled' : '') .'">'. (!empty($enable_fullscreen) ? '<div class="fullscreen-trigger" data-gallery-length="'. count($fsn_inline_photoswipe_array) .'" aria-label="Open Gallery"><i class="material-icons">&#xE145;</i></div>' : '') .'<ul class="placeholder-controls flex-direction-nav"><li class="flex-nav-prev"><a href="#" class="flex-prev'. ($fsn_inline_item_counter === 1 ? ' flex-disabled' : '') .'">Previous</a></li><li class="flex-nav-next"><a href="#" class="flex-next'. ($fsn_inline_item_counter === 1 ? ' flex-disabled' : '') .'">Next</a></li></ul></div>';
+				$output .= '<div class="inline-controls controls-'. esc_attr($gallery_id) . (!empty($enable_fullscreen) ? ' fullscreen-enabled' : '') .'">'. (!empty($enable_fullscreen) ? '<div class="fullscreen-trigger" data-gallery-length="'. count($fsn_inline_photoswipe_array) .'" aria-label="'. __('Open Gallery', 'fusion-extension-gallery') .'"><i class="material-icons">&#xE145;</i></div>' : '') .'<ul class="placeholder-controls flex-direction-nav"><li class="flex-nav-prev"><a href="#" class="flex-prev'. ($fsn_inline_item_counter === 1 ? ' flex-disabled' : '') .'">Previous</a></li><li class="flex-nav-next"><a href="#" class="flex-next'. ($fsn_inline_item_counter === 1 ? ' flex-disabled' : '') .'">Next</a></li></ul></div>';
 			$output .= '</aside>';
 			//thumbnails carousel nav
 			if (!empty($enable_thumbnails)) {
