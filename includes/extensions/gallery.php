@@ -82,9 +82,9 @@ class FusionGallery	{
 			$input .= '<input type="hidden" class="form-control element-input content-field" name="'. esc_attr($param['param_name']) .'" value="'. esc_attr($param_value) .'">';
 
 		    //add item button
-		    $input .= '<a href="#" class="button add-gallery-item">Add Item</a>';
-		    $input .= '<a href="#" class="button expand-all-gallery-items">Expand All</a>';
-		    $input .= '<a href="#" class="button collapse-all-gallery-items">Collapse All</a>';
+		    $input .= '<a href="#" class="button add-gallery-item">'. __('Add Item', 'fusion-extension-gallery') .'</a>';
+		    $input .= '<a href="#" class="button expand-all-gallery-items">'. __('Expand All', 'fusion-extension-gallery') .'</a>';
+		    $input .= '<a href="#" class="button collapse-all-gallery-items">'. __('Collapse All', 'fusion-extension-gallery') .'</a>';
 			
 		}
 		
@@ -107,34 +107,37 @@ class FusionGallery	{
 			
 		global $fsn_gallery_layouts;
 		$gallery_layout = sanitize_text_field($_POST['gallery_layout']);
+		$response_array = array();
 		
 		if (!empty($fsn_gallery_layouts) && !empty($gallery_layout)) {
 			$response_array = array();
-			foreach($fsn_gallery_layouts[$gallery_layout]['params'] as $param) {						
-				$param_value = '';
-				$param['section'] = !empty($param['section']) ? $param['section'] : 'general';
-				//check for dependency
-				$dependency = !empty($param['dependency']) ? true : false;
-				if ($dependency === true) {
-					$depends_on_field = $param['dependency']['param_name'];
-					$depends_on_not_empty = !empty($param['dependency']['not_empty']) ? $param['dependency']['not_empty'] : false;
-					if (!empty($param['dependency']['value']) && is_array($param['dependency']['value'])) {
-						$depends_on_value = json_encode($param['dependency']['value']);
-					} else if (!empty($param['dependency']['value'])) {
-						$depends_on_value = $param['dependency']['value'];
-					} else {
-						$depends_on_value = '';
+			if (!empty($fsn_gallery_layouts[$gallery_layout]['params'])) {
+				foreach($fsn_gallery_layouts[$gallery_layout]['params'] as $param) {						
+					$param_value = '';
+					$param['section'] = !empty($param['section']) ? $param['section'] : 'general';
+					//check for dependency
+					$dependency = !empty($param['dependency']) ? true : false;
+					if ($dependency === true) {
+						$depends_on_field = $param['dependency']['param_name'];
+						$depends_on_not_empty = !empty($param['dependency']['not_empty']) ? $param['dependency']['not_empty'] : false;
+						if (!empty($param['dependency']['value']) && is_array($param['dependency']['value'])) {
+							$depends_on_value = json_encode($param['dependency']['value']);
+						} else if (!empty($param['dependency']['value'])) {
+							$depends_on_value = $param['dependency']['value'];
+						} else {
+							$depends_on_value = '';
+						}
+						$dependency_callback = !empty($param['dependency']['callback']) ? $param['dependency']['callback'] : '';
+						$dependency_string = ' data-dependency-param="'. esc_attr($depends_on_field) .'"'. ($depends_on_not_empty === true ? ' data-dependency-not-empty="true"' : '') . (!empty($depends_on_value) ? ' data-dependency-value="'. esc_attr($depends_on_value) .'"' : '') . (!empty($dependency_callback) ? ' data-dependency-callback="'. esc_attr($dependency_callback) .'"' : '');
 					}
-					$dependency_callback = !empty($param['dependency']['callback']) ? $param['dependency']['callback'] : '';
-					$dependency_string = ' data-dependency-param="'. esc_attr($depends_on_field) .'"'. ($depends_on_not_empty === true ? ' data-dependency-not-empty="true"' : '') . (!empty($depends_on_value) ? ' data-dependency-value="'. esc_attr($depends_on_value) .'"' : '') . (!empty($dependency_callback) ? ' data-dependency-callback="'. esc_attr($dependency_callback) .'"' : '');
+					$param_output = '<div class="form-group gallery-layout'. ( !empty($param['class']) ? ' '. esc_attr($param['class']) : '' ) .'"'. ( $dependency === true ? $dependency_string : '' ) .'>';
+						$param_output .= FusionCore::get_input_field($param, $param_value);
+					$param_output .= '</div>';
+					$response_array[] = array(
+						'section' => $param['section'],
+						'output' => $param_output
+					);
 				}
-				$param_output = '<div class="form-group gallery-layout'. ( !empty($param['class']) ? ' '. esc_attr($param['class']) : '' ) .'"'. ( $dependency === true ? $dependency_string : '' ) .'>';
-					$param_output .= FusionCore::get_input_field($param, $param_value);
-				$param_output .= '</div>';
-				$response_array[] = array(
-					'section' => $param['section'],
-					'output' => $param_output
-				);
 			}
 		}
 		
@@ -157,16 +160,18 @@ class FusionGallery	{
 		
 		if ($shortcode == 'fsn_gallery' && !empty($saved_values['gallery-layout']) && array_key_exists($saved_values['gallery-layout'], $fsn_gallery_layouts)) {
 			$saved_layout = $saved_values['gallery-layout'];
-			$params_to_add = $fsn_gallery_layouts[$saved_layout]['params'];
-			for ($i=0; $i < count($params_to_add); $i++) {
-				if (empty($params_to_add[$i]['class'])) {
-					$params_to_add[$i]['class'] = 'gallery-layout';
-				} else {
-					$params_to_add[$i]['class'] .= ' gallery-layout';
+			$params_to_add = !empty($fsn_gallery_layouts[$saved_layout]['params']) ? $fsn_gallery_layouts[$saved_layout]['params'] : '';
+			if (!empty($params_to_add)) {
+				for ($i=0; $i < count($params_to_add); $i++) {
+					if (empty($params_to_add[$i]['class'])) {
+						$params_to_add[$i]['class'] = 'gallery-layout';
+					} else {
+						$params_to_add[$i]['class'] .= ' gallery-layout';
+					}
 				}
+				//add layout params to initial load
+				array_splice($params, 1, 0, $params_to_add);
 			}
-			//add layout params to initial load
-			array_splice($params, 1, 0, $params_to_add);
 		}
 		
 		return $params;
@@ -431,6 +436,7 @@ class FusionGallery	{
 		$selected_layout = $atts['gallery_layout'];
 		
 		//if running AJAX, get action being run
+		$ajax_action = false;
 		if (defined('DOING_AJAX') && DOING_AJAX) {
 			if (!empty($_POST['action'])) {
 				$ajax_action = sanitize_text_field($_POST['action']);
@@ -444,23 +450,27 @@ class FusionGallery	{
 				$output .= '<div class="gallery-item-details">';
 					if (!empty($fsn_gallery_layouts[$selected_layout])) {
 						foreach($gallery_layouts[$selected_layout]['item_params'] as $param) {
-							$param_name = $param['param_name'];
-							if (array_key_exists($param_name, $atts)) {
-								$param_value = stripslashes($atts[$param_name]);
-								if ($param['encode_base64'] == true) {
-									$param_value = wp_strip_all_tags($param_value);
-									$param_value = htmlentities(base64_decode($param_value));
-								} else if ($param['encode_url'] == true) {
-									$param_value = wp_strip_all_tags($param_value);
-									$param_value = urldecode($param_value);
+							if (!empty($param['param_name'])) {
+								$param_name = $param['param_name'];
+								if (array_key_exists($param_name, $atts)) {
+									$param_value = stripslashes($atts[$param_name]);
+									if (!empty($param['encode_base64'])) {
+										$param_value = wp_strip_all_tags($param_value);
+										$param_value = htmlentities(base64_decode($param_value));
+									} else if (!empty($param['encode_url'])) {
+										$param_value = wp_strip_all_tags($param_value);
+										$param_value = urldecode($param_value);
+									}
+									//decode custom entities
+									$param_value = FusionCore::decode_custom_entities($param_value);
+								} else {
+									$param_value = '';
 								}
-								//decode custom entities
-								$param_value = FusionCore::decode_custom_entities($param_value);
 							} else {
 								$param_value = '';
 							}
 							$param['nested'] = true;
-							$param['param_name'] = $param['param_name']. '-paramid'. $uniqueID;
+							$param['param_name'] = (!empty($param['param_name']) ? $param['param_name'] : '') . '-paramid'. $uniqueID;
 							//check for dependency
 							$dependency = !empty($param['dependency']) ? true : false;
 							if ($dependency === true) {
@@ -481,8 +491,8 @@ class FusionGallery	{
 							$output .= '</div>';
 						}
 					}
-					$output .= '<a href="#" class="collapse-gallery-item">expand</a>';
-		    		$output .= '<a href="#" class="remove-gallery-item">remove</a>';
+					$output .= '<a href="#" class="collapse-gallery-item">'. __('expand', 'fusion-extension-gallery') .'</a>';
+		    		$output .= '<a href="#" class="remove-gallery-item">'. __('remove', 'fusion-extension-gallery') .'</a>';
 	    		$output .= '</div>';
 			$output .= '</div>';
 			
@@ -517,7 +527,7 @@ class FusionGallery	{
 				if (!empty($fsn_gallery_layouts) && !empty($gallery_layout)) {
 					foreach($fsn_gallery_layouts[$gallery_layout]['item_params'] as $param) {						
 						$param_value = '';
-						$param['param_name'] = $param['param_name']. '-paramid'. $uniqueID;
+						$param['param_name'] = (!empty($param['param_name']) ? $param['param_name'] : '') . '-paramid'. $uniqueID;
 						$param['nested'] = true;
 						//check for dependency
 						$dependency = !empty($param['dependency']) ? true : false;
@@ -539,8 +549,8 @@ class FusionGallery	{
 						echo '</div>';
 					}
 				}
-				echo '<a href="#" class="collapse-gallery-item">collapse</a>';
-	    		echo '<a href="#" class="remove-gallery-item">remove</a>';
+				echo '<a href="#" class="collapse-gallery-item">'. __('collapse', 'fusion-extension-gallery') .'</a>';
+	    		echo '<a href="#" class="remove-gallery-item">'. __('remove', 'fusion-extension-gallery') .'</a>';
 			echo '</div>';
 		echo '</div>';
 		exit;
@@ -1158,7 +1168,7 @@ function fsn_get_masthead_gallery($atts = false, $content = false) {
 				<?php
 				$output .= ob_get_clean();
 				//controls
-				$output .= '<div class="masthead-controls controls-'. esc_attr($gallery_id) . (!empty($enable_fullscreen) ? ' fullscreen-enabled' : '') .'">'. (!empty($enable_fullscreen) ? '<div class="fullscreen-trigger" data-gallery-length="'. count($fsn_masthead_photoswipe_array) .'" aria-label="Open Gallery"><i class="material-icons">&#xE145;</i></div>' : '') .'<ul class="placeholder-controls flex-direction-nav"><li class="flex-nav-prev"><a href="#" class="flex-prev'. ($fsn_masthead_item_counter === 1 ? ' flex-disabled' : '') .'">Previous</a></li><li class="flex-nav-next"><a href="#" class="flex-next'. ($fsn_masthead_item_counter === 1 ? ' flex-disabled' : '') .'">Next</a></li></ul></div>';
+				$output .= '<div class="masthead-controls controls-'. esc_attr($gallery_id) . (!empty($enable_fullscreen) ? ' fullscreen-enabled' : '') .'">'. (!empty($enable_fullscreen) ? '<div class="fullscreen-trigger" data-gallery-length="'. count($fsn_masthead_photoswipe_array) .'" aria-label="'. __('Open Gallery', 'fusion-extension-gallery') .'"><i class="material-icons">&#xE145;</i></div>' : '') .'<ul class="placeholder-controls flex-direction-nav"><li class="flex-nav-prev"><a href="#" class="flex-prev'. ($fsn_masthead_item_counter === 1 ? ' flex-disabled' : '') .'">Previous</a></li><li class="flex-nav-next"><a href="#" class="flex-next'. ($fsn_masthead_item_counter === 1 ? ' flex-disabled' : '') .'">Next</a></li></ul></div>';
 			$output .= '</aside>';
 			ob_start();
 			do_action('fsn_after_masthead', $atts);
@@ -1323,12 +1333,12 @@ function fsn_get_masthead_gallery_item($atts = false, $content = false) {
 			$attachment = get_post($atts['image_id']);
 			$attachment_attrs = wp_get_attachment_image_src( $attachment->ID, 'hi-res' );
 			if (!empty($attachment_attrs)) {
-				$gallery_item_description = apply_filters('fsn_masthead_item_photoswipe_caption', $atts['item_description'], $atts);
+				$gallery_item_description = apply_filters('fsn_masthead_item_photoswipe_caption', (!empty($atts['item_description']) ? $atts['item_description'] : ''), $atts);
 				$fsn_masthead_photoswipe_array[] = array(
 					'src' => esc_url($attachment_attrs[0]),
 					'w' => esc_attr($attachment_attrs[1]),
 					'h' => esc_attr($attachment_attrs[2]),
-					'title' => esc_attr($gallery_item_description)
+					'title' => $gallery_item_description
 				);
 			}
 		}
@@ -1420,7 +1430,7 @@ function fsn_get_inline_gallery($atts = false, $content = false) {
 				<?php
 				$output .= ob_get_clean();
 				//controls
-				$output .= '<div class="inline-controls controls-'. esc_attr($gallery_id) . (!empty($enable_fullscreen) ? ' fullscreen-enabled' : '') .'">'. (!empty($enable_fullscreen) ? '<div class="fullscreen-trigger" data-gallery-length="'. count($fsn_inline_photoswipe_array) .'" aria-label="Open Gallery"><i class="material-icons">&#xE145;</i></div>' : '') .'<ul class="placeholder-controls flex-direction-nav"><li class="flex-nav-prev"><a href="#" class="flex-prev'. ($fsn_inline_item_counter === 1 ? ' flex-disabled' : '') .'">Previous</a></li><li class="flex-nav-next"><a href="#" class="flex-next'. ($fsn_inline_item_counter === 1 ? ' flex-disabled' : '') .'">Next</a></li></ul></div>';
+				$output .= '<div class="inline-controls controls-'. esc_attr($gallery_id) . (!empty($enable_fullscreen) ? ' fullscreen-enabled' : '') .'">'. (!empty($enable_fullscreen) ? '<div class="fullscreen-trigger" data-gallery-length="'. count($fsn_inline_photoswipe_array) .'" aria-label="'. __('Open Gallery', 'fusion-extension-gallery') .'"><i class="material-icons">&#xE145;</i></div>' : '') .'<ul class="placeholder-controls flex-direction-nav"><li class="flex-nav-prev"><a href="#" class="flex-prev'. ($fsn_inline_item_counter === 1 ? ' flex-disabled' : '') .'">Previous</a></li><li class="flex-nav-next"><a href="#" class="flex-next'. ($fsn_inline_item_counter === 1 ? ' flex-disabled' : '') .'">Next</a></li></ul></div>';
 			$output .= '</aside>';
 			//thumbnails carousel nav
 			if (!empty($enable_thumbnails)) {
@@ -1456,7 +1466,7 @@ function fsn_get_inline_gallery_item($atts = false, $content = false) {
 			'src' => esc_url($attachment_attrs[0]),
 			'w' => esc_attr($attachment_attrs[1]),
 			'h' => esc_attr($attachment_attrs[2]),
-			'title' => esc_attr($gallery_item_description)
+			'title' => $gallery_item_description
 		);
 	} else if ($fsn_inline_switch == 'placeholder') {
 		if ($fsn_inline_item_counter === 0) {
@@ -1672,7 +1682,7 @@ function fsn_get_carousel_gallery_item($atts = false, $content = false) {
 	//linked piece of content
 	if (!empty($atts['item_type']) && !empty($atts['item_attached'])) {
 		$atts['item_id'] = $atts['item_attached'];
-		$atts['item_button'] = json_encode((object) array('link' => get_permalink($atts['item_attached']), 'label' => 'Learn more', 'type' => 'internal'));
+		$atts['item_button'] = json_encode((object) array('attachedID' => $atts['item_attached'], 'label' => 'Learn more', 'type' => 'internal'));
 		$atts['image_id'] = get_post_thumbnail_id($atts['item_attached']);
 		if (empty($atts['item_headline'])) {
 			$atts['item_headline'] = get_the_title($atts['item_attached']);

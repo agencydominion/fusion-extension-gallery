@@ -7,7 +7,7 @@
  * Plugin Name: Fusion : Extension - Gallery
  * Plugin URI: http://www.agencydominion.com/fusion/
  * Description: Gallery Extension Package for Fusion.
- * Version: 1.1.2
+ * Version: 1.1.3
  * Author: Agency Dominion
  * Author URI: http://agencydominion.com
  * License: GPL2
@@ -63,6 +63,15 @@ class FusionExtensionGallery	{
 					'fsnEditGalleryNonce' => wp_create_nonce('fsn-admin-edit-gallery')
 				)
 			);
+			//add translation strings to script
+			$translation_array = array(
+				'error' => __('Oops, something went wrong. Please reload the page and try again.','fusion-extension-gallery'),
+				'layout_change' => __('Changing the Gallery Layout will erase the current Gallery. Continue?','fusion-extension-gallery'),
+				'layout_change_smart' => __('Changing the Gallery Type to "Smart" will erase your current manual slides. Do you wish to continue?','fusion-extension-gallery'),
+				'gallery_item_collapse' => __('collapse', 'fusion-extension-gallery'),
+				'gallery_item_expand' => __('expand', 'fusion-extension-gallery'),
+			);
+			wp_localize_script('fsn_gallery_admin', 'fsnExtGalleryL10n', $translation_array);
 		}
 	}
 	
@@ -136,10 +145,10 @@ class FusionExtensionGallery	{
 				<div class="pswp__ui pswp__ui--hidden">
 					<div class="pswp__top-bar">
 						<div class="pswp__counter"></div>
-						<button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
-						<button class="pswp__button pswp__button--share" title="Share"></button>
-						<button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
-						<button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+						<button class="pswp__button pswp__button--close" title="<?php _e('Close (Esc)', 'fusion-extension-gallery'); ?>"></button>
+						<button class="pswp__button pswp__button--share" title="<?php _e('Share', 'fusion-extension-gallery'); ?>"></button>
+						<button class="pswp__button pswp__button--fs" title="<?php _e('Toggle fullscreen', 'fusion-extension-gallery'); ?>"></button>
+						<button class="pswp__button pswp__button--zoom" title="<?php _e('Zoom in/out', 'fusion-extension-gallery'); ?>"></button>
 						<div class="pswp__preloader">
 							<div class="pswp__preloader__icn">
 								<div class="pswp__preloader__cut">
@@ -151,8 +160,8 @@ class FusionExtensionGallery	{
 					<div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
 						<div class="pswp__share-tooltip"></div> 
 					</div>
-					<button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)"></button>
-					<button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)"></button>
+					<button class="pswp__button pswp__button--arrow--left" title="<?php _e('Previous (arrow left)', 'fusion-extension-gallery'); ?>"></button>
+					<button class="pswp__button pswp__button--arrow--right" title="<?php _e('Next (arrow right)', 'fusion-extension-gallery') ?>"></button>
 					<div class="pswp__caption">
 						<div class="pswp__caption__center"></div>
 					</div>
