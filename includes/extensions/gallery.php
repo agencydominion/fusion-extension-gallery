@@ -1654,6 +1654,8 @@ function fsn_get_carousel_smart_gallery_items($atts = false) {
 		$query_args['tax_query'] = $tax_query_array;		
 	}
 	
+	$query_args = apply_filters('fsn_carousel_smart_query_args', $query_args, $atts);
+	
 	//get items
 	$items = get_posts($query_args);
 	
