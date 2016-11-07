@@ -30,6 +30,9 @@ class FusionGallery	{
 		//initialize gallery
 		add_action('init', array($this, 'init_gallery'), 12);
 		
+		//clean up gallery
+		add_action('wp_footer', array($this, 'cleanup_gallery'));
+		
 		//add gallery item shortcode
 		add_shortcode('fsn_gallery_item', array($this, 'gallery_item_shortcode'));
 		
@@ -372,6 +375,17 @@ class FusionGallery	{
 	}
 	
 	/**
+	 * Cleanup Gallery
+	 *
+	 * @since 1.1.5
+	 *
+	 */
+	 
+	public function cleanup_gallery() {
+		unset($GLOBALS['fsn_gallery_taxonomy_atts']);
+	}
+	
+	/**
 	 * Gallery shortcode
 	 *
 	 * @since 1.0.0
@@ -415,8 +429,6 @@ class FusionGallery	{
 				$output .= ob_get_clean();
 			$output .= '</div>';
 		}
-		
-		unset($GLOBALS['fsn_gallery_taxonomy_atts']);
 		
 		return $output;
 	}
