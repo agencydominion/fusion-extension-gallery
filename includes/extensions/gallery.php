@@ -1257,7 +1257,7 @@ function fsn_get_masthead_gallery_item($atts = false, $content = false) {
 		}
 		if ($atts['media_type'] == 'video' && !empty($atts['video_id'])) {
 			//VIDEO
-			$atts['image_id'] = $atts['video_poster'];
+			$atts['image_id'] = !empty($atts['video_poster']) ? $atts['video_poster'] : '';
 			$attachment = get_post($atts['video_id']);
 			$attachment_meta = wp_get_attachment_metadata($atts['video_id']);
 			$poster_image_attrs = !empty($atts['video_poster']) ? wp_get_attachment_image_src( $atts['video_poster'], 'masthead-desktop' ) : ''; 
@@ -1280,7 +1280,7 @@ function fsn_get_masthead_gallery_item($atts = false, $content = false) {
 		if (!empty($gallery_item_button)) {
 			$button_object = fsn_get_button_object($gallery_item_button);
 		}
-		$output .= '<li class="slide'. ($atts['media_type'] == 'video' ? ' video' : '') .'"'. (!empty($atts['lazy_load']) ? ' data-lazy-load="true" data-image-id="'. esc_attr($atts['image_id']) .'" data-image-size-desktop="masthead-desktop" data-image-size-mobile="masthead-mobile"' : '') .'>';
+		$output .= '<li class="slide'. ($atts['media_type'] == 'video' ? ' video' : '') .'"'. (!empty($atts['lazy_load']) ? ' data-lazy-load="true" data-image-id="'. (!empty($atts['image_id']) ? esc_attr($atts['image_id']) : '') .'" data-image-size-desktop="masthead-desktop" data-image-size-mobile="masthead-mobile"' : '') .'>';
 			ob_start();
 			do_action('fsn_prepend_masthead_item', $atts);
 			$output .= ob_get_clean();
@@ -1291,7 +1291,9 @@ function fsn_get_masthead_gallery_item($atts = false, $content = false) {
 					$output .= '<span class="masthead-overlay"></span>';
 				$output .= '</div>';
 				$output .= '<div class="masthead-item-image video-fallback">';
-					$output .= fsn_get_dynamic_image($atts['video_poster'], 'masthead-image', 'masthead-desktop', 'masthead-mobile');
+					if (!empty($atts['video_poster'])) {
+						$output .= fsn_get_dynamic_image($atts['video_poster'], 'masthead-image', 'masthead-desktop', 'masthead-mobile');
+					}
 					$output .= '<span class="masthead-overlay"></span>';
 				$output .= '</div>';
 			} elseif ($atts['media_type'] == 'image') {
@@ -1341,7 +1343,7 @@ function fsn_get_masthead_gallery_item($atts = false, $content = false) {
 				$atts['image_id'] = $atts['video_poster'];
 			}
 		}
-		if ($atts['media_type'] == 'image') {
+		if ($atts['media_type'] == 'image' && !empty($atts['image_id'])) {
 			$attachment = get_post($atts['image_id']);
 			$attachment_attrs = wp_get_attachment_image_src( $attachment->ID, 'hi-res' );
 			if (!empty($attachment_attrs)) {
