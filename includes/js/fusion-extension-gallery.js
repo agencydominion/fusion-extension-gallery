@@ -301,13 +301,19 @@ function setMastheadDimensions() {
 	var viewportHeight = jQuery(window).height();
 	mastheads.each(function() {
 		var masthead = jQuery(this);
+		var mastheadContainerWidth = masthead.closest('.masthead-container').width();
+		if (mastheadContainerWidth > viewportWidth) {
+			mastheadMaxWidth = mastheadContainerWidth;
+		} else {
+			mastheadMaxWidth = viewportWidth;
+		}
 		//get params
 		var mastheadDimensions = masthead.data('galleryDimensions');
 		//set width
 		var widthUnit = mastheadDimensions.galleryWidth.unit;
 		switch(widthUnit) {
 			case 'percent':
-				var mastheadWidth = viewportWidth * (parseInt(mastheadDimensions.galleryWidth.percent) / 100);
+				var mastheadWidth = mastheadMaxWidth * (parseInt(mastheadDimensions.galleryWidth.percent) / 100);
 				break;
 			case 'pixels':
 				var mastheadWidth = mastheadDimensions.galleryWidth.pixels + 'px';
