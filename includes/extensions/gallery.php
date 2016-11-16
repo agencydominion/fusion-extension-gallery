@@ -1100,13 +1100,17 @@ function fsn_get_masthead_gallery($atts = false, $content = false) {
 		);
 		
 		//set starting dimensions
-		if ($width_unit == 'pixels' || $height_unit == 'pixels') {
+		if ($width_unit == 'pixels' || $height_unit == 'pixels' || $width_unit == 'percent' || $height_unit == 'percent') {
 			$initial_dimensions = '';
 			if ($width_unit == 'pixels') {
 				$initial_dimensions .= 'width:'. $width_pixels .'px;';	
+			}else if ($width_unit == 'percent') {
+				$initial_dimensions .= 'width:'. $width_percent .'vw;';	
 			}
 			if ($height_unit == 'pixels') {
 				$initial_dimensions .= 'height:'. $height_pixels .'px;';	
+			}else if ($height_unit == 'percent') {
+				$initial_dimensions .= 'height:'. $height_percent .'vh;';	
 			}
 		}
 		
