@@ -673,6 +673,12 @@ class FusionGallery	{
 				),
 				array(
 					'type' => 'checkbox',
+					'param_name' => 'enable_kenburns',
+					'label' => __('Ken Burns Effect', 'fusion-extension-gallery'),
+					'section' => 'advanced'
+				),
+				array(
+					'type' => 'checkbox',
 					'param_name' => 'enable_fullscreen',
 					'label' => __('Full Screen Button', 'fusion-extension-gallery'),
 					'section' => 'advanced'
@@ -1065,6 +1071,7 @@ function fsn_get_masthead_gallery($atts = false, $content = false) {
 		'height_unit' => $gallery_dimensions_defaults['galleryHeight']['unit'],
 		'height_percent' => $gallery_dimensions_defaults['galleryHeight']['percent'],
 		'height_pixels' => $gallery_dimensions_defaults['galleryHeight']['pixels'],
+		'enable_kenburns' => false,
 		'enable_fullscreen' => false,
 		'enable_slideshow' => false,
 		'slideshow_speed' => false
@@ -1156,7 +1163,7 @@ function fsn_get_masthead_gallery($atts = false, $content = false) {
 			ob_start();
 			do_action('fsn_before_masthead', $atts);
 			$output .= ob_get_clean();
-			$output .= '<aside class="flexslider masthead" data-gallery-id="'. esc_attr($gallery_id) .'"'. (!empty($enable_slideshow) ? ' data-gallery-auto="true"' : '') . (!empty($slideshow_speed) ? ' data-gallery-speed="'. esc_attr($slideshow_speed) .'"' : '') . (!empty($initial_dimensions) ? ' style="'. esc_attr($initial_dimensions) .'"' : '') .'>';
+			$output .= '<aside class="flexslider masthead'. (!empty($enable_kenburns) ? ' kenburns' : '') .'" data-gallery-id="'. esc_attr($gallery_id) .'"'. (!empty($enable_slideshow) ? ' data-gallery-auto="true"' : '') . (!empty($slideshow_speed) ? ' data-gallery-speed="'. esc_attr($slideshow_speed) .'"' : '') . (!empty($initial_dimensions) ? ' style="'. esc_attr($initial_dimensions) .'"' : '') .'>';
 				$fsn_masthead_item_layout = 'masthead_placeholder';
 				$fsn_masthead_item_counter = 0;
 				$output .= do_shortcode($content);
