@@ -294,7 +294,7 @@ class FusionGallery	{
 			
 			$smart_params = array(
 				array(
-					'type' => 'radio',
+					'type' => 'select',
 					'options' => $gallery_type_options,
 					'param_name' => 'gallery_type',
 					'label' => __('Content', 'fusion-extension-gallery'),
@@ -703,7 +703,7 @@ class FusionGallery	{
 			),
 			'item_params' => array(
 				array(
-					'type' => 'radio',
+					'type' => 'select',
 					'options' => array(
 						'image' => __('Image', 'fusion-extension-gallery'),
 						'video' => __('Video', 'fusion-extension-gallery')
@@ -849,7 +849,7 @@ class FusionGallery	{
 					'help' => __('Input number of carousel items for each page. Default is 1.', 'fusion-extension-gallery')
 				),
 				array(
-					'type' => 'radio',
+					'type' => 'select',
 					'options' => array(
 						'paging' => __('Dots', 'fusion-extension-gallery'),
 						'direction' => __('Arrows', 'fusion-extension-gallery'),
@@ -861,7 +861,7 @@ class FusionGallery	{
 					'section' => 'advanced'
 				),
 				array(
-					'type' => 'radio',
+					'type' => 'select',
 					'options' => array(
 						'paging' => __('Dots', 'fusion-extension-gallery'),
 						'direction' => __('Arrows', 'fusion-extension-gallery'),
@@ -945,7 +945,7 @@ class FusionGallery	{
 			),
 			'item_params' => array(
 				array(
-					'type' => 'radio',
+					'type' => 'select',
 					'options' => array(
 						'link' => __('Existing', 'fusion-extension-gallery'),
 						'custom' => __('Hand Made', 'fusion-extension-gallery')
