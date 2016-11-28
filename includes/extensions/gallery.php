@@ -606,7 +606,7 @@ class FusionGallery	{
 				array(
 					'type' => 'radio',
 					'options' => array(
-						'' => __('Default', 'fusion-extension-gallery'),
+						'default' => __('Default', 'fusion-extension-gallery'),
 						'percent' => __('Percentage', 'fusion-extension-gallery'),
 						'pixels' => __('Fixed', 'fusion-extension-gallery')
 					),
@@ -640,7 +640,7 @@ class FusionGallery	{
 				array(
 					'type' => 'radio',
 					'options' => array(
-						'' => __('Default', 'fusion-extension-gallery'),
+						'default' => __('Default', 'fusion-extension-gallery'),
 						'percent' => __('Percentage', 'fusion-extension-gallery'),
 						'pixels' => __('Fixed', 'fusion-extension-gallery')
 					),
