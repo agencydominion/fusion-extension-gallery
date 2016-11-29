@@ -217,7 +217,7 @@ class FusionGallery	{
 			$post_types = apply_filters('fsn_smart_gallery_posttypes', $post_types);
 			
 			$post_type_options = array();
-			$post_type_options[''] = __('Choose Post Type.', 'fusion-extension-gallery');
+			$post_type_options[''] = __('Choose post type.', 'fusion-extension-gallery');
 			$post_type_options['all'] = __('All', 'fusion-extension-gallery');
 			foreach($post_types as $post_type) {
 				$post_type_object = get_post_type_object($post_type);
@@ -239,7 +239,7 @@ class FusionGallery	{
 				$taxonomy_terms = get_terms($taxonomy);			
 				if (!empty($taxonomy_terms)) {
 					$taxonomy_term_options = array();
-					$taxonomy_term_options[''] = __('Choose Term.', 'fusion-extension-gallery');
+					$taxonomy_term_options[''] = __('Choose term.', 'fusion-extension-gallery');
 					foreach($taxonomy_terms as $taxonomy_term) {
 						$slug = $taxonomy_term->slug;
 						$name = $taxonomy_term->name;
