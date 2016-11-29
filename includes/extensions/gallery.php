@@ -217,7 +217,7 @@ class FusionGallery	{
 			$post_types = apply_filters('fsn_smart_gallery_posttypes', $post_types);
 			
 			$post_type_options = array();
-			$post_type_options[''] = __('Choose Post Type.', 'fusion-extension-gallery');
+			$post_type_options[''] = __('Choose post type.', 'fusion-extension-gallery');
 			$post_type_options['all'] = __('All', 'fusion-extension-gallery');
 			foreach($post_types as $post_type) {
 				$post_type_object = get_post_type_object($post_type);
@@ -239,7 +239,7 @@ class FusionGallery	{
 				$taxonomy_terms = get_terms($taxonomy);			
 				if (!empty($taxonomy_terms)) {
 					$taxonomy_term_options = array();
-					$taxonomy_term_options[''] = __('Choose Term.', 'fusion-extension-gallery');
+					$taxonomy_term_options[''] = __('Choose term.', 'fusion-extension-gallery');
 					foreach($taxonomy_terms as $taxonomy_term) {
 						$slug = $taxonomy_term->slug;
 						$name = $taxonomy_term->name;
@@ -294,7 +294,7 @@ class FusionGallery	{
 			
 			$smart_params = array(
 				array(
-					'type' => 'radio',
+					'type' => 'select',
 					'options' => $gallery_type_options,
 					'param_name' => 'gallery_type',
 					'label' => __('Content', 'fusion-extension-gallery'),
@@ -606,7 +606,7 @@ class FusionGallery	{
 				array(
 					'type' => 'radio',
 					'options' => array(
-						'' => __('Default', 'fusion-extension-gallery'),
+						'default' => __('Default', 'fusion-extension-gallery'),
 						'percent' => __('Percentage', 'fusion-extension-gallery'),
 						'pixels' => __('Fixed', 'fusion-extension-gallery')
 					),
@@ -640,7 +640,7 @@ class FusionGallery	{
 				array(
 					'type' => 'radio',
 					'options' => array(
-						'' => __('Default', 'fusion-extension-gallery'),
+						'default' => __('Default', 'fusion-extension-gallery'),
 						'percent' => __('Percentage', 'fusion-extension-gallery'),
 						'pixels' => __('Fixed', 'fusion-extension-gallery')
 					),
@@ -673,6 +673,12 @@ class FusionGallery	{
 				),
 				array(
 					'type' => 'checkbox',
+					'param_name' => 'enable_kenburns',
+					'label' => __('Ken Burns Effect', 'fusion-extension-gallery'),
+					'section' => 'advanced'
+				),
+				array(
+					'type' => 'checkbox',
 					'param_name' => 'enable_fullscreen',
 					'label' => __('Full Screen Button', 'fusion-extension-gallery'),
 					'section' => 'advanced'
@@ -697,7 +703,7 @@ class FusionGallery	{
 			),
 			'item_params' => array(
 				array(
-					'type' => 'radio',
+					'type' => 'select',
 					'options' => array(
 						'image' => __('Image', 'fusion-extension-gallery'),
 						'video' => __('Video', 'fusion-extension-gallery')
@@ -843,7 +849,7 @@ class FusionGallery	{
 					'help' => __('Input number of carousel items for each page. Default is 1.', 'fusion-extension-gallery')
 				),
 				array(
-					'type' => 'radio',
+					'type' => 'select',
 					'options' => array(
 						'paging' => __('Dots', 'fusion-extension-gallery'),
 						'direction' => __('Arrows', 'fusion-extension-gallery'),
@@ -855,7 +861,7 @@ class FusionGallery	{
 					'section' => 'advanced'
 				),
 				array(
-					'type' => 'radio',
+					'type' => 'select',
 					'options' => array(
 						'paging' => __('Dots', 'fusion-extension-gallery'),
 						'direction' => __('Arrows', 'fusion-extension-gallery'),
@@ -1065,6 +1071,7 @@ function fsn_get_masthead_gallery($atts = false, $content = false) {
 		'height_unit' => $gallery_dimensions_defaults['galleryHeight']['unit'],
 		'height_percent' => $gallery_dimensions_defaults['galleryHeight']['percent'],
 		'height_pixels' => $gallery_dimensions_defaults['galleryHeight']['pixels'],
+		'enable_kenburns' => false,
 		'enable_fullscreen' => false,
 		'enable_slideshow' => false,
 		'slideshow_speed' => false
@@ -1156,7 +1163,7 @@ function fsn_get_masthead_gallery($atts = false, $content = false) {
 			ob_start();
 			do_action('fsn_before_masthead', $atts);
 			$output .= ob_get_clean();
-			$output .= '<aside class="flexslider masthead" data-gallery-id="'. esc_attr($gallery_id) .'"'. (!empty($enable_slideshow) ? ' data-gallery-auto="true"' : '') . (!empty($slideshow_speed) ? ' data-gallery-speed="'. esc_attr($slideshow_speed) .'"' : '') . (!empty($initial_dimensions) ? ' style="'. esc_attr($initial_dimensions) .'"' : '') .'>';
+			$output .= '<aside class="flexslider masthead'. (!empty($enable_kenburns) ? ' kenburns' : '') .'" data-gallery-id="'. esc_attr($gallery_id) .'"'. (!empty($enable_slideshow) ? ' data-gallery-auto="true"' : '') . (!empty($slideshow_speed) ? ' data-gallery-speed="'. esc_attr($slideshow_speed) .'"' : '') . (!empty($initial_dimensions) ? ' style="'. esc_attr($initial_dimensions) .'"' : '') .'>';
 				$fsn_masthead_item_layout = 'masthead_placeholder';
 				$fsn_masthead_item_counter = 0;
 				$output .= do_shortcode($content);

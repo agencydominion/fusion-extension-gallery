@@ -633,3 +633,23 @@
 	}
 
 }
+
+/**
+ * Ken Burns Effect
+ */
+
+@media (min-width: 768px) {
+	.kenburns .flex-active-slide img	{
+		animation:kenburns 30s cubic-bezier(0, 0, .80, .90) infinite alternate;	
+	}
+}
+
+@keyframes kenburns	{
+	0%	{
+		transform:scale3d(1, 1, 1);
+	}
+	100% {
+		transform:scale3d(1.2,1.2,1);
+		transform-origin:(50%, 50%);
+	}
+}

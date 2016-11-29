@@ -15,7 +15,7 @@ jQuery(document).ready(function() {
 	jQuery('body').on('shown.bs.modal', '#fsn_gallery_modal', function() {
 		var gallery = jQuery('.gallery-sort');
 		var selectTypeElement = jQuery('[name="gallery_type"]');
-		var selectedType = selectTypeElement.filter(':checked').val();
+		var selectedType = selectTypeElement.find('option:selected').val();
 		
 		if (selectedType == 'smart') {
 			gallery.closest('.form-group').hide();	
@@ -32,7 +32,7 @@ jQuery(document).ready(function() {
 
 //update gallery type function
 jQuery(document).ready(function() {
-	jQuery('body').on('change', 'input[name="gallery_type"]', function(e) {
+	jQuery('body').on('change', 'select[name="gallery_type"]', function(e) {
 		fsnUpdateGalleryType(e);
 	});
 });
@@ -57,11 +57,12 @@ function fsnUpdateGallery(event) {
 		fsnUpdateGalleryLayout();
 	}	
 	//hide smart items on empty layout
-	var selectTypeElement = jQuery('[name="gallery_type"]');
+	var selectTypeElement = jQuery('select[name="gallery_type"]');
 	if (selectedLayout == '') {
+		selectTypeElement.find('option[value="manual"]').prop('selected', true);
 		jQuery('.form-group[data-dependency-param="gallery_type"][data-dependency-value="smart"]').hide();
 	} else {
-		selectTypeElement.filter('[value="manual"]').prop('checked', true).change();
+		selectTypeElement.find('option[value="manual"]').prop('selected', true).change();
 	}
 }
 
@@ -77,7 +78,7 @@ function fsnUpdateGalleryType(event) {
 			//hide manual items
 			gallery.closest('.form-group').hide();
 		} else {
-			jQuery('input[name="gallery_type"][value="manual"]').trigger('click');
+			jQuery('select[name="gallery_type"] option[value="manual"]').prop('selected', true).change();
 		}
 	} else if (selectedType == 'smart' && galleryItems.length == 0) {
 		//hide manual items
