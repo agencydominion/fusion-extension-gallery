@@ -945,7 +945,7 @@ class FusionGallery	{
 			),
 			'item_params' => array(
 				array(
-					'type' => 'select',
+					'type' => 'radio',
 					'options' => array(
 						'link' => __('Existing', 'fusion-extension-gallery'),
 						'custom' => __('Hand Made', 'fusion-extension-gallery')
