@@ -673,12 +673,6 @@ class FusionGallery	{
 				),
 				array(
 					'type' => 'checkbox',
-					'param_name' => 'enable_kenburns',
-					'label' => __('Ken Burns Effect', 'fusion-extension-gallery'),
-					'section' => 'advanced'
-				),
-				array(
-					'type' => 'checkbox',
 					'param_name' => 'enable_fullscreen',
 					'label' => __('Full Screen Button', 'fusion-extension-gallery'),
 					'section' => 'advanced'
@@ -699,6 +693,12 @@ class FusionGallery	{
 						'param_name' => 'enable_slideshow',
 						'not_empty' => true
 					)
+				),
+				array(
+					'type' => 'checkbox',
+					'param_name' => 'enable_kenburns',
+					'label' => __('Ken Burns Effect', 'fusion-extension-gallery'),
+					'section' => 'animation'
 				)
 			),
 			'item_params' => array(

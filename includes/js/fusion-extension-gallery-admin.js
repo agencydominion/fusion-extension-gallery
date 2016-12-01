@@ -123,6 +123,13 @@ function fsnUpdateGalleryLayout() {
 				var tabPane = jQuery(this);
 				tabPane.find('.gallery-layout').first().unwrap();
 				tabPane.find('.layout-fields:empty').remove();
+				//toggle panel tabs visibility
+				var tabPaneId = tabPane.attr('id'); 
+				if (tabPane.is(':empty')) {
+					jQuery('a[data-toggle="tab"][href="#'+ tabPaneId +'"]').parent('li').hide();
+				} else {
+					jQuery('a[data-toggle="tab"][href="#'+ tabPaneId +'"]').parent('li').show();
+				}
 			});
 		}
 		var modalSelector = jQuery('#fsn_gallery_modal');
