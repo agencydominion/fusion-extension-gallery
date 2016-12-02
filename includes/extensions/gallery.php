@@ -604,74 +604,6 @@ class FusionGallery	{
 			'name' => __('Masthead', 'fusion-extension-gallery'),
 			'params' => array(
 				array(
-					'type' => 'radio',
-					'options' => array(
-						'default' => __('Default', 'fusion-extension-gallery'),
-						'percent' => __('Percentage', 'fusion-extension-gallery'),
-						'pixels' => __('Fixed', 'fusion-extension-gallery')
-					),
-					'param_name' => 'width_unit',
-					'label' => __('Width', 'fusion-extension-gallery'),
-					'help' => __('Choose whether gallery is a percentage of the browser width or a fixed pixel width.', 'fusion-extension-gallery'),
-					'section' => 'advanced'
-				),
-				array(
-					'type' => 'text',
-					'param_name' => 'width_percent',
-					'label' => __('Percentage', 'fusion-extension-gallery'),
-					'help' => __('Input percentage of browser width (e.g. 100).', 'fusion-extension-gallery'),
-					'section' => 'advanced',
-					'dependency' => array(
-						'param_name' => 'width_unit',
-						'value' => 'percent'
-					)
-				),
-				array(
-					'type' => 'text',
-					'param_name' => 'width_pixels',
-					'label' => __('Pixels', 'fusion-extension-gallery'),
-					'help' => __('Input pixel width (e.g. 1440).', 'fusion-extension-gallery'),
-					'section' => 'advanced',
-					'dependency' => array(
-						'param_name' => 'width_unit',
-						'value' => 'pixels'
-					)
-				),
-				array(
-					'type' => 'radio',
-					'options' => array(
-						'default' => __('Default', 'fusion-extension-gallery'),
-						'percent' => __('Percentage', 'fusion-extension-gallery'),
-						'pixels' => __('Fixed', 'fusion-extension-gallery')
-					),
-					'param_name' => 'height_unit',
-					'label' => __('Height', 'fusion-extension-gallery'),
-					'help' => __('Choose whether gallery is a percentage of the browser height or a fixed pixel height.', 'fusion-extension-gallery'),
-					'section' => 'advanced'
-				),
-				array(
-					'type' => 'text',
-					'param_name' => 'height_percent',
-					'label' => __('Percentage', 'fusion-extension-gallery'),
-					'help' => __('Input percentage of browser height (e.g. 100).', 'fusion-extension-gallery'),
-					'section' => 'advanced',
-					'dependency' => array(
-						'param_name' => 'height_unit',
-						'value' => 'percent'
-					)
-				),
-				array(
-					'type' => 'text',
-					'param_name' => 'height_pixels',
-					'label' => __('Pixels', 'fusion-extension-gallery'),
-					'help' => __('Input pixel height (e.g. 600).', 'fusion-extension-gallery'),
-					'section' => 'advanced',
-					'dependency' => array(
-						'param_name' => 'height_unit',
-						'value' => 'pixels'
-					)
-				),
-				array(
 					'type' => 'checkbox',
 					'param_name' => 'enable_fullscreen',
 					'label' => __('Full Screen Button', 'fusion-extension-gallery'),
@@ -692,6 +624,74 @@ class FusionGallery	{
 					'dependency' => array(
 						'param_name' => 'enable_slideshow',
 						'not_empty' => true
+					)
+				),
+				array(
+					'type' => 'radio',
+					'options' => array(
+						'default' => __('Default', 'fusion-extension-gallery'),
+						'percent' => __('Percentage', 'fusion-extension-gallery'),
+						'pixels' => __('Fixed', 'fusion-extension-gallery')
+					),
+					'param_name' => 'width_unit',
+					'label' => __('Width', 'fusion-extension-gallery'),
+					'help' => __('Choose whether gallery is a percentage of the browser width or a fixed pixel width.', 'fusion-extension-gallery'),
+					'section' => 'style'
+				),
+				array(
+					'type' => 'text',
+					'param_name' => 'width_percent',
+					'label' => __('Percentage', 'fusion-extension-gallery'),
+					'help' => __('Input percentage of browser width (e.g. 100).', 'fusion-extension-gallery'),
+					'section' => 'style',
+					'dependency' => array(
+						'param_name' => 'width_unit',
+						'value' => 'percent'
+					)
+				),
+				array(
+					'type' => 'text',
+					'param_name' => 'width_pixels',
+					'label' => __('Pixels', 'fusion-extension-gallery'),
+					'help' => __('Input pixel width (e.g. 1440).', 'fusion-extension-gallery'),
+					'section' => 'style',
+					'dependency' => array(
+						'param_name' => 'width_unit',
+						'value' => 'pixels'
+					)
+				),
+				array(
+					'type' => 'radio',
+					'options' => array(
+						'default' => __('Default', 'fusion-extension-gallery'),
+						'percent' => __('Percentage', 'fusion-extension-gallery'),
+						'pixels' => __('Fixed', 'fusion-extension-gallery')
+					),
+					'param_name' => 'height_unit',
+					'label' => __('Height', 'fusion-extension-gallery'),
+					'help' => __('Choose whether gallery is a percentage of the browser height or a fixed pixel height.', 'fusion-extension-gallery'),
+					'section' => 'style'
+				),
+				array(
+					'type' => 'text',
+					'param_name' => 'height_percent',
+					'label' => __('Percentage', 'fusion-extension-gallery'),
+					'help' => __('Input percentage of browser height (e.g. 100).', 'fusion-extension-gallery'),
+					'section' => 'style',
+					'dependency' => array(
+						'param_name' => 'height_unit',
+						'value' => 'percent'
+					)
+				),
+				array(
+					'type' => 'text',
+					'param_name' => 'height_pixels',
+					'label' => __('Pixels', 'fusion-extension-gallery'),
+					'help' => __('Input pixel height (e.g. 600).', 'fusion-extension-gallery'),
+					'section' => 'style',
+					'dependency' => array(
+						'param_name' => 'height_unit',
+						'value' => 'pixels'
 					)
 				),
 				array(
