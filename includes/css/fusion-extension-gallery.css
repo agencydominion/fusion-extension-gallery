@@ -238,9 +238,17 @@
 	transition:opacity 0.6s;
 }
 
+.fsn-gallery .masthead .gallery-item-logo	{
+	display:inline-block;
+	max-width:100%;
+}
+
 @media (max-width: 767px) {
 	.fsn-gallery .masthead	{
 		height: 375px !important;
+	}
+	.fsn-gallery .masthead .gallery-item-logo	{
+		height:auto !important;
 	}	
 }
 
@@ -639,7 +647,7 @@
  */
 
 @media (min-width: 768px) {
-	.kenburns .flex-active-slide img	{
+	.kenburns .flex-active-slide img.masthead-image	{
 		animation:kenburns 30s cubic-bezier(0, 0, .80, .90) infinite alternate;	
 	}
 }

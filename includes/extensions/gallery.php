@@ -741,6 +741,12 @@ class FusionGallery	{
 					)
 				),
 				array(
+					'type' => 'image',
+					'param_name' => 'item_logo_id',
+					'label' => __('Logo', 'fusion-extension-gallery'),
+					'help' => __('High resolution display-ready. Dimensions will be half the size of the uploaded image.', 'fusion-extension-image')
+				),
+				array(
 					'type' => 'text',
 					'param_name' => 'item_headline',
 					'label' => __('Headline', 'fusion-extension-gallery')
@@ -1216,10 +1222,12 @@ function fsn_get_masthead_gallery_item($atts = false, $content = false) {
 			if (!empty($atts['video_poster'])) {
 				$atts['image_id'] = $atts['video_poster'];
 			}
+			$gallery_item_logo_id = !empty($atts['item_logo_id']) ? $atts['item_logo_id'] : '';
 			$gallery_item_headline = !empty($atts['item_headline']) ? $atts['item_headline'] : '';
 			$gallery_item_subheadline = !empty($atts['item_subheadline']) ? $atts['item_subheadline'] : '';
 			$gallery_item_description = !empty($atts['item_description']) ? $atts['item_description'] : '';
 			$gallery_item_button = !empty($atts['item_button']) ? $atts['item_button'] : '';
+			
 			if (!empty($gallery_item_button)) {
 				$button_object = fsn_get_button_object($gallery_item_button);
 			}
@@ -1230,12 +1238,20 @@ function fsn_get_masthead_gallery_item($atts = false, $content = false) {
 				$desktop_init = !$detect->isMobile() || $detect->isTablet() ? true : false;
 				$output .= fsn_get_dynamic_image($atts['image_id'], 'masthead-placeholder masthead-image', 'masthead-desktop', 'masthead-mobile', $desktop_init);
 				$output .= '<span class="masthead-overlay"></span>';
-				if (!empty($gallery_item_headline) || !empty($gallery_item_subheadline) || !empty($gallery_item_description) || !empty($gallery_item_button)) {
+				if (!empty($gallery_item_logo_id) || !empty($gallery_item_headline) || !empty($gallery_item_subheadline) || !empty($gallery_item_description) || !empty($gallery_item_button)) {
 					ob_start();
 					do_action('fsn_before_masthead_item_content', $atts);
 					$output .= ob_get_clean();
 					$output .= '<div class="masthead-item-content">';
 						$item_content_output = '';
+						if (!empty($gallery_item_logo_id)) {				
+							//get image
+							$attachment_attrs = wp_get_attachment_image_src( $gallery_item_logo_id, 'full' );
+							$attachment_alt = get_post_meta($gallery_item_logo_id, '_wp_attachment_image_alt', true);
+							$attachment_width = round(intval($attachment_attrs[1])/2, 0, PHP_ROUND_HALF_DOWN);
+							$attachment_height = round(intval($attachment_attrs[2])/2, 0, PHP_ROUND_HALF_DOWN);
+							$item_content_output .= '<img src="'. esc_url($attachment_attrs[0]) .'" width="'. $attachment_width .'" height="'. $attachment_height .'" alt="'. esc_attr($attachment_alt) .'" class="gallery-item-logo" style="width:'. $attachment_width .'px;height:'. $attachment_height .'px;">';
+						}
 						$item_content_output .= !empty($gallery_item_headline) ? '<h2 class="gallery-item-headline">' . esc_html($gallery_item_headline) . '</h2>' : '';
 						$item_content_output .= !empty($gallery_item_subheadline) ? '<h3 class="gallery-item-subheadline">' . esc_html($gallery_item_subheadline) . '</h3>' : ''; 
 						$item_content_output .= !empty($gallery_item_description) ? '<div class="gallery-item-desc">'. do_shortcode($gallery_item_description) .'</div>' : '';
@@ -1281,7 +1297,8 @@ function fsn_get_masthead_gallery_item($atts = false, $content = false) {
 			//IMAGE
 			$attachment = get_post($atts['image_id']);
 		} 
-				
+		
+		$gallery_item_logo_id = !empty($atts['item_logo_id']) ? $atts['item_logo_id'] : '';
 		$gallery_item_headline = !empty($atts['item_headline']) ? $atts['item_headline'] : '';
 		$gallery_item_subheadline = !empty($atts['item_subheadline']) ? $atts['item_subheadline'] : '';
 		$gallery_item_description = !empty($atts['item_description']) ? $atts['item_description'] : '';
@@ -1321,12 +1338,20 @@ function fsn_get_masthead_gallery_item($atts = false, $content = false) {
 					$output .= '<span class="masthead-overlay"></span>';
 				$output .= '</div>';
 			}
-			if (!empty($gallery_item_headline) || !empty($gallery_item_subheadline) || !empty($gallery_item_description) || !empty($gallery_item_button)) {
+			if (!empty($gallery_item_logo_id) || !empty($gallery_item_headline) || !empty($gallery_item_subheadline) || !empty($gallery_item_description) || !empty($gallery_item_button)) {
 				ob_start();
 				do_action('fsn_before_masthead_item_content', $atts);
 				$output .= ob_get_clean();
 				$output .= '<div class="masthead-item-content">';
 					$item_content_output = '';
+					if (!empty($gallery_item_logo_id)) {				
+						//get image
+						$attachment_attrs = wp_get_attachment_image_src( $gallery_item_logo_id, 'full' );
+						$attachment_alt = get_post_meta($gallery_item_logo_id, '_wp_attachment_image_alt', true);
+						$attachment_width = round(intval($attachment_attrs[1])/2, 0, PHP_ROUND_HALF_DOWN);
+						$attachment_height = round(intval($attachment_attrs[2])/2, 0, PHP_ROUND_HALF_DOWN);
+						$item_content_output .= '<img src="'. esc_url($attachment_attrs[0]) .'" width="'. $attachment_width .'" height="'. $attachment_height .'" alt="'. esc_attr($attachment_alt) .'" class="gallery-item-logo" style="width:'. $attachment_width .'px;height:'. $attachment_height .'px;">';
+					}
 					$item_content_output .= !empty($gallery_item_headline) ? '<h2 class="gallery-item-headline">' . esc_html($gallery_item_headline) . '</h2>' : '';
 					$item_content_output .= !empty($gallery_item_subheadline) ? '<h3 class="gallery-item-subheadline">' . esc_html($gallery_item_subheadline) . '</h3>' : ''; 
 					$item_content_output .= !empty($gallery_item_description) ? '<div class="gallery-item-desc">'. do_shortcode($gallery_item_description) .'</div>' : '';
