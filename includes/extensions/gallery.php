@@ -1331,7 +1331,7 @@ function fsn_get_masthead_gallery_item($atts = false, $content = false) {
 			if ($attachment_meta['fileformat'] == 'mp4') {				
 				$mp4_src = wp_get_attachment_url($atts['video_id']);
 				$video_id = uniqid();
-				$video_element = '<video id="video_'. esc_attr($video_id) .'" class="video-element" preload="auto" width="'. esc_attr($attachment_meta['width']) .'" height="'. esc_attr($attachment_meta['height']) .'"'. (!empty($poster_image_attrs) ? ' poster="'. esc_attr($poster_image_attrs[0]) .'"' : '') .' loop>';
+				$video_element = '<video id="video_'. esc_attr($video_id) .'" class="video-element" preload="auto" width="'. esc_attr($attachment_meta['width']) .'" height="'. esc_attr($attachment_meta['height']) .'"'. (!empty($poster_image_attrs) ? ' poster="'. esc_attr($poster_image_attrs[0]) .'"' : '') .' loop muted>';
 					$video_element .= '<source src="'. esc_url($mp4_src) .'" type="video/mp4" />';
 				$video_element .= '</video>';
 			}
