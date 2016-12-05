@@ -696,6 +696,34 @@ class FusionGallery	{
 				),
 				array(
 					'type' => 'checkbox',
+					'param_name' => 'enable_overlay',
+					'label' => __('Overlay', 'fusion-extension-gallery'),
+					'section' => 'style'
+				),
+				array(
+					'type' => 'colorpicker',
+					'param_name' => 'overlay_color',
+					'label' => __('Overlay Color', 'fusion-extension-gallery'),
+					'help' => __('Default is "#000000".', 'fusion-extension-gallery'),
+					'section' => 'style',
+					'dependency' => array(
+						'param_name' => 'enable_overlay',
+						'not_empty' => true
+					)
+				),
+				array(
+					'type' => 'text',
+					'param_name' => 'overlay_color_opacity',
+					'label' => __('Overlay Color', 'fusion-extension-gallery'),
+					'help' => __('Value between 0 and 1. Default is "0.3".', 'fusion-extension-gallery'),
+					'section' => 'style',
+					'dependency' => array(
+						'param_name' => 'enable_overlay',
+						'not_empty' => true
+					)
+				),
+				array(
+					'type' => 'checkbox',
 					'param_name' => 'enable_kenburns',
 					'label' => __('Ken Burns Effect', 'fusion-extension-gallery'),
 					'section' => 'animation'
@@ -1080,7 +1108,10 @@ function fsn_get_masthead_gallery($atts = false, $content = false) {
 		'enable_kenburns' => false,
 		'enable_fullscreen' => false,
 		'enable_slideshow' => false,
-		'slideshow_speed' => false
+		'slideshow_speed' => false,
+		'enable_overlay' => false,
+		'overlay_color' => '#000000',
+		'overlay_color_opacity' => '0.3',
 	), $atts ) );
 	
 	$output = '';
@@ -1123,6 +1154,14 @@ function fsn_get_masthead_gallery($atts = false, $content = false) {
 			$initial_dimensions .= 'height:'. $height_pixels .'px;';	
 		} else if ($height_unit == 'percent') {
 			$initial_dimensions .= 'height:'. $height_percent .'vh;';	
+		}
+		
+		//gallery overlay
+		if (!empty($enable_overlay)) {
+			$gallery_overlay = array(
+				'color' => $overlay_color,
+				'colorOpacity' => $overlay_color_opacity,
+			);
 		}
 		
 		$output .= '<div class="masthead-container'. (!empty($combined_classes) ? ' '. esc_attr($combined_classes) : '') .'">';
@@ -1190,6 +1229,10 @@ function fsn_get_masthead_gallery($atts = false, $content = false) {
 						//gallery dimensions
 						jQuery('.masthead[data-gallery-id="<?php echo esc_attr($gallery_id); ?>"]').data('galleryDimensions', <?php echo json_encode($gallery_dimensions); ?>);
 						<?php endif; ?>
+						<?php if (!empty($gallery_overlay)) : ?>
+						//gallery overlay
+						jQuery('.masthead[data-gallery-id="<?php echo esc_attr($gallery_id); ?>"]').data('galleryOverlay', <?php echo json_encode($gallery_overlay); ?>);
+						<?php endif; ?>
 					});
 				</script>
 				<?php
@@ -1237,7 +1280,6 @@ function fsn_get_masthead_gallery_item($atts = false, $content = false) {
 				$output .= ob_get_clean();
 				$desktop_init = !$detect->isMobile() || $detect->isTablet() ? true : false;
 				$output .= fsn_get_dynamic_image($atts['image_id'], 'masthead-placeholder masthead-image', 'masthead-desktop', 'masthead-mobile', $desktop_init);
-				$output .= '<span class="masthead-overlay"></span>';
 				if (!empty($gallery_item_logo_id) || !empty($gallery_item_headline) || !empty($gallery_item_subheadline) || !empty($gallery_item_description) || !empty($gallery_item_button)) {
 					ob_start();
 					do_action('fsn_before_masthead_item_content', $atts);
@@ -1314,13 +1356,11 @@ function fsn_get_masthead_gallery_item($atts = false, $content = false) {
 				//VIDEO
 				$output .= '<div class="masthead-item-video">';
 					$output .= $video_element;
-					$output .= '<span class="masthead-overlay"></span>';
 				$output .= '</div>';
 				$output .= '<div class="masthead-item-image video-fallback">';
 					if (!empty($atts['video_poster'])) {
 						$output .= fsn_get_dynamic_image($atts['video_poster'], 'masthead-image', 'masthead-desktop', 'masthead-mobile');
 					}
-					$output .= '<span class="masthead-overlay"></span>';
 				$output .= '</div>';
 			} elseif ($atts['media_type'] == 'image') {
 				//IMAGE
@@ -1335,7 +1375,6 @@ function fsn_get_masthead_gallery_item($atts = false, $content = false) {
 							$output .= '<span id="bubblingG_3"></span>';
 						$output .= '</div>';
 					}
-					$output .= '<span class="masthead-overlay"></span>';
 				$output .= '</div>';
 			}
 			if (!empty($gallery_item_logo_id) || !empty($gallery_item_headline) || !empty($gallery_item_subheadline) || !empty($gallery_item_description) || !empty($gallery_item_button)) {
