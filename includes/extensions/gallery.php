@@ -627,7 +627,7 @@ class FusionGallery	{
 					)
 				),
 				array(
-					'type' => 'radio',
+					'type' => 'select',
 					'options' => array(
 						'default' => __('Default', 'fusion-extension-gallery'),
 						'percent' => __('Percentage', 'fusion-extension-gallery'),
@@ -661,7 +661,7 @@ class FusionGallery	{
 					)
 				),
 				array(
-					'type' => 'radio',
+					'type' => 'select',
 					'options' => array(
 						'default' => __('Default', 'fusion-extension-gallery'),
 						'percent' => __('Percentage', 'fusion-extension-gallery'),
@@ -691,6 +691,41 @@ class FusionGallery	{
 					'section' => 'style',
 					'dependency' => array(
 						'param_name' => 'height_unit',
+						'value' => 'pixels'
+					)
+				),
+				array(
+					'type' => 'select',
+					'options' => array(
+						'default' => __('Default', 'fusion-extension-gallery'),
+						'percent' => __('Percentage', 'fusion-extension-gallery'),
+						'pixels' => __('Fixed', 'fusion-extension-gallery'),
+						'flex' => __('Flexible', 'fusion-extension-gallery')
+					),
+					'param_name' => 'height_unit_xs',
+					'label' => __('Mobile Height', 'fusion-extension-gallery'),
+					'help' => __('Choose whether gallery is a percentage of the mobile browser height, a fixed pixel height, or flexible based on the content of each slide.', 'fusion-extension-gallery'),
+					'section' => 'style'
+				),
+				array(
+					'type' => 'text',
+					'param_name' => 'height_percent_xs',
+					'label' => __('Percentage', 'fusion-extension-gallery'),
+					'help' => __('Input percentage of mobile browser height (e.g. 100).', 'fusion-extension-gallery'),
+					'section' => 'style',
+					'dependency' => array(
+						'param_name' => 'height_unit_xs',
+						'value' => 'percent'
+					)
+				),
+				array(
+					'type' => 'text',
+					'param_name' => 'height_pixels_xs',
+					'label' => __('Pixels', 'fusion-extension-gallery'),
+					'help' => __('Input pixel height (e.g. 600).', 'fusion-extension-gallery'),
+					'section' => 'style',
+					'dependency' => array(
+						'param_name' => 'height_unit_xs',
 						'value' => 'pixels'
 					)
 				),
@@ -1094,17 +1129,25 @@ function fsn_get_masthead_gallery($atts = false, $content = false) {
 			'unit' => 'percent',
 			'percent' => '100',
 			'pixels' => '600'
+		),
+		'galleryHeightMobile' => array(
+			'unit' => 'pixels',
+			'percent' => '100',
+			'pixels' => '375'
 		)
 	);
 	$gallery_dimensions_defaults = apply_filters('fsn_masthead_default_dimensions', $gallery_dimensions_defaults, $atts);
 	
 	extract( shortcode_atts( array(
-		'width_unit' => $gallery_dimensions_defaults['galleryWidth']['unit'],
+		'width_unit' => 'default',
 		'width_percent' => $gallery_dimensions_defaults['galleryWidth']['percent'],
 		'width_pixels' => $gallery_dimensions_defaults['galleryWidth']['pixels'],
-		'height_unit' => $gallery_dimensions_defaults['galleryHeight']['unit'],
+		'height_unit' => 'default',
 		'height_percent' => $gallery_dimensions_defaults['galleryHeight']['percent'],
 		'height_pixels' => $gallery_dimensions_defaults['galleryHeight']['pixels'],
+		'height_unit_xs' => 'default',
+		'height_percent_xs' => $gallery_dimensions_defaults['galleryHeightMobile']['percent'],
+		'height_pixels_xs' => $gallery_dimensions_defaults['galleryHeightMobile']['pixels'],
 		'enable_kenburns' => false,
 		'enable_fullscreen' => false,
 		'enable_slideshow' => false,
@@ -1130,6 +1173,15 @@ function fsn_get_masthead_gallery($atts = false, $content = false) {
 			$combined_classes = $classes;
 		}
 		//gallery dimensions
+		if ($width_unit == 'default') {
+			$width_unit = $gallery_dimensions_defaults['galleryWidth']['unit'];
+		}
+		if ($height_unit == 'default') {
+			$height_unit = $gallery_dimensions_defaults['galleryHeight']['unit'];
+		}
+		if ($height_unit_xs == 'default') {
+			$height_unit_xs = $gallery_dimensions_defaults['galleryHeightMobile']['unit'];
+		}
 		$gallery_dimensions = array(
 			'galleryWidth' => array(
 				'unit' => $width_unit,
@@ -1140,6 +1192,11 @@ function fsn_get_masthead_gallery($atts = false, $content = false) {
 				'unit' => $height_unit,
 				'percent' => $height_percent,
 				'pixels' => $height_pixels
+			),
+			'galleryHeightMobile' => array(
+				'unit' => $height_unit_xs,
+				'percent' => $height_percent_xs,
+				'pixels' => $height_pixels_xs
 			)
 		);
 		
