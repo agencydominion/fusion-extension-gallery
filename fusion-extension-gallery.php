@@ -174,7 +174,12 @@ class FusionExtensionGallery	{
 
 $fsn_extension_gallery = new FusionExtensionGallery();
 
-//EXTENSIONS
+//CLASSES
+
+//Gallery Styles
+require_once('includes/classes/masthead-styles.php');
+
+//ELEMENTS
 
 //Gallery
 require_once('includes/extensions/gallery.php');

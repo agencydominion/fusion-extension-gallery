@@ -236,6 +236,12 @@
 }
 
 @media (max-width: 767px) {
+	.fsn-gallery .masthead.mobile-flex .masthead-item-content	{
+		position:relative;
+		bottom:0;
+		padding-top:30px;
+		padding-bottom:60px;
+	}
 	.fsn-gallery .masthead .gallery-item-logo	{
 		height:auto !important;
 	}	
