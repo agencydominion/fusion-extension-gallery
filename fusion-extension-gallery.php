@@ -113,7 +113,6 @@ class FusionExtensionGallery	{
 	 
 	public function selectable_image_sizes($fsn_selectable_image_sizes) {
 		//unset Gallery image sizes
-		unset($fsn_selectable_image_sizes['masthead-mobile']);
 		unset($fsn_selectable_image_sizes['masthead-desktop']);
 		unset($fsn_selectable_image_sizes['inline-mobile']);
 		unset($fsn_selectable_image_sizes['inline-desktop']);
