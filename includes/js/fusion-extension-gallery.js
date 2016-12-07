@@ -734,6 +734,7 @@ function galleryPlayVideo(video) {
 		videoContainer.find('.video-fallback').css('display','block');
 		videoContainer.find('.masthead-slide-video').remove();
 		videoContainer.removeClass('video');
+		centerMastheadImages();
 		return false;
 	}
 	var videoPlayer = document.getElementById(video);
@@ -742,6 +743,7 @@ function galleryPlayVideo(video) {
 		videoContainer.find('.video-fallback').css('display','block');
 		videoContainer.find('.masthead-slide-video').remove();
 		videoContainer.removeClass('video');
+		centerMastheadImages();
 	};
 	centerGalleryVideos();
 	videoPlayer.play();

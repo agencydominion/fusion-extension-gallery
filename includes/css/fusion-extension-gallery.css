@@ -167,7 +167,7 @@
 }
 
 .fsn-gallery .masthead li.loading .masthead-overlay	{
-	opacity:0;
+	opacity:0 !important;
 }
 
 .no-opacity .fsn-gallery .masthead li.loading .masthead-overlay	{
