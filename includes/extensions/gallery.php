@@ -749,7 +749,7 @@ class FusionGallery	{
 				array(
 					'type' => 'text',
 					'param_name' => 'overlay_color_opacity',
-					'label' => __('Overlay Color', 'fusion-extension-gallery'),
+					'label' => __('Overlay Color Opacity', 'fusion-extension-gallery'),
 					'help' => __('Value between 0 and 1. Default is "0.3".', 'fusion-extension-gallery'),
 					'section' => 'style',
 					'dependency' => array(
