@@ -83,6 +83,8 @@ jQuery(document).ready(function() {
 				slide.find('.masthead-item-image, .masthead-item-video').append('<span class="masthead-overlay" style="'+ overlayStyle +'"></span>');
 			});
 		}
+		//get dimensions
+		var mastheadDimensions = currentGallery.data('galleryDimensions');
 		
 		currentGallery.flexslider({
 			animation: 'fade',
@@ -222,6 +224,18 @@ jQuery(document).ready(function() {
 				}
 			},
 			after: function(slider) {
+				//mobile flex
+				if (jQuery(window).width() <= 767 && mastheadDimensions.galleryHeightMobile.unit == 'flex') {
+					var incomingSlide = slider.find('.slide').eq(slider.animatingTo);
+					mastheadHeight = incomingSlide.find('.masthead-item-content').first().outerHeight();
+					if (mastheadHeight != null) {
+						slider.height(mastheadHeight);
+						setTimeout(function() {
+							centerMastheadImages();
+						}, 300);
+					}
+				}
+				//pause videos in non-active slides
 				nonActiveSlides = slider.find('.slide').not('.flex-active-slide');
 				nonActiveSlides.each(function() {
 					var nonActiveSlide = jQuery(this);
@@ -355,6 +369,10 @@ function setMastheadDimensions() {
 			case 'pixels':
 				var mastheadHeight = mastheadDimensions.galleryHeight.pixels + 'px';
 				break;
+		}
+		//mobile flex
+		if (jQuery(window).width() <= 767 && mastheadDimensions.galleryHeightMobile.unit == 'flex') {
+			mastheadHeight = masthead.find('.masthead-item-content').first().outerHeight();
 		}
 		masthead.height(mastheadHeight);
 	});
@@ -716,6 +734,7 @@ function galleryPlayVideo(video) {
 		videoContainer.find('.video-fallback').css('display','block');
 		videoContainer.find('.masthead-slide-video').remove();
 		videoContainer.removeClass('video');
+		centerMastheadImages();
 		return false;
 	}
 	var videoPlayer = document.getElementById(video);
@@ -724,6 +743,7 @@ function galleryPlayVideo(video) {
 		videoContainer.find('.video-fallback').css('display','block');
 		videoContainer.find('.masthead-slide-video').remove();
 		videoContainer.removeClass('video');
+		centerMastheadImages();
 	};
 	centerGalleryVideos();
 	videoPlayer.play();

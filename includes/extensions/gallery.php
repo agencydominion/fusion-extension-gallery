@@ -627,7 +627,7 @@ class FusionGallery	{
 					)
 				),
 				array(
-					'type' => 'radio',
+					'type' => 'select',
 					'options' => array(
 						'default' => __('Default', 'fusion-extension-gallery'),
 						'percent' => __('Percentage', 'fusion-extension-gallery'),
@@ -661,7 +661,7 @@ class FusionGallery	{
 					)
 				),
 				array(
-					'type' => 'radio',
+					'type' => 'select',
 					'options' => array(
 						'default' => __('Default', 'fusion-extension-gallery'),
 						'percent' => __('Percentage', 'fusion-extension-gallery'),
@@ -691,6 +691,41 @@ class FusionGallery	{
 					'section' => 'style',
 					'dependency' => array(
 						'param_name' => 'height_unit',
+						'value' => 'pixels'
+					)
+				),
+				array(
+					'type' => 'select',
+					'options' => array(
+						'default' => __('Default', 'fusion-extension-gallery'),
+						'percent' => __('Percentage', 'fusion-extension-gallery'),
+						'pixels' => __('Fixed', 'fusion-extension-gallery'),
+						'flex' => __('Flexible', 'fusion-extension-gallery')
+					),
+					'param_name' => 'height_unit_xs',
+					'label' => __('Mobile Height', 'fusion-extension-gallery'),
+					'help' => __('Choose whether gallery is a percentage of the mobile browser height, a fixed pixel height, or flexible based on the content of each slide.', 'fusion-extension-gallery'),
+					'section' => 'style'
+				),
+				array(
+					'type' => 'text',
+					'param_name' => 'height_percent_xs',
+					'label' => __('Percentage', 'fusion-extension-gallery'),
+					'help' => __('Input percentage of mobile browser height (e.g. 100).', 'fusion-extension-gallery'),
+					'section' => 'style',
+					'dependency' => array(
+						'param_name' => 'height_unit_xs',
+						'value' => 'percent'
+					)
+				),
+				array(
+					'type' => 'text',
+					'param_name' => 'height_pixels_xs',
+					'label' => __('Pixels', 'fusion-extension-gallery'),
+					'help' => __('Input pixel height (e.g. 600).', 'fusion-extension-gallery'),
+					'section' => 'style',
+					'dependency' => array(
+						'param_name' => 'height_unit_xs',
 						'value' => 'pixels'
 					)
 				),
@@ -1077,7 +1112,6 @@ function fsn_get_gallery_image() {
 
 //add image sizes
 if ( function_exists( 'add_image_size' ) ) {
-	add_image_size('masthead-mobile', 640, 375, true);
 	add_image_size('masthead-desktop', 2560, 1600, true);
 }
 
@@ -1094,17 +1128,25 @@ function fsn_get_masthead_gallery($atts = false, $content = false) {
 			'unit' => 'percent',
 			'percent' => '100',
 			'pixels' => '600'
+		),
+		'galleryHeightMobile' => array(
+			'unit' => 'pixels',
+			'percent' => '100',
+			'pixels' => '375'
 		)
 	);
 	$gallery_dimensions_defaults = apply_filters('fsn_masthead_default_dimensions', $gallery_dimensions_defaults, $atts);
 	
 	extract( shortcode_atts( array(
-		'width_unit' => $gallery_dimensions_defaults['galleryWidth']['unit'],
+		'width_unit' => 'default',
 		'width_percent' => $gallery_dimensions_defaults['galleryWidth']['percent'],
 		'width_pixels' => $gallery_dimensions_defaults['galleryWidth']['pixels'],
-		'height_unit' => $gallery_dimensions_defaults['galleryHeight']['unit'],
+		'height_unit' => 'default',
 		'height_percent' => $gallery_dimensions_defaults['galleryHeight']['percent'],
 		'height_pixels' => $gallery_dimensions_defaults['galleryHeight']['pixels'],
+		'height_unit_xs' => 'default',
+		'height_percent_xs' => $gallery_dimensions_defaults['galleryHeightMobile']['percent'],
+		'height_pixels_xs' => $gallery_dimensions_defaults['galleryHeightMobile']['pixels'],
 		'enable_kenburns' => false,
 		'enable_fullscreen' => false,
 		'enable_slideshow' => false,
@@ -1130,6 +1172,15 @@ function fsn_get_masthead_gallery($atts = false, $content = false) {
 			$combined_classes = $classes;
 		}
 		//gallery dimensions
+		if ($width_unit == 'default') {
+			$width_unit = $gallery_dimensions_defaults['galleryWidth']['unit'];
+		}
+		if ($height_unit == 'default') {
+			$height_unit = $gallery_dimensions_defaults['galleryHeight']['unit'];
+		}
+		if ($height_unit_xs == 'default') {
+			$height_unit_xs = $gallery_dimensions_defaults['galleryHeightMobile']['unit'];
+		}
 		$gallery_dimensions = array(
 			'galleryWidth' => array(
 				'unit' => $width_unit,
@@ -1140,21 +1191,16 @@ function fsn_get_masthead_gallery($atts = false, $content = false) {
 				'unit' => $height_unit,
 				'percent' => $height_percent,
 				'pixels' => $height_pixels
+			),
+			'galleryHeightMobile' => array(
+				'unit' => $height_unit_xs,
+				'percent' => $height_percent_xs,
+				'pixels' => $height_pixels_xs
 			)
 		);
 		
-		//set starting dimensions
-		$initial_dimensions = '';
-		if ($width_unit == 'pixels') {
-			$initial_dimensions .= 'width:'. $width_pixels .'px;';	
-		} else if ($width_unit == 'percent') {
-			$initial_dimensions .= 'width:'. $width_percent .'vw;';	
-		}
-		if ($height_unit == 'pixels') {
-			$initial_dimensions .= 'height:'. $height_pixels .'px;';	
-		} else if ($height_unit == 'percent') {
-			$initial_dimensions .= 'height:'. $height_percent .'vh;';	
-		}
+		//set dimensions
+		FusionMastheadStyles::get_instance()->add_gallery($gallery_id, $gallery_dimensions);
 		
 		//gallery overlay
 		if (!empty($enable_overlay)) {
@@ -1208,7 +1254,7 @@ function fsn_get_masthead_gallery($atts = false, $content = false) {
 			ob_start();
 			do_action('fsn_before_masthead', $atts);
 			$output .= ob_get_clean();
-			$output .= '<aside class="flexslider masthead'. (!empty($enable_kenburns) ? ' kenburns' : '') .'" data-gallery-id="'. esc_attr($gallery_id) .'"'. (!empty($enable_slideshow) ? ' data-gallery-auto="true"' : '') . (!empty($slideshow_speed) ? ' data-gallery-speed="'. esc_attr($slideshow_speed) .'"' : '') . (!empty($initial_dimensions) ? ' style="'. esc_attr($initial_dimensions) .'"' : '') .'>';
+			$output .= '<aside class="flexslider masthead'. (!empty($enable_kenburns) ? ' kenburns' : '') . ($gallery_dimensions['galleryHeightMobile']['unit'] == 'flex' ? ' mobile-flex' : '') .'" data-gallery-id="'. esc_attr($gallery_id) .'"'. (!empty($enable_slideshow) ? ' data-gallery-auto="true"' : '') . (!empty($slideshow_speed) ? ' data-gallery-speed="'. esc_attr($slideshow_speed) .'"' : '') .'>';
 				$fsn_masthead_item_layout = 'masthead_placeholder';
 				$fsn_masthead_item_counter = 0;
 				$output .= do_shortcode($content);
@@ -1279,7 +1325,7 @@ function fsn_get_masthead_gallery_item($atts = false, $content = false) {
 				do_action('fsn_prepend_masthead_item', $atts);
 				$output .= ob_get_clean();
 				$desktop_init = !$detect->isMobile() || $detect->isTablet() ? true : false;
-				$output .= fsn_get_dynamic_image($atts['image_id'], 'masthead-placeholder masthead-image', 'masthead-desktop', 'masthead-mobile', $desktop_init);
+				$output .= fsn_get_dynamic_image($atts['image_id'], 'masthead-placeholder masthead-image', 'masthead-desktop', 'mobile', $desktop_init);
 				if (!empty($gallery_item_logo_id) || !empty($gallery_item_headline) || !empty($gallery_item_subheadline) || !empty($gallery_item_description) || !empty($gallery_item_button)) {
 					ob_start();
 					do_action('fsn_before_masthead_item_content', $atts);
@@ -1331,7 +1377,7 @@ function fsn_get_masthead_gallery_item($atts = false, $content = false) {
 			if ($attachment_meta['fileformat'] == 'mp4') {				
 				$mp4_src = wp_get_attachment_url($atts['video_id']);
 				$video_id = uniqid();
-				$video_element = '<video id="video_'. esc_attr($video_id) .'" class="video-element" preload="auto" width="'. esc_attr($attachment_meta['width']) .'" height="'. esc_attr($attachment_meta['height']) .'"'. (!empty($poster_image_attrs) ? ' poster="'. esc_attr($poster_image_attrs[0]) .'"' : '') .' loop>';
+				$video_element = '<video id="video_'. esc_attr($video_id) .'" class="video-element" preload="auto" width="'. esc_attr($attachment_meta['width']) .'" height="'. esc_attr($attachment_meta['height']) .'"'. (!empty($poster_image_attrs) ? ' poster="'. esc_attr($poster_image_attrs[0]) .'"' : '') .' loop muted>';
 					$video_element .= '<source src="'. esc_url($mp4_src) .'" type="video/mp4" />';
 				$video_element .= '</video>';
 			}
@@ -1348,7 +1394,7 @@ function fsn_get_masthead_gallery_item($atts = false, $content = false) {
 		if (!empty($gallery_item_button)) {
 			$button_object = fsn_get_button_object($gallery_item_button);
 		}
-		$output .= '<li class="slide'. ($atts['media_type'] == 'video' ? ' video' : '') .'"'. (!empty($atts['lazy_load']) ? ' data-lazy-load="true" data-image-id="'. (!empty($atts['image_id']) ? esc_attr($atts['image_id']) : '') .'" data-image-size-desktop="masthead-desktop" data-image-size-mobile="masthead-mobile"' : '') .'>';
+		$output .= '<li class="slide'. ($atts['media_type'] == 'video' ? ' video' : '') .'"'. (!empty($atts['lazy_load']) ? ' data-lazy-load="true" data-image-id="'. (!empty($atts['image_id']) ? esc_attr($atts['image_id']) : '') .'" data-image-size-desktop="masthead-desktop" data-image-size-mobile="mobile"' : '') .'>';
 			ob_start();
 			do_action('fsn_prepend_masthead_item', $atts);
 			$output .= ob_get_clean();
@@ -1359,14 +1405,14 @@ function fsn_get_masthead_gallery_item($atts = false, $content = false) {
 				$output .= '</div>';
 				$output .= '<div class="masthead-item-image video-fallback">';
 					if (!empty($atts['video_poster'])) {
-						$output .= fsn_get_dynamic_image($atts['video_poster'], 'masthead-image', 'masthead-desktop', 'masthead-mobile');
+						$output .= fsn_get_dynamic_image($atts['video_poster'], 'masthead-image', 'masthead-desktop', 'mobile');
 					}
 				$output .= '</div>';
 			} elseif ($atts['media_type'] == 'image') {
 				//IMAGE
 				$output .= '<div class="masthead-item-image">';
 					if (empty($atts['lazy_load'])) {
-						$image_element = fsn_get_dynamic_image($atts['image_id'], 'masthead-image', 'masthead-desktop', 'masthead-mobile');
+						$image_element = fsn_get_dynamic_image($atts['image_id'], 'masthead-image', 'masthead-desktop', 'mobile');
 						$output .= apply_filters('fsn_masthead_image_output', $image_element, $attachment);
 					} else {
 						$output .= '<div class="bubblingG preloader">';
