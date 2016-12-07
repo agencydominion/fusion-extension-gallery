@@ -230,7 +230,9 @@ jQuery(document).ready(function() {
 					mastheadHeight = incomingSlide.find('.masthead-item-content').first().outerHeight();
 					if (mastheadHeight != null) {
 						slider.height(mastheadHeight);
-						centerMastheadImages();
+						setTimeout(function() {
+							centerMastheadImages();
+						}, 300);
 					}
 				}
 				//pause videos in non-active slides
