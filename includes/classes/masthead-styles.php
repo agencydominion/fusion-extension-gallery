@@ -38,7 +38,6 @@ class FusionMastheadStyles {
 	 */
 	 
 	public function output_styles() {
-		echo '<pre>'; print_r($this); echo '</pre>';
 		if (!empty($this)) {
 			echo '<style>';
 				foreach($this as $key => $value) {
