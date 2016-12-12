@@ -239,15 +239,19 @@ jQuery(document).ready(function() {
 					}
 				}
 				//pause videos in non-active slides
-				nonActiveSlides = slider.find('.slide').not('.flex-active-slide');
-				nonActiveSlides.each(function() {
-					var nonActiveSlide = jQuery(this);
-					var slideVideo = nonActiveSlide.find('.masthead-item-video');
-					if (slideVideo.length > 0) {
-						var videoPlayerElement = slideVideo.find('.video-element').attr('id');
-						galleryPauseVideo(videoPlayerElement);
-					}
-				});
+				if (galleryAnimationSpeed === 0) {
+					setTimeout(function() {
+						nonActiveSlides = slider.find('.slide').not('.flex-active-slide');
+						nonActiveSlides.each(function() {
+							var nonActiveSlide = jQuery(this);
+							var slideVideo = nonActiveSlide.find('.masthead-item-video');
+							if (slideVideo.length > 0) {
+								var videoPlayerElement = slideVideo.find('.video-element').attr('id');
+								galleryPauseVideo(videoPlayerElement);
+							}
+						});
+					}, 600);
+				}
 			}
 		});
 	});
