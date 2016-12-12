@@ -7,7 +7,7 @@
  * Plugin Name: Fusion : Extension - Gallery
  * Plugin URI: http://www.agencydominion.com/fusion/
  * Description: Gallery Extension Package for Fusion.
- * Version: 1.1.12
+ * Version: 1.1.13
  * Author: Agency Dominion
  * Author URI: http://agencydominion.com
  * License: GPL2
@@ -113,7 +113,6 @@ class FusionExtensionGallery	{
 	 
 	public function selectable_image_sizes($fsn_selectable_image_sizes) {
 		//unset Gallery image sizes
-		unset($fsn_selectable_image_sizes['masthead-mobile']);
 		unset($fsn_selectable_image_sizes['masthead-desktop']);
 		unset($fsn_selectable_image_sizes['inline-mobile']);
 		unset($fsn_selectable_image_sizes['inline-desktop']);

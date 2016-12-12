@@ -70,6 +70,8 @@ jQuery(document).ready(function() {
 		var currentGallerySpeed = currentGallery.attr('data-gallery-speed');
 		var galleryAuto = currentGalleryAuto == undefined ? false : true;
 		var gallerySpeed = currentGallerySpeed == undefined ? 7000 : parseInt(currentGallerySpeed);
+		//animation speed
+		var galleryAnimationSpeed = Modernizr.csstransitions ? 0 : 600;
 		//overlays
 		var overlayData = currentGallery.data('galleryOverlay');
 		if (overlayData != undefined) {
@@ -88,6 +90,7 @@ jQuery(document).ready(function() {
 		
 		currentGallery.flexslider({
 			animation: 'fade',
+			animationSpeed: galleryAnimationSpeed,
 			slideshow: galleryAuto,
 			slideshowSpeed: gallerySpeed,
 			multipleKeyboard: true,

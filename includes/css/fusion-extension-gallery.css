@@ -235,6 +235,18 @@
 	max-width:100%;
 }
 
+.csstransitions .fsn-gallery .masthead .slide	{
+	-moz-transition:opacity 0.6s ease 0.6s !important;
+	-webkit-transition:opacity 0.6s ease 0.6s !important;
+	transition:opacity 0.6s ease 0.6s !important;
+}
+
+.csstransitions .fsn-gallery .masthead .slide.flex-active-slide	{
+	-moz-transition-delay:0s !important;
+	-webkit-transition-delay:0s !important;
+	transition-delay:0s !important;
+}
+
 @media (max-width: 767px) {
 	.fsn-gallery .masthead.mobile-flex	{
 		-moz-transition:height 0.3s;
