@@ -1103,6 +1103,7 @@ function fsn_get_gallery_image() {
 //add image sizes
 if ( function_exists( 'add_image_size' ) ) {
 	add_image_size('masthead-desktop', 2560, 1600, true);
+	add_image_size('masthead-mobile', 1024, 1024, true);
 }
 
 //render gallery wrapper ** function name must follow fsn_get_[gallery layout key]_gallery
@@ -1315,7 +1316,7 @@ function fsn_get_masthead_gallery_item($atts = false, $content = false) {
 				do_action('fsn_prepend_masthead_item', $atts);
 				$output .= ob_get_clean();
 				$desktop_init = !$detect->isMobile() || $detect->isTablet() ? true : false;
-				$output .= fsn_get_dynamic_image($atts['image_id'], 'masthead-placeholder masthead-image', 'masthead-desktop', 'mobile', $desktop_init);
+				$output .= fsn_get_dynamic_image($atts['image_id'], 'masthead-placeholder masthead-image', 'masthead-desktop', 'masthead-mobile', $desktop_init);
 				if (!empty($gallery_item_logo_id) || !empty($gallery_item_headline) || !empty($gallery_item_subheadline) || !empty($gallery_item_description) || !empty($gallery_item_button)) {
 					ob_start();
 					do_action('fsn_before_masthead_item_content', $atts);
@@ -1384,7 +1385,7 @@ function fsn_get_masthead_gallery_item($atts = false, $content = false) {
 		if (!empty($gallery_item_button)) {
 			$button_object = fsn_get_button_object($gallery_item_button);
 		}
-		$output .= '<li class="slide'. ($atts['media_type'] == 'video' ? ' video' : '') .'"'. (!empty($atts['lazy_load']) ? ' data-lazy-load="true" data-image-id="'. (!empty($atts['image_id']) ? esc_attr($atts['image_id']) : '') .'" data-image-size-desktop="masthead-desktop" data-image-size-mobile="mobile"' : '') .'>';
+		$output .= '<li class="slide'. ($atts['media_type'] == 'video' ? ' video' : '') .'"'. (!empty($atts['lazy_load']) ? ' data-lazy-load="true" data-image-id="'. (!empty($atts['image_id']) ? esc_attr($atts['image_id']) : '') .'" data-image-size-desktop="masthead-desktop" data-image-size-mobile="masthead-mobile"' : '') .'>';
 			ob_start();
 			do_action('fsn_prepend_masthead_item', $atts);
 			$output .= ob_get_clean();
@@ -1395,14 +1396,14 @@ function fsn_get_masthead_gallery_item($atts = false, $content = false) {
 				$output .= '</div>';
 				$output .= '<div class="masthead-item-image video-fallback">';
 					if (!empty($atts['video_poster'])) {
-						$output .= fsn_get_dynamic_image($atts['video_poster'], 'masthead-image', 'masthead-desktop', 'mobile');
+						$output .= fsn_get_dynamic_image($atts['video_poster'], 'masthead-image', 'masthead-desktop', 'masthead-mobile');
 					}
 				$output .= '</div>';
 			} elseif ($atts['media_type'] == 'image') {
 				//IMAGE
 				$output .= '<div class="masthead-item-image">';
 					if (empty($atts['lazy_load'])) {
-						$image_element = fsn_get_dynamic_image($atts['image_id'], 'masthead-image', 'masthead-desktop', 'mobile');
+						$image_element = fsn_get_dynamic_image($atts['image_id'], 'masthead-image', 'masthead-desktop', 'masthead-mobile');
 						$output .= apply_filters('fsn_masthead_image_output', $image_element, $attachment);
 					} else {
 						$output .= '<div class="bubblingG preloader">';
