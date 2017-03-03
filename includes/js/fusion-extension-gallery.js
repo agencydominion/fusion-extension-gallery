@@ -63,6 +63,9 @@ jQuery(document).ready(function() {
 	jQuery('.fsn-gallery .masthead').on('fsnGalleryReady', function(event, galleryID) {
 		var currentGalleryID = galleryID;
 		var currentGallery = jQuery('.fsn-gallery .masthead[data-gallery-id="'+ currentGalleryID +'"]');
+		var currentGalleryControls = currentGallery.attr('data-controls');
+		var currentGalleryControlNav = false;
+		var currentGalleryDirectionNav = true;
 		var currentGalleryPlaceholder = currentGallery.find('.masthead-placeholder-container');
 		var currentGalleryPlaceholderControls = currentGallery.find('.placeholder-controls');
 		currentGalleryPlaceholderControls.remove();
@@ -70,6 +73,26 @@ jQuery(document).ready(function() {
 		var currentGallerySpeed = currentGallery.attr('data-gallery-speed');
 		var galleryAuto = currentGalleryAuto == undefined ? false : true;
 		var gallerySpeed = currentGallerySpeed == undefined ? 7000 : parseInt(currentGallerySpeed);
+		
+		switch(currentGalleryControls) {
+			case 'direction':
+				currentGalleryControlNav = false;
+				currentGalleryDirectionNav = true;
+				break;
+			case 'paging':
+				currentGalleryControlNav = true;
+				currentGalleryDirectionNav = false;
+				break;
+			case 'both':
+				currentGalleryControlNav = true;
+				currentGalleryDirectionNav = true;
+				break;
+			case 'none':
+				currentGalleryControlNav = false;
+				currentGalleryDirectionNav = false;
+				break;
+		}
+		
 		//animation speed
 		var galleryAnimationSpeed = Modernizr.csstransitions ? 0 : 600;
 		//overlays
@@ -95,7 +118,8 @@ jQuery(document).ready(function() {
 			slideshowSpeed: gallerySpeed,
 			multipleKeyboard: true,
 			controlsContainer: '.controls-'+ currentGalleryID,
-			controlNav: false,
+			directionNav: currentGalleryDirectionNav,
+			controlNav: currentGalleryControlNav,
 			start: function(slider) {
 				setTimeout(function() {
 					currentGalleryPlaceholder.remove();

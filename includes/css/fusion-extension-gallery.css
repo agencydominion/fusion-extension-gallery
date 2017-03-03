@@ -247,6 +247,11 @@
 	transition-delay:0s !important;
 }
 
+.masthead .masthead-controls .flex-control-nav{
+	bottom: 10px;
+	z-index: 10;
+}
+
 @media (max-width: 767px) {
 	.fsn-gallery .masthead.mobile-flex	{
 		-moz-transition:height 0.3s;
