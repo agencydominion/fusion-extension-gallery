@@ -348,7 +348,7 @@ function animateMastheadControls(slideDirection){
 				if(activeListPos < 2){
 					mastheadFlexControlNav.css('transition-duration', '1s');
 					mastheadFlexControlNav.css('transform', 'translate3d(0px, 0px, 0px)');
-				}else if(activeListPos > totalSlides){
+				}else if(activeListPos >= totalSlides){
 					translateWidth = parseInt(controlWidth * (totalSlides-3));
 					mastheadFlexControlNav.css('transition-duration', '1s');
 					mastheadFlexControlNav.css('transform', 'translate3d(-'+translateWidth+'px, 0px, 0px)');
@@ -366,7 +366,7 @@ function animateMastheadControls(slideDirection){
 				
 			}
 		});
-	
+		mastheadControls.find('.flex-control-paging-wrap').addClass('in');
 	});
 }
 
