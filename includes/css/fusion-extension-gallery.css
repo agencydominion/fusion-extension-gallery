@@ -247,12 +247,69 @@
 	transition-delay:0s !important;
 }
 
+/* Masthead Controls */
+
 .masthead .masthead-controls .flex-control-nav{
-	bottom: 10px;
+	position: static;
+	text-align: left;
+	width: 500%;
+	bottom: 0;
+	-webkit-transition: all 1s ease;
+	-moz-transition: all 1s ease;
+	-ms-transition: all 1s ease;
+	-o-transition: all 1s ease;
+	transition: all 1s ease;
+}
+.masthead .masthead-controls .flex-control-paging-wrap{
+	position: absolute;
+	bottom: 30px;
 	z-index: 10;
+	left: 50%;
+	margin-left: -80px;
+	width: 160px;
+	overflow: hidden;
+	height: 30px;
+}
+.masthead-controls .flex-control-nav li a{
+	width: 20px;
+	height: 20px;
+	-webkit-transition: all 0.5s ease;
+	-moz-transition: all 0.5s ease;
+	-ms-transition: all 0.5s ease;
+	-o-transition: all 0.5s ease;
+	transition: all 0.5s ease;
+	-webkit-transform: scale(0.4);
+	-moz-transform: scale(0.4);
+	transform: scale(0.4);
+	background: rgba(255,0,0,0.4);
+}
+.masthead-controls .flex-control-nav li a.flex-active{
+	-webkit-transform: scale(1);
+	-moz-transform: scale(1);
+	transform: scale(1);
+	background: rgba(255,0,0,0.8);
+}
+.masthead-controls .flex-control-nav li.sibling-li a{
+	-webkit-transform: scale(1);
+	-moz-transform: scale(1);
+	transform: scale(1);
+}
+.masthead-controls .flex-control-nav li.next-sibling-li a{
+	-webkit-transform: scale(0.7);
+	-moz-transform: scale(0.7);
+	transform: scale(0.7);
 }
 
 @media (max-width: 767px) {
+	.masthead-controls .flex-control-nav li a{
+		width: 10px;
+		height: 10px;
+	}
+	.masthead .masthead-controls .flex-control-paging-wrap{
+		width: 110px;
+		margin-left: -55px;
+		bottom: 10px;
+	}
 	.fsn-gallery .masthead.mobile-flex	{
 		-moz-transition:height 0.3s;
 		-webkit-transition:height 0.3s;
