@@ -311,10 +311,6 @@ function animateMastheadControls(slideDirection){
 		var mastheadControls = jQuery(this).find('.masthead-controls');
 		var mastheadFlexControlNav = mastheadControls.find('.flex-control-nav');
 		var mastheadFlexControls = mastheadControls.find('.flex-control-nav li');
-		if(slideDirection == 'start'){
-			mastheadFlexControlNav.css('transition-duration', '0s');
-			mastheadFlexControlNav.css('transform', 'translate3d(0px, 0px, 0px)'); 
-		}
 		var controlWidth = mastheadFlexControls.outerWidth(true);
 		mastheadFlexControlNav.css('width', parseInt(mastheadFlexControls.length*controlWidth));
 		var totalSlides = mastheadFlexControls.length - 2;
