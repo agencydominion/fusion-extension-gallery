@@ -343,20 +343,36 @@ function animateMastheadControls(slideDirection){
 				var activeListPos = controlList.index();
 				if(activeListPos < 2){
 					mastheadFlexControlNav.css('transition-duration', '1s');
+					mastheadFlexControlNav.css('-ms-transform', 'translate(0px, 0px)');
 					mastheadFlexControlNav.css('transform', 'translate3d(0px, 0px, 0px)');
+					if (!Modernizr.csstransforms) {
+						mastheadFlexControlNav.css('margin-left', '0px');
+					}
 				}else if(activeListPos >= totalSlides){
 					translateWidth = parseInt(controlWidth * (totalSlides-3));
 					mastheadFlexControlNav.css('transition-duration', '1s');
+					mastheadFlexControlNav.css('-ms-transform', 'translate(-'+translateWidth+'px, 0px)');
 					mastheadFlexControlNav.css('transform', 'translate3d(-'+translateWidth+'px, 0px, 0px)');
+					if (!Modernizr.csstransforms) {
+						mastheadFlexControlNav.css('margin-left', '-'+translateWidth +'px');
+					}
 				}else if(activeListPos >= 2 && activeListPos < totalSlides){
 					if(slideDirection == 'prev'){
 						translateWidth = parseInt(controlWidth * (activeListPos-2));
 						mastheadFlexControlNav.css('transition-duration', '1s');
+						mastheadFlexControlNav.css('-ms-transform', 'translate(-'+translateWidth+'px, 0px)');
 						mastheadFlexControlNav.css('transform', 'translate3d(-'+translateWidth+'px, 0px, 0px)');
+						if (!Modernizr.csstransforms) {
+							mastheadFlexControlNav.css('margin-left', '-'+translateWidth +'px');
+						}
 					}else if(slideDirection == 'next'){
 						translateWidth = parseInt(controlWidth * (activeListPos-2));
 						mastheadFlexControlNav.css('transition-duration', '1s');
+						mastheadFlexControlNav.css('-ms-transform', 'translate(-'+translateWidth+'px, 0px)');
 						mastheadFlexControlNav.css('transform', 'translate3d(-'+translateWidth+'px, 0px, 0px)');
+						if (!Modernizr.csstransforms) {
+							mastheadFlexControlNav.css('margin-left', '-'+translateWidth +'px');
+						}
 					}
 				}		
 				

@@ -288,25 +288,31 @@
 	-ms-transition: all 0.5s ease;
 	-o-transition: all 0.5s ease;
 	transition: all 0.5s ease;
+	-ms-transform: scale(0.4, 0.4); /* IE9 */
 	-webkit-transform: scale(0.4, 0.4) translate3d(0px, 0px, 0px);
 	-moz-transform: scale(0.4, 0.4) translate3d(0px, 0px, 0px);
+	-ms-transform: scale(0.4, 0.4) translate3d(0px, 0px, 0px);
 	transform: scale(0.4, 0.4) translate3d(0px, 0px, 0px);
-	background: rgba(255,0,0,0.4);
 }
 .masthead-controls .flex-control-nav li a.flex-active{
+	-ms-transform: scale(1, 1); /* IE9 */
 	-webkit-transform: scale(1, 1) translate3d(0px, 0px, 0px);
 	-moz-transform: scale(1, 1) translate3d(0px, 0px, 0px);
+	-ms-transform: scale(1, 1) translate3d(0px, 0px, 0px);
 	transform: scale(1, 1) translate3d(0px, 0px, 0px);
-	background: rgba(255,0,0,0.8);
 }
 .masthead-controls .flex-control-nav li.sibling-li a{
+	-ms-transform: scale(1, 1); /* IE9 */
 	-webkit-transform: scale(1, 1) translate3d(0px, 0px, 0px);
 	-moz-transform: scale(1, 1) translate3d(0px, 0px, 0px);
+	-ms-transform: scale(1, 1) translate3d(0px, 0px, 0px);
 	transform: scale(1, 1) translate3d(0px, 0px, 0px);
 }
 .masthead-controls .flex-control-nav li.next-sibling-li a{
+	-ms-transform: scale(0.7, 0.7); /* IE9 */
 	-webkit-transform: scale(0.7, 0.7) translate3d(0px, 0px, 0px);
 	-moz-transform: scale(0.7, 0.7) translate3d(0px, 0px, 0px);
+	-ms-transform: scale(0.7, 0.7) translate3d(0px, 0px, 0px);
 	transform: scale(0.7, 0.7) translate3d(0px, 0px, 0px);
 }
 
