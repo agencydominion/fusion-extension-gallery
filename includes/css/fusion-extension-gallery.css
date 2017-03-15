@@ -364,6 +364,9 @@
 		bottom:40px;
 		padding:0 100px;
 	}
+	.fsn-gallery .masthead[data-controls="paging"] .masthead-item-content, .fsn-gallery .masthead[data-controls="both"] .masthead-item-content	{
+		bottom:76px;
+	}
 }
 
 /**
