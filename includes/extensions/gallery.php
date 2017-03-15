@@ -599,6 +599,18 @@ class FusionGallery	{
 			'name' => __('Masthead', 'fusion-extension-gallery'),
 			'params' => array(
 				array(
+					'type' => 'select',
+					'options' => array(
+						'direction' => __('Arrows', 'fusion-extension-gallery'),
+						'paging' => __('Dots', 'fusion-extension-gallery'),
+						'both' => __('Dots & Arrows', 'fusion-extension-gallery'),
+						'none' => __('None', 'fusion-extension-gallery')
+					),
+					'param_name' => 'controls',
+					'label' => __('Controls', 'fusion-extension-gallery'),
+					'section' => 'advanced'
+				),
+				array(
 					'type' => 'checkbox',
 					'param_name' => 'enable_fullscreen',
 					'label' => __('Full Screen Button', 'fusion-extension-gallery'),
@@ -1245,7 +1257,7 @@ function fsn_get_masthead_gallery($atts = false, $content = false) {
 			ob_start();
 			do_action('fsn_before_masthead', $atts);
 			$output .= ob_get_clean();
-			$output .= '<aside class="flexslider masthead'. (!empty($enable_kenburns) ? ' kenburns' : '') . ($gallery_dimensions['galleryHeightMobile']['unit'] == 'flex' ? ' mobile-flex' : '') .'" data-gallery-id="'. esc_attr($gallery_id) .'"'. (!empty($enable_slideshow) ? ' data-gallery-auto="true"' : '') . (!empty($slideshow_speed) ? ' data-gallery-speed="'. esc_attr($slideshow_speed) .'"' : '') .'>';
+			$output .= '<aside class="flexslider masthead'. (!empty($enable_kenburns) ? ' kenburns' : '') . ($gallery_dimensions['galleryHeightMobile']['unit'] == 'flex' ? ' mobile-flex' : '') .'" data-gallery-id="'. esc_attr($gallery_id) .'"'. (!empty($enable_slideshow) ? ' data-gallery-auto="true"' : '') . (!empty($slideshow_speed) ? ' data-gallery-speed="'. esc_attr($slideshow_speed) .'"' : '') . (!empty($atts['controls']) ? ' data-controls="'. esc_attr($atts['controls']) .'"' : ' data-controls="direction"') .'>';
 				$fsn_masthead_item_layout = 'masthead_placeholder';
 				$fsn_masthead_item_counter = 0;
 				$output .= do_shortcode($content);
@@ -1275,7 +1287,7 @@ function fsn_get_masthead_gallery($atts = false, $content = false) {
 				<?php
 				$output .= ob_get_clean();
 				//controls
-				$output .= '<div class="masthead-controls controls-'. esc_attr($gallery_id) . (!empty($enable_fullscreen) ? ' fullscreen-enabled' : '') .'">'. (!empty($enable_fullscreen) ? '<div class="fullscreen-trigger" data-gallery-length="'. count($fsn_masthead_photoswipe_array) .'" aria-label="'. __('Open Gallery', 'fusion-extension-gallery') .'"><i class="material-icons">&#xE145;</i></div>' : '') .'<ul class="placeholder-controls flex-direction-nav"><li class="flex-nav-prev"><a href="#" class="flex-prev'. ($fsn_masthead_item_counter === 1 ? ' flex-disabled' : '') .'">Previous</a></li><li class="flex-nav-next"><a href="#" class="flex-next'. ($fsn_masthead_item_counter === 1 ? ' flex-disabled' : '') .'">Next</a></li></ul></div>';
+				$output .= '<div class="masthead-controls controls-'. esc_attr($gallery_id) . (!empty($enable_fullscreen) ? ' fullscreen-enabled' : '') .'">'. (!empty($enable_fullscreen) ? '<div class="fullscreen-trigger" data-gallery-length="'. count($fsn_masthead_photoswipe_array) .'" aria-label="'. __('Open Gallery', 'fusion-extension-gallery') .'"><i class="material-icons">&#xE145;</i></div>' : '') . ((!empty($atts['controls']) && ($atts['controls']=='direction' || $atts['controls']=='both')) ? '<ul class="placeholder-controls flex-direction-nav"><li class="flex-nav-prev"><a href="#" class="flex-prev'. ($fsn_masthead_item_counter === 1 ? ' flex-disabled' : '') .'">Previous</a></li><li class="flex-nav-next"><a href="#" class="flex-next'. ($fsn_masthead_item_counter === 1 ? ' flex-disabled' : '') .'">Next</a></li></ul>' : '') .'</div>';
 			$output .= '</aside>';
 			ob_start();
 			do_action('fsn_after_masthead', $atts);
