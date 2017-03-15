@@ -166,6 +166,14 @@ jQuery(document).ready(function() {
 				}
 				if(currentGalleryControlNav){
 					currentGallery.find('.flex-control-nav').wrap('<div class="flex-control-paging-wrap"></div>');
+					var controlPagingWrap = currentGallery.find('.flex-control-paging-wrap');
+					var controlPagingWrapWidth = controlPagingWrap.width();
+					if (controlPagingWrapWidth > 0) {
+						controlPagingWrap.css({
+							'width' : controlPagingWrapWidth+'px',
+							'margin-left' : '-'+(controlPagingWrapWidth/2)+'px'
+						});
+					}
 					animateMastheadControls('start');
 				}
 			},
