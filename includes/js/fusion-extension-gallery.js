@@ -22,7 +22,7 @@ jQuery(window).load(function() {
 		//if first slide is a video, init gallery
 		var slideVideo = currentGallery.find('.video');
 		//trigger load gallery event
-		if (Modernizr.touch) {
+		if (Modernizr.touchevents) {
 			currentGallery.on('touchstart.loadGallery', function() {
 				currentGallery.off('touchstart.loadGallery');
 		        currentGallery.prepend(currentGalleryContentData);
@@ -585,7 +585,7 @@ jQuery(window).load(function() {
 		var currentGalleryContentData = currentGallery.data('galleryContent');
 		var currentGalleryContainer = currentGallery.closest('.inline-container');
 		var currentGalleryAuto = currentGallery.attr('data-gallery-auto');
-		if (Modernizr.touch) {
+		if (Modernizr.touchevents) {
 			currentGalleryContainer.on('touchstart.loadGallery', function() {
 				currentGalleryContainer.off('touchstart.loadGallery');
 		        currentGallery.prepend(currentGalleryContentData);
