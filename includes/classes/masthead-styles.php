@@ -61,6 +61,9 @@ class FusionMastheadStyles {
 							echo 'height:'. $value['galleryHeight']['percent'] .'vh;';
 							break;
 					}
+					if (!empty($value['galleryMinHeight'])) {
+						echo 'min-height:'. $value['galleryMinHeight'] .'px;';
+					}
 				echo '}';
 				//mobile
 				echo '@media (max-width: 767px) {'. $selector . '{';

@@ -1132,6 +1132,7 @@ function fsn_get_masthead_gallery($atts = false, $content = false) {
 			'percent' => '100',
 			'pixels' => '600'
 		),
+		'galleryMinHeight' => false,
 		'galleryHeightMobile' => array(
 			'unit' => 'pixels',
 			'percent' => '100',
@@ -1195,6 +1196,7 @@ function fsn_get_masthead_gallery($atts = false, $content = false) {
 				'percent' => $height_percent,
 				'pixels' => $height_pixels
 			),
+			'galleryMinHeight' => $gallery_dimensions_defaults['galleryMinHeight'],
 			'galleryHeightMobile' => array(
 				'unit' => $height_unit_xs,
 				'percent' => $height_percent_xs,
