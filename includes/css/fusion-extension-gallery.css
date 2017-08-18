@@ -575,8 +575,8 @@
 }
 
 .carousel .flex-direction-nav a.flex-disabled	{
-	opacity:0.5 !important;
-	z-index:10;
+	opacity: 0 !important;
+	z-index:-1;
 }
 
 .carousel .flex-direction-nav a:before	{
