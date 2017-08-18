@@ -570,13 +570,8 @@
 	outline:none;
 }
 
-.carousel .flex-direction-nav a	{
-	opacity:1 !important;
-}
-
-.carousel .flex-direction-nav a.flex-disabled	{
-	opacity:0.5 !important;
-	z-index:10;
+.carousel .flex-direction-nav a, .carousel.flexslider:hover .flex-direction-nav a	{
+	opacity:1;
 }
 
 .carousel .flex-direction-nav a:before	{
