@@ -12,7 +12,7 @@ jQuery(document).ready(function() {
  * Masthead Gallery
  */
  
-jQuery(window).load(function() {
+jQuery(window).on('load', function() {
 	var mastheadGalleries = jQuery('.fsn-gallery .masthead');	
 	mastheadGalleries.each(function() {
 		var currentGallery = jQuery(this);
@@ -352,7 +352,7 @@ function fsnInitMastheadControls(gallery){
 	mastheadControls.find('.flex-control-paging-wrap').addClass('in');
 }
 
-jQuery(window).load(function(){
+jQuery(window).on('load', function(){
 	setTimeout(function() {
 		jQuery(window).resize(function() {
 			fsnResizeMastheadControls();	
@@ -515,7 +515,7 @@ function fsnCenterMastheadImages() {
 //Set masthead dimensions
 jQuery(document).ready(function() {
 	fsnSetMastheadDimensions();
-	jQuery(window).load(function() {
+	jQuery(window).on('load', function() {
 		fsnSetMastheadDimensions();
 		setTimeout(function() {
 			jQuery(window).resize(function() {
@@ -576,7 +576,7 @@ function fsnSetMastheadDimensions() {
  * Inline Gallery
  */
  
-jQuery(window).load(function() {
+jQuery(window).on('load', function() {
 	var galleryWithThumbnails = jQuery('.fsn-gallery .inline');
 	galleryWithThumbnails.each(function() {
 		//trigger load gallery event
@@ -804,7 +804,7 @@ jQuery(document).ready(function() {
  * Carousels
  */
 
-jQuery(window).load(function() {
+jQuery(window).on('load', function() {
 	//desktop carousels
 	var carousels = jQuery('.carousel');
 	carousels.each(function() {
@@ -951,7 +951,7 @@ function fsnGalleryPauseVideo(video) {
 }
 
 //video centering
-jQuery(window).load(function() {
+jQuery(window).on('load', function() {
 	fsnCenterGalleryVideos();
 	setTimeout(function() {
 		jQuery(window).resize(function() {
