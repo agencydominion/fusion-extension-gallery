@@ -7,9 +7,11 @@
  * Plugin Name: Fusion : Extension - Gallery
  * Plugin URI: http://www.agencydominion.com/fusion/
  * Description: Gallery Extension Package for Fusion.
- * Version: 1.2.6
+ * Version: 1.2.7
  * Author: Agency Dominion
  * Author URI: http://agencydominion.com
+ * Text Domain: fusion-extension-gallery
+ * Domain Path: /languages/
  * License: GPL2
  */
  
@@ -25,7 +27,7 @@ class FusionExtensionGallery	{
 	public function __construct() {
 						
 		// Initialize the language files
-		load_plugin_textdomain( 'fusion-extension-gallery', false, plugin_dir_url( __FILE__ ) . 'languages' );
+		add_action('plugins_loaded', array($this, 'load_textdomain'));
 		
 		// Enqueue admin scripts and styles
 		add_action('admin_enqueue_scripts', array($this, 'admin_enqueue_scripts_styles'));
@@ -39,6 +41,17 @@ class FusionExtensionGallery	{
 		// Output PhotoSwipe container in footer
 		add_action('wp_footer', array($this, 'photoswipe_container'));
 		
+	}
+	
+	/**
+	 * Load Textdomain
+	 *
+	 * @since 1.2.7
+	 *
+	 */
+	 
+	public function load_textdomain() {
+		load_plugin_textdomain( 'fusion-extension-gallery', FALSE, basename( dirname( __FILE__ ) ) . '/languages/' );
 	}
 	
 	/**
