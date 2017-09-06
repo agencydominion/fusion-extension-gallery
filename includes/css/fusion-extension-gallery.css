@@ -550,14 +550,9 @@
 	left:50%;
 	padding-left:35px;
 	padding-right:35px;
-	opacity:1;
-	-moz-transition:opacity .5s;
-	-webkit-transition:opacity .5s;
-	transition:opacity .5s;
-}
-
-.carousel .carousel-controls.loading {
-	opacity:0;
+	-moz-transform:translateX(-50%);
+	-webkit-transform:translateX(-50%);
+	transform:translateX(-50%);
 }
 
 .carousel .carousel-controls .flex-control-nav {
