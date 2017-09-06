@@ -816,6 +816,7 @@ jQuery(window).on('load', function() {
 		var carouselDirectionNav = false;
 		var carouselSlideshow = carousel.attr('data-slideshow');
 		var carouselSpeed = carousel.attr('data-gallery-speed');
+		var carouselSlides = carousel.find('.slide');
 		carouselSlideshow = carouselSlideshow != undefined ? true : false;
 		carouselSpeed = carouselSpeed == undefined ? 7000 : parseInt(carouselSpeed);
 		
@@ -838,10 +839,12 @@ jQuery(window).on('load', function() {
 				break;
 		}
 		if (carousel.parents('.tab-pane').not(':visible').length > 0) {
-			var slideWidth = Math.floor((carousel.closest('.tab-content').width() * 0.8290598291 ) / itemsPerPage);
+			var rowMargin = carousel.closest('.carousel-content.row').css('margin-left').replace(/-|px/gi,'');
+			var slideWidth = Math.floor((carousel.closest('.tab-content').width()+parseInt(rowMargin*2)) / itemsPerPage);
 		} else {
-			var slideWidth = Math.floor((carousel.closest('.row').width() * 0.8290598291 ) / itemsPerPage);
+			var slideWidth = Math.floor(carousel.closest('.carousel-content.row').width() / itemsPerPage);
 		}
+		carouselSlides.css('min-width', slideWidth+'px');
 		//init gallery
 		carousel.flexslider({
 			animation: 'slide',
@@ -859,14 +862,10 @@ jQuery(window).on('load', function() {
 			controlNav: carouselControlNav,
 			start: function(slider) {
 				slider.resize(); //fixes slide width bug
-				var controls = carousel.find('.carousel-controls');
-				var controlsOffset = controls.outerWidth() / 2;
-				controls.css('margin-left','-'+ controlsOffset +'px').removeClass('loading');
-				if (carousel.parents('.tab-pane').not(':visible').length > 0) {
-					jQuery('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
-						var controlsOffset = controls.outerWidth() / 2;
-						controls.css('margin-left','-'+ controlsOffset +'px').removeClass('loading');		
-					});
+				if (!Modernizr.csstransforms) {
+					var controls = carousel.find('.carousel-controls');
+					var controlsOffset = controls.outerWidth() / 2;
+					controls.css('margin-left','-'+ controlsOffset +'px');
 				}
 			}
 		});			
@@ -879,6 +878,7 @@ jQuery(window).on('load', function() {
 		var carouselControls = mobileCarousel.attr('data-controls');
 		var carouselControlNav = true;
 		var carouselDirectionNav = false;
+		var carouselSlides = mobileCarousel.find('.slide');
 		
 		switch(carouselControls) {
 			case 'paging':
@@ -899,7 +899,13 @@ jQuery(window).on('load', function() {
 				break;
 		}
 		
-		var slideWidth = Math.floor((mobileCarousel.closest('.row').width() * 0.8290598291 ) / 1);
+		if (mobileCarousel.parents('.tab-pane').not(':visible').length > 0) {
+			var rowMargin = mobileCarousel.closest('.carousel-content.row').css('margin-left').replace(/-|px/gi,'');
+			var slideWidth = Math.floor((mobileCarousel.closest('.tab-content').width()+parseInt(rowMargin*2)));
+		} else {
+			var slideWidth = Math.floor(mobileCarousel.closest('.carousel-content.row').width());
+		}
+		carouselSlides.css('min-width', slideWidth+'px');
 		//init gallery
 		mobileCarousel.flexslider({
 			animation: 'slide',
@@ -918,6 +924,55 @@ jQuery(window).on('load', function() {
 			}
 		});			
 	});
+});
+
+//carousel min width handling
+jQuery(window).on('resize', function() {
+	//desktop carousels
+	var carousels = jQuery('.carousel');
+	carousels.each(function() {
+		var carousel = jQuery(this);
+		var carouselSlides = carousel.find('.slide');
+		var itemsPerPage = parseInt(carousel.attr('data-pager'));
+		if (carousel.parents('.tab-pane').not(':visible').length > 0) {
+			var rowMargin = carousel.closest('.carousel-content.row').css('margin-left').replace(/-|px/gi,'');
+			var slideWidth = Math.floor((carousel.closest('.tab-content').width()+parseInt(rowMargin*2)) / itemsPerPage);
+		} else {
+			var slideWidth = Math.floor(carousel.closest('.carousel-content.row').width() / itemsPerPage);
+		}
+		carouselSlides.css('min-width', slideWidth+'px');
+	});
+	//mobile carousels
+	var mobileCarousels = jQuery('.carousel-mobile');	
+	mobileCarousels.each(function() {		
+		var mobileCarousel = jQuery(this);
+		var carouselSlides = mobileCarousel.find('.slide');
+		if (mobileCarousel.parents('.tab-pane').not(':visible').length > 0) {
+			var rowMargin = mobileCarousel.closest('.carousel-content.row').css('margin-left').replace(/-|px/gi,'');
+			var slideWidth = Math.floor((mobileCarousel.closest('.tab-content').width()+parseInt(rowMargin*2)));
+		} else {
+			var slideWidth = Math.floor(mobileCarousel.closest('.carousel-content.row').width());
+		}
+		carouselSlides.css('min-width', slideWidth+'px');
+	});
+});
+
+//carousel in-tab control centering fallback
+jQuery(document).ready(function() {
+	if (!Modernizr.csstransforms) {
+		var tabsWithInvisibleCarousels = jQuery('.tab-pane').not(':visible').has('.carousel');
+		tabsWithInvisibleCarousels.each(function() {
+			var tab = jQuery(this);
+			var tabID = tab.attr('id');
+			jQuery('a[data-toggle="tab"][href="#'+ tabID +'"]').on('shown.bs.tab', function (e) {
+				setTimeout(function() {
+					var controls = jQuery(e.target.hash).find('.carousel-controls');
+					var controlsOffset = controls.outerWidth() / 2;
+					controls.css('margin-left','-'+ controlsOffset +'px');
+				}, 10);
+			});
+		});	
+	}
 });
 
 //videos
