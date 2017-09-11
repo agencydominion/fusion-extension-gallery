@@ -112,6 +112,8 @@
 	position:relative;
 	height:100%;
 	overflow:hidden;
+	margin:0;
+	padding:0;
 }
 
 .opacity .fsn-gallery .masthead ul.slides li.slide.waiting	{
@@ -403,6 +405,8 @@
 .fsn-gallery .inline ul.slides li	{
 	height:100%;
 	overflow:hidden;
+	margin:0;
+	padding:0;
 }
 
 .opacity .fsn-gallery .inline ul.slides li.slide.waiting	{
