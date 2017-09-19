@@ -1472,6 +1472,8 @@ function fsn_get_masthead_gallery_item($atts = false, $content = false) {
 			$attachment_attrs = wp_get_attachment_image_src( $attachment->ID, 'hi-res' );
 			if (!empty($attachment_attrs)) {
 				$gallery_item_description = apply_filters('fsn_masthead_item_photoswipe_caption', (!empty($atts['item_description']) ? $atts['item_description'] : ''), $atts);
+				//decode custom entities to avoid JS errors
+				$gallery_item_description = FusionCore::decode_custom_entities($gallery_item_description);
 				$fsn_masthead_photoswipe_array[] = array(
 					'src' => esc_url($attachment_attrs[0]),
 					'w' => esc_attr($attachment_attrs[1]),
