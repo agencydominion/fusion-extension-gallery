@@ -283,7 +283,8 @@ class FusionGallery	{
 			//smart order options
 			$smart_order_options = array(
 				'recent' => __('Most Recent', 'fusion-extension-gallery'),
-				'alpha' => __('Alphabetical', 'fusion-extension-gallery')
+				'alpha' => __('Alphabetical', 'fusion-extension-gallery'),
+				'menu_order' => __('Page Order', 'fusion-extension-gallery')
 			);
 			$smart_order_options = apply_filters('fsn_smart_gallery_order_options', $smart_order_options);
 			
@@ -1769,6 +1770,10 @@ function fsn_get_carousel_smart_gallery_items($atts = false) {
 			break;
 		case 'alpha':
 			$query_args['orderby'] = 'title';
+			$query_args['order'] = 'ASC';
+			break;
+		case 'menu_order':
+			$query_args['orderby'] = 'menu_order';
 			$query_args['order'] = 'ASC';
 			break;
 	}
