@@ -1809,6 +1809,7 @@ function fsn_get_carousel_smart_gallery_items($atts = false) {
 			$item_atts['item_button'] = json_encode((object) array('link' => get_permalink($item->ID), 'label' => 'Learn more', 'attachedID' => $item->ID, 'type' => 'internal'));
 			$item_atts['image_id'] = get_post_thumbnail_id($item->ID);
 			$item_atts['item_id'] = $item->ID;
+			$item_atts = apply_filters('fsn_carousel_smart_item_atts', $item_atts, $item);
 			$output .= fsn_get_carousel_gallery_item($item_atts);
 		}
 	}
@@ -1829,6 +1830,7 @@ function fsn_get_carousel_gallery_item($atts = false, $content = false) {
 		if (empty($atts['item_headline'])) {
 			$atts['item_headline'] = get_the_title($atts['item_attached']);
 		}
+		$atts = apply_filters('fsn_carousel_linked_item_atts', $atts);
 	}
 	
 	if (!empty($atts['image_id'])) {
