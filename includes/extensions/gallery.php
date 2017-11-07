@@ -1830,6 +1830,7 @@ function fsn_get_carousel_gallery_item($atts = false, $content = false) {
 		if (empty($atts['item_headline'])) {
 			$atts['item_headline'] = get_the_title($atts['item_attached']);
 		}
+		$atts = apply_filters('fsn_carousel_linked_item_atts', $atts);
 	}
 	
 	if (!empty($atts['image_id'])) {
