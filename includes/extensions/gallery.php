@@ -262,7 +262,7 @@ class FusionGallery	{
 				$gallery_layout_options = array();
 				$smart_supported = array();
 				$layout_specific_params = array();
-				$gallery_layout_options[''] = __('Choose gallery layout.', 'fusion-extension-gallery');
+				$gallery_layout_options[''] = __('Choose gallery type.', 'fusion-extension-gallery');
 				foreach($gallery_layouts as $key => $value) {
 					//create array of layouts for select layout dropdown
 					$gallery_layout_options[$key] = $value['name'];
