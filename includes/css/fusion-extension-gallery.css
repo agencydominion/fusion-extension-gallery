@@ -554,6 +554,7 @@
 	left:50%;
 	padding-left:35px;
 	padding-right:35px;
+	-ms-transform:translateX(-50%);
 	-moz-transform:translateX(-50%);
 	-webkit-transform:translateX(-50%);
 	transform:translateX(-50%);
