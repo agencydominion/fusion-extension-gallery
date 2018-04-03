@@ -10,52 +10,52 @@
  *
  * @since 1.0.0
  */
- 
+
 class FusionGallery	{
 
 	public function __construct() {
-		
+
 		//add gallery field type
 		add_filter('fsn_input_types', array($this, 'add_gallery_field_type'), 10, 3);
-		
+
 		//add gallery shortcode
 		add_shortcode('fsn_gallery', array($this, 'gallery_shortcode'));
-		
+
 		//load gallery layout via AJAX
 		add_action('wp_ajax_gallery_load_layout', array($this, 'load_gallery_layout'));
-		
+
 		//load saved gallery layout fields
 		add_filter('fsn_element_params', array($this, 'load_saved_gallery_layout_fields'), 10, 3);
-		
+
 		//initialize gallery
 		add_action('init', array($this, 'init_gallery'), 12);
-		
+
 		//clean up gallery
 		add_action('wp_footer', array($this, 'cleanup_gallery'));
-		
+
 		//add gallery item shortcode
 		add_shortcode('fsn_gallery_item', array($this, 'gallery_item_shortcode'));
-		
+
 		//add new gallery item via AJAX
 		add_action('wp_ajax_gallery_add_item', array($this, 'add_gallery_item'));
-		
+
 		//disable wpautop on admin shortcode content output
 		add_filter('fsn_admin_shortcode_content_output', array($this, 'shortcode_content_unautop'), 10, 3);
-		
+
 		//add filter to clean gallery items shortcode
 		add_filter('fsn_clean_shortcodes', array($this, 'clean_gallery_shortcodes'));
-		
+
 		//add masthead layout
 		add_filter('add_gallery_layout', array($this, 'masthead_layout'));
-		
+
 		//add inline layout
 		add_filter('add_gallery_layout', array($this, 'inline_layout'));
-		
+
 		//add carousel layout
 		add_filter('add_gallery_layout', array($this, 'carousel_layout'));
-		
+
 	}
-	
+
 	/**
 	 * Add gallery input type
 	 *
@@ -66,12 +66,12 @@ class FusionGallery	{
 	 * @param string $param_value The saved parameter value
 	 * @return string The HTML for the input field(s)
 	 */
-	 
+
 	public function add_gallery_field_type($input, $param, $param_value = '') {
-		
+
 		if ($param['type'] == 'gallery') {
 			global $fsn_gallery_layouts;
-			
+
 			$input .= '<label for="fsn_'. esc_attr($param['param_name']) .'">'. esc_html($param['label']) .'</label>';
 			$input .= !empty($param['help']) ? '<p class="help-block">'. esc_html($param['help']) .'</p>' : '';
 			//drag and drop interface
@@ -88,34 +88,34 @@ class FusionGallery	{
 		    $input .= '<a href="#" class="button add-gallery-item">'. __('Add Item', 'fusion-extension-gallery') .'</a>';
 		    $input .= '<a href="#" class="button expand-all-gallery-items">'. __('Expand All', 'fusion-extension-gallery') .'</a>';
 		    $input .= '<a href="#" class="button collapse-all-gallery-items">'. __('Collapse All', 'fusion-extension-gallery') .'</a>';
-			
+
 		}
-		
+
 		return $input;
 	}
-	
+
 	/**
 	 * Load Gallery Layout
 	 *
 	 * @since 1.0.0
 	 */
-	 
+
 	public function load_gallery_layout() {
 		//verify nonce
 		check_ajax_referer( 'fsn-admin-edit-gallery', 'security' );
-		
+
 		//verify capabilities
 		if ( !current_user_can( 'edit_post', intval($_POST['post_id']) ) )
 			die( '-1' );
-			
+
 		global $fsn_gallery_layouts;
 		$gallery_layout = sanitize_text_field($_POST['gallery_layout']);
 		$response_array = array();
-		
+
 		if (!empty($fsn_gallery_layouts) && !empty($gallery_layout)) {
 			$response_array = array();
 			if (!empty($fsn_gallery_layouts[$gallery_layout]['params'])) {
-				foreach($fsn_gallery_layouts[$gallery_layout]['params'] as $param) {						
+				foreach($fsn_gallery_layouts[$gallery_layout]['params'] as $param) {
 					$param_value = '';
 					$param['section'] = !empty($param['section']) ? $param['section'] : 'general';
 					//check for dependency
@@ -143,24 +143,24 @@ class FusionGallery	{
 				}
 			}
 		}
-		
+
 		header('Content-type: application/json');
-		
+
 		echo json_encode($response_array);
-		
+
 		exit;
 	}
-	
+
 	/**
 	 * Load Saved Gallery Layout Fields
 	 *
 	 * @since 1.0.0
 	 */
-	 
+
 	public function load_saved_gallery_layout_fields($params, $shortcode, $saved_values) {
-	
+
 		global $fsn_gallery_layouts;
-		
+
 		if ($shortcode == 'fsn_gallery' && !empty($saved_values['gallery-layout']) && array_key_exists($saved_values['gallery-layout'], $fsn_gallery_layouts)) {
 			$saved_layout = $saved_values['gallery-layout'];
 			$params_to_add = !empty($fsn_gallery_layouts[$saved_layout]['params']) ? $fsn_gallery_layouts[$saved_layout]['params'] : '';
@@ -176,41 +176,41 @@ class FusionGallery	{
 				array_splice($params, 1, 0, $params_to_add);
 			}
 		}
-		
+
 		return $params;
 	}
-	
+
 	/**
 	 * Initialize Gallery
 	 *
 	 * @since 1.0.0
 	 */
-	 
+
 	public function init_gallery() {
-	
+
 		//MAP SHORTCODE
-		if (function_exists('fsn_map')) {							
-			
+		if (function_exists('fsn_map')) {
+
 			//define gallery layouts
 			$gallery_layouts = array();
-			
+
 			//get layouts
 			$gallery_layouts = apply_filters('add_gallery_layout', $gallery_layouts);
-			
+
 			//create gallery layouts global
 			global $fsn_gallery_layouts;
 			$fsn_gallery_layouts = $gallery_layouts;
-			
+
 			//pass layouts array to script
 			wp_localize_script('fsn_gallery', 'fsnGallery', $gallery_layouts);
-			
-			//get registered post types		
+
+			//get registered post types
 			$post_types = get_post_types(array('public' => true));
 			unset($post_types['attachment']);
 			unset($post_types['component']);
 			unset($post_types['template']);
 			$post_types = apply_filters('fsn_smart_gallery_posttypes', $post_types);
-			
+
 			$post_type_options = array();
 			$post_type_options[''] = __('Choose post type.', 'fusion-extension-gallery');
 			$post_type_options['all'] = __('All', 'fusion-extension-gallery');
@@ -224,14 +224,14 @@ class FusionGallery	{
 			unset($taxonomies['link_category']);
 			unset($taxonomies['post_format']);
 			$taxonomies = apply_filters('fsn_smart_gallery_taxonomies', $taxonomies);
-			
+
 			global $fsn_gallery_taxonomy_atts;
 			$fsn_gallery_taxonomy_atts = array();
 			$taxonomy_params = array();
 			foreach($taxonomies as $taxonomy) {
 				$fsn_gallery_taxonomy_atts[] = $taxonomy;
 				$taxonomy_object = get_taxonomy($taxonomy);
-				$taxonomy_terms = get_terms($taxonomy);			
+				$taxonomy_terms = get_terms($taxonomy);
 				if (!empty($taxonomy_terms)) {
 					$taxonomy_term_options = array();
 					$taxonomy_term_options[''] = __('Choose term.', 'fusion-extension-gallery');
@@ -245,18 +245,18 @@ class FusionGallery	{
 						'param_name' => $taxonomy,
 						'class' => 'taxonomy',
 						'hidden_empty' => true,
-						'options' => $taxonomy_term_options,					
+						'options' => $taxonomy_term_options,
 						'label' => __($taxonomy_object->labels->name, 'fusion-extension-gallery'),
 						'help' => __('Choose '. $taxonomy_object->labels->name .' to filter gallery by.', 'fusion-extension-gallery'),
 							'dependency' => array(
 							'param_name' => 'gallery_type',
 							'value' => 'smart'
 						)
-					);	
-				}			
+					);
+				}
 			}
 			$fsn_taxonomy_params = $taxonomy_params;
-			
+
 			//get gallery layout options
 			if (!empty($gallery_layouts)) {
 				$gallery_layout_options = array();
@@ -272,14 +272,14 @@ class FusionGallery	{
 					}
 				}
 			}
-			
+
 			//gallery type options
 			$gallery_type_options = array(
 				'manual' => __('Hand Picked', 'fusion-extension-gallery'),
 				'smart' => __('Smart', 'fusion-extension-gallery')
 			);
 			$gallery_type_options = apply_filters('fsn_gallery_type_options', $gallery_type_options);
-			
+
 			//smart order options
 			$smart_order_options = array(
 				'recent' => __('Most Recent', 'fusion-extension-gallery'),
@@ -287,7 +287,7 @@ class FusionGallery	{
 				'menu_order' => __('Page Order', 'fusion-extension-gallery')
 			);
 			$smart_order_options = apply_filters('fsn_smart_gallery_order_options', $smart_order_options);
-			
+
 			$smart_params = array(
 				array(
 					'type' => 'select',
@@ -321,7 +321,7 @@ class FusionGallery	{
 					)
 				),
 				array(
-					'type' => 'select',				
+					'type' => 'select',
 					'param_name' => 'post_type',
 					'options' => $post_type_options,
 					'label' => __('Post Type', 'fusion-extension-gallery'),
@@ -331,12 +331,12 @@ class FusionGallery	{
 					)
 				)
 			);
-			
+
 			$smart_params = apply_filters('fsn_smart_params_array', $smart_params);
-			
+
 			$combined_params = array_merge_recursive($smart_params, $taxonomy_params);
-			
-			$params_array = array(		
+
+			$params_array = array(
 				array(
 					'type' => 'select',
 					'options' => $gallery_layout_options,
@@ -355,10 +355,10 @@ class FusionGallery	{
 					)
 				)
 			);
-			
+
 			//splice in taxonomy options
 			array_splice($params_array, 1, 0, $combined_params);
-			
+
 			fsn_map(array(
 				'name' => __('Gallery', 'fusion-extension-gallery'),
 				'shortcode_tag' => 'fsn_gallery',
@@ -369,18 +369,18 @@ class FusionGallery	{
 			));
 		}
 	}
-	
+
 	/**
 	 * Cleanup Gallery
 	 *
 	 * @since 1.1.5
 	 *
 	 */
-	 
+
 	public function cleanup_gallery() {
 		unset($GLOBALS['fsn_gallery_taxonomy_atts']);
 	}
-	
+
 	/**
 	 * Gallery shortcode
 	 *
@@ -389,17 +389,17 @@ class FusionGallery	{
 	 * @param array $atts The shortcode attributes.
 	 * @param string $content The shortcode content.
 	 */
-	
-	public function gallery_shortcode( $atts, $content ) {		
-		extract( shortcode_atts( array(			
+
+	public function gallery_shortcode( $atts, $content ) {
+		extract( shortcode_atts( array(
 			'gallery_layout' => false,
 			'gallery_type' => 'manual'
 		), $atts ) );
-		
+
 		/**
 		 * Enqueue Scripts
 		 */
-		 
+
 		//flexslider
 		wp_enqueue_script('flexslider');
 		//photoswipe
@@ -407,9 +407,9 @@ class FusionGallery	{
 		wp_enqueue_script('photoswipe_ui');
 		//plugin
 		wp_enqueue_script('fsn_gallery');
-		
+
 		$output = '';
-		
+
 		if (!empty($gallery_layout)) {
 			$output .= '<div class="fsn-gallery '. fsn_style_params_class($atts) .'">';
 				$callback_function = 'fsn_get_'. sanitize_text_field($gallery_layout) .'_gallery';
@@ -417,6 +417,8 @@ class FusionGallery	{
 				ob_start();
 				do_action('fsn_before_gallery', $atts);
 				$output .= ob_get_clean();
+        //filter gallery content
+        $content = apply_filters('fsn_gallery_filter_content', $content, $atts);
 				//get gallery
 				$output .= call_user_func($callback_function, $atts, $content);
 				//after gallery action hook
@@ -425,10 +427,10 @@ class FusionGallery	{
 				$output .= ob_get_clean();
 			$output .= '</div>';
 		}
-		
+
 		return $output;
 	}
-	
+
 	/**
 	 * Gallery item shortcode
 	 *
@@ -437,12 +439,12 @@ class FusionGallery	{
 	 * @param array $atts The shortcode attributes.
 	 * @param string $content The shortcode content.
 	 */
-	
+
 	public function gallery_item_shortcode( $atts, $content ) {
 		global $fsn_gallery_layouts;
 		$gallery_layouts = $fsn_gallery_layouts;
 		$selected_layout = $atts['gallery_layout'];
-		
+
 		//if running AJAX, get action being run
 		$ajax_action = false;
 		if (defined('DOING_AJAX') && DOING_AJAX) {
@@ -450,11 +452,11 @@ class FusionGallery	{
 				$ajax_action = sanitize_text_field($_POST['action']);
 			}
 		}
-		
+
 		if ( is_admin() && (!defined('DOING_AJAX') || !DOING_AJAX || (!empty($ajax_action) && $ajax_action == 'load_template') || (!empty($ajax_action) && $ajax_action == 'fsn_gallery_modal')) ) {
 			$uniqueID = uniqid();
 			$output = '';
-			$output .= '<div class="gallery-item collapse-active">';					
+			$output .= '<div class="gallery-item collapse-active">';
 				$output .= '<div class="gallery-item-details">';
 					if (!empty($fsn_gallery_layouts[$selected_layout])) {
 						foreach($gallery_layouts[$selected_layout]['item_params'] as $param) {
@@ -503,37 +505,37 @@ class FusionGallery	{
 		    		$output .= '<a href="#" class="remove-gallery-item">'. __('remove', 'fusion-extension-gallery') .'</a>';
 	    		$output .= '</div>';
 			$output .= '</div>';
-			
+
 		} else {
 			$output = '';
 			$callback_function = 'fsn_get_'. sanitize_text_field($selected_layout) .'_gallery_item';
 			$output .= call_user_func($callback_function, $atts, $content);
 		}
-		
+
 		return $output;
 	}
-	
+
 	/**
 	 * Add gallery item
 	 *
 	 * @since 1.0.0
 	 */
-	 
+
 	public function add_gallery_item() {
 		//verify nonce
 		check_ajax_referer( 'fsn-admin-edit-gallery', 'security' );
-		
+
 		//verify capabilities
 		if ( !current_user_can( 'edit_post', intval($_POST['post_id']) ) )
 			die( '-1' );
-			
+
 		global $fsn_gallery_layouts;
 		$gallery_layout = sanitize_text_field($_POST['gallery_layout']);
 		$uniqueID = uniqid();
-		echo '<div class="gallery-item">';		
+		echo '<div class="gallery-item">';
 			echo '<div class="gallery-item-details">';
 				if (!empty($fsn_gallery_layouts) && !empty($gallery_layout)) {
-					foreach($fsn_gallery_layouts[$gallery_layout]['item_params'] as $param) {						
+					foreach($fsn_gallery_layouts[$gallery_layout]['item_params'] as $param) {
 						$param_value = '';
 						$param['param_name'] = (!empty($param['param_name']) ? $param['param_name'] : '') . '-paramid'. $uniqueID;
 						$param['nested'] = true;
@@ -563,13 +565,13 @@ class FusionGallery	{
 		echo '</div>';
 		exit;
 	}
-	
+
 	/**
 	 * Remove wpautop processing
 	 *
 	 * @since 1.0.0
 	 */
-	
+
 	public function shortcode_content_unautop($autop_content, $shortcode_tag, $content) {
 		if (has_shortcode($content, 'fsn_gallery_item')) {
 			return $content;
@@ -577,7 +579,7 @@ class FusionGallery	{
 			return $autop_content;
 		}
 	}
-	
+
 	/**
 	 * Clean Gallery Shortcodes
 	 *
@@ -585,16 +587,16 @@ class FusionGallery	{
 	 *
 	 * @param array $shortcodes_to_clean The array of shortcodes to clean.
 	 */
-	 
+
 	public function clean_gallery_shortcodes($shortcodes_to_clean) {
 		$shortcodes_to_clean[] = 'fsn_gallery_item';
 		return $shortcodes_to_clean;
 	}
-	
+
 	/**
 	 * Masthead layout
 	 */
-	 
+
 	public function masthead_layout($gallery_layouts) {
 		$masthead_layout = array(
 			'name' => __('Masthead', 'fusion-extension-gallery'),
@@ -841,14 +843,14 @@ class FusionGallery	{
 			)
 		);
 		$gallery_layouts['masthead'] = $masthead_layout;
-		
+
 		return $gallery_layouts;
 	}
-	
+
 	/**
 	 * Inline layout
 	 */
-	 
+
 	public function inline_layout($gallery_layouts) {
 		$inline_layout = array(
 			'name' => __('Inline', 'fusion-extension-gallery'),
@@ -891,24 +893,24 @@ class FusionGallery	{
 			)
 		);
 		$gallery_layouts['inline'] = $inline_layout;
-		
+
 		return $gallery_layouts;
 	}
-	
+
 	/**
 	 * Carousel layout
 	 */
-	 
+
 	public function carousel_layout($gallery_layouts) {
-		
+
 		$image_sizes_array = fsn_get_image_sizes();
-		
+
 		//get registered post types
-		$post_types = get_post_types(array('public' => true));		
+		$post_types = get_post_types(array('public' => true));
 		unset($post_types['attachment']);
 		unset($post_types['component']);
 		unset($post_types['template']);
-		
+
 		//carousel layout
 		$carousel_layout = array(
 			'name' => __('Carousel', 'fusion-extension-gallery'),
@@ -1076,12 +1078,12 @@ class FusionGallery	{
 			)
 		);
 		$gallery_layouts['carousel'] = $carousel_layout;
-		
+
 		return $gallery_layouts;
 	}
- 
+
 }
- 
+
 $fsn_gallery = new FusionGallery();
 
 /**
@@ -1090,7 +1092,7 @@ $fsn_gallery = new FusionGallery();
 
 add_action( 'wp_ajax_nopriv_gallery-lazy-load', 'fsn_get_gallery_image' );
 add_action( 'wp_ajax_gallery-lazy-load', 'fsn_get_gallery_image' );
- 
+
 function fsn_get_gallery_image() {
     // get the submitted parameters
     $viewport = sanitize_text_field($_POST['viewport']);
@@ -1101,12 +1103,12 @@ function fsn_get_gallery_image() {
 	//load dynamic image
 	$load_desktop_size = $viewport == 'desktop' ? true : false;
 	$image_element = fsn_get_dynamic_image($attachmentID, $classes, $image_size_desktop, $image_size_mobile, $load_desktop_size);
-	
+
     echo $image_element;
- 
+
     exit;
 }
- 
+
 /**
  * Gallery Layouts
  */
@@ -1141,7 +1143,7 @@ function fsn_get_masthead_gallery($atts = false, $content = false) {
 		)
 	);
 	$gallery_dimensions_defaults = apply_filters('fsn_masthead_default_dimensions', $gallery_dimensions_defaults, $atts);
-	
+
 	extract( shortcode_atts( array(
 		'width_unit' => 'default',
 		'width_percent' => $gallery_dimensions_defaults['galleryWidth']['percent'],
@@ -1160,16 +1162,16 @@ function fsn_get_masthead_gallery($atts = false, $content = false) {
 		'overlay_color' => '#000000',
 		'overlay_color_opacity' => '0.3',
 	), $atts ) );
-	
+
 	$output = '';
-		
+
 	if (!empty($content)) {
 		global $fsn_masthead_item_layout, $fsn_masthead_photoswipe_array, $fsn_masthead_item_counter;
 		$gallery_id = uniqid();
-		
+
 		//build classes
 		$classes_array = array();
-			
+
 		//filter for adding classes
 		$classes_array = apply_filters('fsn_masthead_classes', $classes_array, $atts);
 		if (!empty($classes_array)) {
@@ -1204,10 +1206,10 @@ function fsn_get_masthead_gallery($atts = false, $content = false) {
 				'pixels' => $height_pixels_xs
 			)
 		);
-		
+
 		//set dimensions
 		FusionMastheadStyles::get_instance()->add_gallery($gallery_id, $gallery_dimensions);
-		
+
 		//gallery overlay
 		if (!empty($enable_overlay)) {
 			$gallery_overlay = array(
@@ -1215,7 +1217,7 @@ function fsn_get_masthead_gallery($atts = false, $content = false) {
 				'colorOpacity' => $overlay_color_opacity,
 			);
 		}
-		
+
 		$output .= '<div class="masthead-container'. (!empty($combined_classes) ? ' '. esc_attr($combined_classes) : '') .'">';
 			if (!empty($enable_fullscreen)) {
 				$fsn_masthead_photoswipe_array = array();
@@ -1228,9 +1230,9 @@ function fsn_get_masthead_gallery($atts = false, $content = false) {
 						//trigger gallery open
 						jQuery('.masthead[data-gallery-id="<?php echo esc_attr($gallery_id); ?>"]').on('click', '.fullscreen-trigger', function() {
 							var items = <?php echo json_encode($fsn_masthead_photoswipe_array); ?>;
-							
+
 							var pswpElement = document.querySelectorAll('.pswp')[0];
-							
+
 							//get first slide
 							var currentGallery = jQuery(this).closest('.masthead');
 							var allImages = currentGallery.find('.slide').not('.video');
@@ -1240,18 +1242,18 @@ function fsn_get_masthead_gallery($atts = false, $content = false) {
 							}
 							var firstSlide = 0;
 							firstSlide = allImages.index(activeImage);
-							
+
 							// define options (if needed)
 							var options = {
 							    index: firstSlide,
 							    closeOnScroll: false,
 							    showHideOpacity: true
 							};
-							
+
 							// Initializes and opens PhotoSwipe
 							var gallery<?php echo esc_attr($gallery_id); ?>  = new PhotoSwipe( pswpElement, PhotoSwipeUI_Default, items, options);
-							gallery<?php echo esc_attr($gallery_id); ?>.init();							
-						});						
+							gallery<?php echo esc_attr($gallery_id); ?>.init();
+						});
 					});
 				</script>
 				<?php
@@ -1264,7 +1266,7 @@ function fsn_get_masthead_gallery($atts = false, $content = false) {
 				$fsn_masthead_item_layout = 'masthead_placeholder';
 				$fsn_masthead_item_counter = 0;
 				$output .= do_shortcode($content);
-				
+
 				//set slides content as JS variable
 				$deferred_output = '<ul class="slides">';
 					$fsn_masthead_item_layout = 'masthead_item';
@@ -1296,11 +1298,11 @@ function fsn_get_masthead_gallery($atts = false, $content = false) {
 			do_action('fsn_after_masthead', $atts);
 			$output .= ob_get_clean();
 		$output .= '</div>';
-		//unset globals		
+		//unset globals
 		unset($GLOBALS['fsn_masthead_photoswipe_array']);
 		unset($GLOBALS['fsn_masthead_item_layout']);
 		unset($GLOBALS['fsn_masthead_item_counter']);
-	}	
+	}
 	return $output;
 }
 
@@ -1322,7 +1324,7 @@ function fsn_get_masthead_gallery_item($atts = false, $content = false) {
 			$gallery_item_subheadline = !empty($atts['item_subheadline']) ? $atts['item_subheadline'] : '';
 			$gallery_item_description = !empty($atts['item_description']) ? $atts['item_description'] : '';
 			$gallery_item_button = !empty($atts['item_button']) ? $atts['item_button'] : '';
-			
+
 			if (!empty($gallery_item_button)) {
 				$button_object = fsn_get_button_object($gallery_item_button);
 			}
@@ -1338,7 +1340,7 @@ function fsn_get_masthead_gallery_item($atts = false, $content = false) {
 					$output .= ob_get_clean();
 					$output .= '<div class="masthead-item-content">';
 						$item_content_output = '';
-						if (!empty($gallery_item_logo_id)) {				
+						if (!empty($gallery_item_logo_id)) {
 							//get image
 							$attachment_attrs = wp_get_attachment_image_src( $gallery_item_logo_id, 'full' );
 							$attachment_alt = get_post_meta($gallery_item_logo_id, '_wp_attachment_image_alt', true);
@@ -1347,7 +1349,7 @@ function fsn_get_masthead_gallery_item($atts = false, $content = false) {
 							$item_content_output .= '<img src="'. esc_url($attachment_attrs[0]) .'" width="'. $attachment_width .'" height="'. $attachment_height .'" alt="'. esc_attr($attachment_alt) .'" class="gallery-item-logo" style="width:'. $attachment_width .'px;height:'. $attachment_height .'px;">';
 						}
 						$item_content_output .= !empty($gallery_item_headline) ? '<h2 class="gallery-item-headline">' . esc_html($gallery_item_headline) . '</h2>' : '';
-						$item_content_output .= !empty($gallery_item_subheadline) ? '<h3 class="gallery-item-subheadline">' . esc_html($gallery_item_subheadline) . '</h3>' : ''; 
+						$item_content_output .= !empty($gallery_item_subheadline) ? '<h3 class="gallery-item-subheadline">' . esc_html($gallery_item_subheadline) . '</h3>' : '';
 						$item_content_output .= !empty($gallery_item_description) ? '<div class="gallery-item-desc">'. do_shortcode($gallery_item_description) .'</div>' : '';
 						if (!empty($button_object)) {
 							$button_classes = apply_filters('fsn_masthead_button_class', 'gallery-item-button', $atts);
@@ -1379,8 +1381,8 @@ function fsn_get_masthead_gallery_item($atts = false, $content = false) {
 			$atts['image_id'] = !empty($atts['video_poster']) ? $atts['video_poster'] : '';
 			$attachment = get_post($atts['video_id']);
 			$attachment_meta = wp_get_attachment_metadata($atts['video_id']);
-			$poster_image_attrs = !empty($atts['video_poster']) ? wp_get_attachment_image_src( $atts['video_poster'], 'masthead-desktop' ) : ''; 
-			if ($attachment_meta['fileformat'] == 'mp4') {				
+			$poster_image_attrs = !empty($atts['video_poster']) ? wp_get_attachment_image_src( $atts['video_poster'], 'masthead-desktop' ) : '';
+			if ($attachment_meta['fileformat'] == 'mp4') {
 				$mp4_src = wp_get_attachment_url($atts['video_id']);
 				$video_id = uniqid();
 				$video_element = '<video id="video_'. esc_attr($video_id) .'" class="video-element" preload="auto" width="'. esc_attr($attachment_meta['width']) .'" height="'. esc_attr($attachment_meta['height']) .'"'. (!empty($poster_image_attrs) ? ' poster="'. esc_attr($poster_image_attrs[0]) .'"' : '') .' loop muted>';
@@ -1390,8 +1392,8 @@ function fsn_get_masthead_gallery_item($atts = false, $content = false) {
 		} elseif ($atts['media_type'] == 'image' && !empty($atts['image_id'])) {
 			//IMAGE
 			$attachment = get_post($atts['image_id']);
-		} 
-		
+		}
+
 		$gallery_item_logo_id = !empty($atts['item_logo_id']) ? $atts['item_logo_id'] : '';
 		$gallery_item_headline = !empty($atts['item_headline']) ? $atts['item_headline'] : '';
 		$gallery_item_subheadline = !empty($atts['item_subheadline']) ? $atts['item_subheadline'] : '';
@@ -1435,7 +1437,7 @@ function fsn_get_masthead_gallery_item($atts = false, $content = false) {
 				$output .= ob_get_clean();
 				$output .= '<div class="masthead-item-content">';
 					$item_content_output = '';
-					if (!empty($gallery_item_logo_id)) {				
+					if (!empty($gallery_item_logo_id)) {
 						//get image
 						$attachment_attrs = wp_get_attachment_image_src( $gallery_item_logo_id, 'full' );
 						$attachment_alt = get_post_meta($gallery_item_logo_id, '_wp_attachment_image_alt', true);
@@ -1444,7 +1446,7 @@ function fsn_get_masthead_gallery_item($atts = false, $content = false) {
 						$item_content_output .= '<img src="'. esc_url($attachment_attrs[0]) .'" width="'. $attachment_width .'" height="'. $attachment_height .'" alt="'. esc_attr($attachment_alt) .'" class="gallery-item-logo" style="width:'. $attachment_width .'px;height:'. $attachment_height .'px;">';
 					}
 					$item_content_output .= !empty($gallery_item_headline) ? '<h2 class="gallery-item-headline">' . esc_html($gallery_item_headline) . '</h2>' : '';
-					$item_content_output .= !empty($gallery_item_subheadline) ? '<h3 class="gallery-item-subheadline">' . esc_html($gallery_item_subheadline) . '</h3>' : ''; 
+					$item_content_output .= !empty($gallery_item_subheadline) ? '<h3 class="gallery-item-subheadline">' . esc_html($gallery_item_subheadline) . '</h3>' : '';
 					$item_content_output .= !empty($gallery_item_description) ? '<div class="gallery-item-desc">'. do_shortcode($gallery_item_description) .'</div>' : '';
 					if (!empty($button_object)) {
 						$button_classes = apply_filters('fsn_masthead_button_class', 'gallery-item-button', $atts);
@@ -1460,7 +1462,7 @@ function fsn_get_masthead_gallery_item($atts = false, $content = false) {
 			do_action('fsn_append_masthead_item', $atts);
 			$output .= ob_get_clean();
 			$fsn_masthead_item_counter++;
-		$output .= '</li>';		
+		$output .= '</li>';
 	} elseif ($fsn_masthead_item_layout == 'photoswipe_item') {
 		if (empty($atts['media_type']) || $detect->isMobile()) {
 			$atts['media_type'] = 'image';
@@ -1490,7 +1492,7 @@ function fsn_get_masthead_gallery_item($atts = false, $content = false) {
 //INLINE
 
 //add image sizes
-if ( function_exists( 'add_image_size' ) ) { 
+if ( function_exists( 'add_image_size' ) ) {
 	add_image_size('inline-mobile', 640, 480);
 	add_image_size('inline-desktop', 948, 500);
 	add_image_size('inline-thumb-mobile', 172, 113, true);
@@ -1505,13 +1507,13 @@ function fsn_get_inline_gallery($atts = false, $content = false) {
 		'enable_slideshow' => false,
 		'slideshow_speed' => false
 	), $atts ) );
-	
+
 	$output = '';
-		
+
 	if (!empty($content)) {
 		$gallery_id = uniqid();
 		global $fsn_inline_switch, $fsn_inline_photoswipe_array, $fsn_inline_item_counter;
-		
+
 		$output .= '<div class="inline-container">';
 			$output .= '<aside class="flexslider inline" data-gallery-id="'. esc_attr($gallery_id) .'"'. (!empty($enable_slideshow) ? ' data-gallery-auto="true"' : '') . (!empty($slideshow_speed) ? ' data-gallery-speed="'. esc_attr($slideshow_speed) .'"' : '') . (!empty($enable_thumbnails) ? ' data-gallery-thumbs="true"' : '') .'>';
 				if (!empty($enable_fullscreen)) {
@@ -1525,27 +1527,27 @@ function fsn_get_inline_gallery($atts = false, $content = false) {
 							//trigger gallery open
 							jQuery('.inline[data-gallery-id="<?php echo esc_attr($gallery_id); ?>"]').on('click', '.fullscreen-trigger', function() {
 								var items = <?php echo json_encode($fsn_inline_photoswipe_array); ?>;
-								
+
 								var pswpElement = document.querySelectorAll('.pswp')[0];
-								
+
 								//get first slide
 								var currentGallery = jQuery(this).closest('.inline');
 								var allImages = currentGallery.find('.slide');
 								var activeImage = currentGallery.find('.flex-active-slide');
 								var firstSlide = 0;
 								firstSlide = allImages.index(activeImage);
-								
+
 								// define options (if needed)
 								var options = {
 								    index: firstSlide,
 								    closeOnScroll: false,
 								    showHideOpacity: true
 								};
-								
+
 								// Initializes and opens PhotoSwipe
 								var gallery<?php echo esc_attr($gallery_id); ?>  = new PhotoSwipe( pswpElement, PhotoSwipeUI_Default, items, options);
-								gallery<?php echo esc_attr($gallery_id); ?>.init();							
-							});						
+								gallery<?php echo esc_attr($gallery_id); ?>.init();
+							});
 						});
 					</script>
 					<?php
@@ -1554,7 +1556,7 @@ function fsn_get_inline_gallery($atts = false, $content = false) {
 				$fsn_inline_switch = 'placeholder';
 				$fsn_inline_item_counter = 0;
 				$output .= do_shortcode($content);
-				
+
 				//set slides content as JS variable
 				$deferred_output = '<ul class="slides">';
 					$fsn_inline_switch = 'main_image';
@@ -1590,7 +1592,7 @@ function fsn_get_inline_gallery($atts = false, $content = false) {
 	unset($GLOBALS['fsn_inline_switch']);
 	unset($GLOBALS['fsn_inline_item_counter']);
 	unset($GLOBALS['fsn_inline_photoswipe_array']);
-	
+
 	return $output;
 }
 
@@ -1601,7 +1603,7 @@ function fsn_get_inline_gallery_item($atts = false, $content = false) {
 	if ($fsn_inline_switch == 'photoswipe_item') {
 		global $fsn_inline_photoswipe_array;
 		$attachment = get_post($atts['image_id']);
-		$attachment_attrs = wp_get_attachment_image_src( $attachment->ID, 'hi-res' );				
+		$attachment_attrs = wp_get_attachment_image_src( $attachment->ID, 'hi-res' );
 		$gallery_item_description = apply_filters('fsn_inline_item_photoswipe_caption', $attachment->post_excerpt, $atts);
 		$fsn_inline_photoswipe_array[] = array(
 			'src' => esc_url($attachment_attrs[0]),
@@ -1622,7 +1624,7 @@ function fsn_get_inline_gallery_item($atts = false, $content = false) {
 			$fsn_inline_item_counter++;
 			return $output;
 		}
-	} else {	
+	} else {
 		switch($fsn_inline_switch) {
 			case 'main_image':
 				$image_size = 'inline';
@@ -1631,7 +1633,7 @@ function fsn_get_inline_gallery_item($atts = false, $content = false) {
 				$image_size = 'inline-thumb';
 				$atts['lazy_load'] = false;
 				break;
-		}	
+		}
 		$output = '';
 		$output .= '<li class="slide"'. (!empty($atts['lazy_load']) ? ' data-lazy-load="true" data-image-id="'. esc_attr($atts['image_id']) .'" data-image-size-desktop="'. esc_attr($image_size) .'-desktop" data-image-size-mobile="'. esc_attr($image_size) .'-mobile"' : '') .'>';
 			if (empty($atts['lazy_load'])) {
@@ -1642,8 +1644,8 @@ function fsn_get_inline_gallery_item($atts = false, $content = false) {
 					$output .= '<span id="bubblingG_2"></span>';
 					$output .= '<span id="bubblingG_3"></span>';
 				$output .= '</div>';
-			}		
-			if ($fsn_inline_switch == 'main_image') {	
+			}
+			if ($fsn_inline_switch == 'main_image') {
 				ob_start();
 				do_action('fsn_after_inline_image', $atts);
 				$output .= ob_get_clean();
@@ -1657,7 +1659,7 @@ function fsn_get_inline_gallery_item($atts = false, $content = false) {
 //CAROUSEL LAYOUT
 
 //add image sizes
-if ( function_exists( 'add_image_size' ) ) { 
+if ( function_exists( 'add_image_size' ) ) {
 	add_image_size('carousel-mobile', 640, 426, true);
 	add_image_size('carousel-desktop', 555, 369, true);
 }
@@ -1666,7 +1668,7 @@ if ( function_exists( 'add_image_size' ) ) {
 function fsn_get_carousel_gallery($atts = false, $content = false) {
 	global $fsn_carousel_item_layout, $fsn_carousel_view_options;
 	$output = '';
-	
+
 	$fsn_carousel_view_options['image'] = !empty($atts['show_image']) ? true : false;
 	$fsn_carousel_view_options['headline'] = !empty($atts['show_headline']) ? true : false;
 	$fsn_carousel_view_options['image_size'] = !empty($atts['image_size']) ? $atts['image_size'] : 'carousel-desktop';
@@ -1679,7 +1681,7 @@ function fsn_get_carousel_gallery($atts = false, $content = false) {
 		$fsn_carousel_view_options['description'] = true;
 		$fsn_carousel_view_options['button'] = true;
 	}
-	
+
 	$gallery_id = uniqid();
 	$carousel_container_class = apply_filters('fsn_gallery_carousel_container_class', 'carousel-container', $atts);
 	$output .= '<div'. (!empty($carousel_container_class) ? ' class="'. esc_attr($carousel_container_class) .'"' : '') .'>';
@@ -1698,7 +1700,7 @@ function fsn_get_carousel_gallery($atts = false, $content = false) {
 				$output .= '</ul>';
 				$output .= '<div class="carousel-controls-container"><div class="carousel-controls controls-'. esc_attr($gallery_id) .'"></div></div>';
 			$output .= '</div>';
-			
+
 			//mobile gallery
 			$output .= '<div class="carousel-mobile flexslider visible-xs" data-gallery-id="'. esc_attr($gallery_id) .'" '. (!empty($atts['pager']) ? ' data-pager="'. esc_attr($atts['pager']) .'"' : ' data-pager="1"') . (!empty($atts['controls_mobile']) ? ' data-controls="'. esc_attr($atts['controls_mobile']) .'"' : ' data-controls="paging"') . (!empty($atts['enable_slideshow']) ? ' data-slideshow="enabled"' : '') . (!empty($atts['slideshow_speed']) ? ' data-gallery-speed="'. esc_attr($atts['slideshow_speed']) .'"' : '') .'>';
 				$output .= '<ul class="slides">';
@@ -1713,30 +1715,30 @@ function fsn_get_carousel_gallery($atts = false, $content = false) {
 					}
 				$output .= '</ul>';
 			$output .= '</div>';
-			
+
         $output .= '</div>';
 	$output .= '</div>';
-	
+
 	//unset globals
 	unset($GLOBALS['fsn_carousel_item_layout']);
 	unset($GLOBALS['fsn_carousel_view_options']);
-		
+
 	return $output;
 }
 
 //get smart gallery items for carousel layout
 function fsn_get_carousel_smart_gallery_items($atts = false) {
 	global $post;
-	
-	extract( shortcode_atts( array(			
+
+	extract( shortcode_atts( array(
 		'post_type' => '',
 		'item_count' => 12,
 		'item_order' => ''
 	), $atts ) );
-	
+
 	//narrow down to taxonomies
 	global $fsn_gallery_taxonomy_atts;
-	
+
 	$taxonomy_atts = array();
 	if (!empty($fsn_gallery_taxonomy_atts)) {
 		foreach($atts as $key => $value) {
@@ -1745,7 +1747,7 @@ function fsn_get_carousel_smart_gallery_items($atts = false) {
 			}
 		}
 	}
-	
+
 	//if not set, use all post type options
 	if (empty($post_type) || $post_type == 'all') {
 		$post_types = get_post_types(array('public' => true));
@@ -1755,14 +1757,14 @@ function fsn_get_carousel_smart_gallery_items($atts = false) {
 		unset($post_types['template']);
 		$post_type = $post_types;
 	}
-	
+
 	//set query args
 	$query_args = array();
 	$query_args['posts_per_page'] = intval($item_count);
 	$query_args['post_type'] = $post_type;
 	//exclude current post
 	$query_args['post__not_in'] = array($post->ID);
-			
+
 	//set order
 	switch($item_order) {
 		case 'recent':
@@ -1777,11 +1779,11 @@ function fsn_get_carousel_smart_gallery_items($atts = false) {
 			$query_args['order'] = 'ASC';
 			break;
 	}
-	
+
 	//taxonomy filtering
 	if (!empty($taxonomy_atts)) {
 		$tax_query_array = array('relation' => 'AND');
-		foreach($taxonomy_atts as $key => $value) {			
+		foreach($taxonomy_atts as $key => $value) {
 			$query_tax_slug = $key;
 			$query_tax_term = get_term_by('slug', $value, $key);
 			$query_tax_term_id = $query_tax_term->term_id;
@@ -1791,16 +1793,16 @@ function fsn_get_carousel_smart_gallery_items($atts = false) {
 				'terms' => $query_tax_term_id
 			);
 		}
-		$query_args['tax_query'] = $tax_query_array;		
+		$query_args['tax_query'] = $tax_query_array;
 	}
-	
+
 	$query_args = apply_filters('fsn_carousel_smart_query_args', $query_args, $atts);
-	
+
 	//get items
 	$items = get_posts($query_args);
-	
+
 	$output = '';
-	
+
 	if (!empty($items)) {
 		foreach ($items as $item) {
 			$item_atts = array();
@@ -1813,14 +1815,14 @@ function fsn_get_carousel_smart_gallery_items($atts = false) {
 			$output .= fsn_get_carousel_gallery_item($item_atts);
 		}
 	}
-	
+
 	return $output;
 }
 
 //render gallery item ** function name must follow fsn_get_[gallery layout key]_gallery_item
 function fsn_get_carousel_gallery_item($atts = false, $content = false) {
 	global $fsn_carousel_item_layout, $fsn_carousel_view_options;
-	
+
 	//item meta
 	//linked piece of content
 	if (!empty($atts['item_type']) && !empty($atts['item_attached'])) {
@@ -1832,14 +1834,14 @@ function fsn_get_carousel_gallery_item($atts = false, $content = false) {
 		}
 		$atts = apply_filters('fsn_carousel_linked_item_atts', $atts);
 	}
-	
+
 	if (!empty($atts['image_id'])) {
 		$image_output = '';
 		//before carousel item attachment action hook
 		ob_start();
 		do_action('fsn_before_get_carousel_item_attachment');
 		$image_output .= ob_get_clean();
-		
+
 		$attachment = get_post($atts['image_id']);
 		switch ($fsn_carousel_item_layout) {
 			case 'desktop':
@@ -1851,7 +1853,7 @@ function fsn_get_carousel_gallery_item($atts = false, $content = false) {
 		}
 		$attachment_attrs = wp_get_attachment_image_src( $attachment->ID, $image_size );
 		$attachment_alt = get_post_meta($attachment->ID, '_wp_attachment_image_alt', true);
-		
+
 		$image_output .= '<img src="'. esc_url($attachment_attrs[0]) .'" alt="'. esc_attr($attachment_alt) .'" class="wp-post-image">';
 		//after carousel item attachment action hook
 		ob_start();
@@ -1860,7 +1862,7 @@ function fsn_get_carousel_gallery_item($atts = false, $content = false) {
 	} else {
 		$image_output = apply_filters('fsn_carousel_image_fallback', '', !empty($atts['item_id']) ? $atts['item_id'] : '');
 	}
-	
+
 	$gallery_item_headline = !empty($atts['item_headline']) ? $atts['item_headline'] : '';
 	$gallery_item_description = !empty($atts['item_description']) ? $atts['item_description'] : '';
 	$gallery_item_button = !empty($atts['item_button']) ? $atts['item_button'] : '';
@@ -1868,13 +1870,13 @@ function fsn_get_carousel_gallery_item($atts = false, $content = false) {
 		$button_object = fsn_get_button_object($gallery_item_button);
 	}
 	$output = '';
-	$output .= '<li class="slide col-sm-12">';						
+	$output .= '<li class="slide col-sm-12">';
 		$output .= '<div class="carousel-item">';
 			if (!empty($image_output) && $fsn_carousel_view_options['image'] === true) {
 				$output .= !empty($button_object) ? '<a'.fsn_get_button_anchor_attributes($button_object, 'carousel-item-image') .'>' : '<div class="carousel-item-image">';
 				$output .= $image_output;
 				$output .= !empty($button_object) ? '</a>' : '</div>';
-			}												
+			}
 			$output .= '<div class="carousel-item-detail">';
 				$carousel_item_content_output = '';
 				if (!empty($gallery_item_headline) && $fsn_carousel_view_options['headline'] === true) {
@@ -1889,7 +1891,7 @@ function fsn_get_carousel_gallery_item($atts = false, $content = false) {
 			$output .= '</div>';
 		$output .= '</div>';
 	$output .= '</li>';
-	
+
 	return $output;
 }
 
