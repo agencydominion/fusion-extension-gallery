@@ -2,19 +2,19 @@
 /**
  * @package Fusion_Extension_Gallery
  */
- 
+
 /**
  * Plugin Name: Fusion : Extension - Gallery
  * Plugin URI: http://www.agencydominion.com/fusion/
  * Description: Gallery Extension Package for Fusion.
- * Version: 1.3.2
+ * Version: 1.4.0
  * Author: Agency Dominion
  * Author URI: http://agencydominion.com
  * Text Domain: fusion-extension-gallery
  * Domain Path: /languages/
  * License: GPL2
  */
- 
+
 /**
  * FusionExtensionGallery class.
  *
@@ -23,37 +23,37 @@
  * @since 1.0.0
  */
 
-class FusionExtensionGallery	{ 
+class FusionExtensionGallery	{
 	public function __construct() {
-						
+
 		// Initialize the language files
 		add_action('plugins_loaded', array($this, 'load_textdomain'));
-		
+
 		// Enqueue admin scripts and styles
 		add_action('admin_enqueue_scripts', array($this, 'admin_enqueue_scripts_styles'));
-		
+
 		// Enqueue front end scripts and styles
 		add_action('wp_enqueue_scripts', array($this, 'front_enqueue_scripts_styles'));
-		
+
 		// Filter Image Sizes
 		add_filter('fsn_selectable_image_sizes', array($this, 'selectable_image_sizes'));
-		
+
 		// Output PhotoSwipe container in footer
 		add_action('wp_footer', array($this, 'photoswipe_container'));
-		
+
 	}
-	
+
 	/**
 	 * Load Textdomain
 	 *
 	 * @since 1.2.7
 	 *
 	 */
-	 
+
 	public function load_textdomain() {
 		load_plugin_textdomain( 'fusion-extension-gallery', FALSE, basename( dirname( __FILE__ ) ) . '/languages/' );
 	}
-	
+
 	/**
 	 * Enqueue JavaScript and CSS on Admin pages.
 	 *
@@ -61,13 +61,13 @@ class FusionExtensionGallery	{
 	 *
 	 * @param string $hook_suffix The current admin page.
 	 */
-	 
+
 	public function admin_enqueue_scripts_styles($hook_suffix) {
 		global $post;
-		
+
 		$options = get_option('fsn_options');
 		$fsn_post_types = !empty($options['fsn_post_types']) ? $options['fsn_post_types'] : '';
-		
+
 		// Editor scripts and styles
 		if ( ($hook_suffix == 'post.php' || $hook_suffix == 'post-new.php') && (!empty($fsn_post_types) && is_array($fsn_post_types) && in_array($post->post_type, $fsn_post_types)) ) {
 			wp_enqueue_script( 'fsn_gallery_admin', plugin_dir_url( __FILE__ ) . 'includes/js/fusion-extension-gallery-admin.js', array('jquery'), '1.0.0', true );
@@ -87,14 +87,14 @@ class FusionExtensionGallery	{
 			wp_localize_script('fsn_gallery_admin', 'fsnExtGalleryL10n', $translation_array);
 		}
 	}
-	
+
 	/**
 	 * Enqueue JavaScript and CSS on Front End pages.
 	 *
 	 * @since 1.0.0
 	 *
 	 */
-	 
+
 	public function front_enqueue_scripts_styles() {
 		//scripts
 		wp_register_script('flexslider', plugin_dir_url( __FILE__ ) .'includes/utilities/flexslider/jquery.flexslider-min.js', array('jquery'), '2.6.0', true);
@@ -106,8 +106,8 @@ class FusionExtensionGallery	{
 		wp_enqueue_style('flexslider', plugin_dir_url( __FILE__ ) .'includes/utilities/flexslider/flexslider.css');
 		wp_enqueue_style('photoswipe', plugin_dir_url( __FILE__ ) .'includes/utilities/photoswipe/photoswipe.css');
 		wp_enqueue_style('photoswipe_skin', plugin_dir_url( __FILE__ ) .'includes/utilities/photoswipe/default-skin/default-skin.css');				wp_enqueue_style( 'video_js', plugin_dir_url( __FILE__ ) . 'includes/utilities/video-js/video-js.min.css', false, '4.11.2' );
-		wp_enqueue_style( 'fsn_gallery', plugin_dir_url( __FILE__ ) . 'includes/css/fusion-extension-gallery.css', false, '1.0.0' );	 
-		
+		wp_enqueue_style( 'fsn_gallery', plugin_dir_url( __FILE__ ) . 'includes/css/fusion-extension-gallery.css', false, '1.0.0' );
+
 		//setup front end script for use with AJAX
 		wp_localize_script( 'fsn_gallery', 'fsnGalleryExtAjax', array(
 				'ajaxurl' => admin_url( 'admin-ajax.php' ),
@@ -115,7 +115,7 @@ class FusionExtensionGallery	{
 			)
 		);
 	}
-	
+
 	/**
 	 * Filter image sizes
 	 *
@@ -123,7 +123,7 @@ class FusionExtensionGallery	{
 	 *
 	 * @since 1.0.0
 	 */
-	 
+
 	public function selectable_image_sizes($fsn_selectable_image_sizes) {
 		//unset Gallery image sizes
 		unset($fsn_selectable_image_sizes['masthead-mobile']);
@@ -136,14 +136,14 @@ class FusionExtensionGallery	{
 		unset($fsn_selectable_image_sizes['carousel-desktop']);
 		return $fsn_selectable_image_sizes;
 	}
-    
+
     /**
 	 * Output PhotoSwipe container in footer.
 	 *
 	 * @since 1.0.0
 	 *
 	 */
-	 
+
 	public function photoswipe_container() {
 		?>
 		<!-- Root element of PhotoSwipe. Must have class pswp. -->
@@ -171,7 +171,7 @@ class FusionExtensionGallery	{
 						</div>
 					</div>
 					<div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
-						<div class="pswp__share-tooltip"></div> 
+						<div class="pswp__share-tooltip"></div>
 					</div>
 					<button class="pswp__button pswp__button--arrow--left" title="<?php _e('Previous (arrow left)', 'fusion-extension-gallery'); ?>"></button>
 					<button class="pswp__button pswp__button--arrow--right" title="<?php _e('Next (arrow right)', 'fusion-extension-gallery') ?>"></button>
@@ -181,7 +181,7 @@ class FusionExtensionGallery	{
 				</div>
 			</div>
 		</div>
-		<?php	
+		<?php
 	}
 }
 
