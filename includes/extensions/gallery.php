@@ -1335,6 +1335,11 @@ function fsn_get_masthead_gallery_item($atts = false, $content = false) {
 				$desktop_init = !$detect->isMobile() || $detect->isTablet() ? true : false;
 				$output .= fsn_get_dynamic_image($atts['image_id'], 'masthead-placeholder masthead-image', 'masthead-desktop', 'masthead-mobile', $desktop_init);
 				if (!empty($gallery_item_logo_id) || !empty($gallery_item_headline) || !empty($gallery_item_subheadline) || !empty($gallery_item_description) || !empty($gallery_item_button)) {
+					$item_show_content = true;
+				} else {
+					$item_show_content = apply_filters('fsn_masthead_item_show_content', false, $atts);
+				}
+				if ($item_show_content == true) {
 					ob_start();
 					do_action('fsn_before_masthead_item_content', $atts);
 					$output .= ob_get_clean();
@@ -1432,6 +1437,11 @@ function fsn_get_masthead_gallery_item($atts = false, $content = false) {
 				$output .= '</div>';
 			}
 			if (!empty($gallery_item_logo_id) || !empty($gallery_item_headline) || !empty($gallery_item_subheadline) || !empty($gallery_item_description) || !empty($gallery_item_button)) {
+				$item_show_content = true;
+			} else {
+				$item_show_content = apply_filters('fsn_masthead_item_show_content', false, $atts);
+			}
+			if ($item_show_content == true) {
 				ob_start();
 				do_action('fsn_before_masthead_item_content', $atts);
 				$output .= ob_get_clean();
