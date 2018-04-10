@@ -8,7 +8,7 @@
 
 .flex-direction-nav .flex-prev,
 .flex-direction-nav .flex-next	{
-	box-shadow:none;	
+	box-shadow:none;
 }
 
 .flex-direction-nav .flex-prev,
@@ -51,7 +51,7 @@
 		width:40px;
 		height:40px;
 		padding:8px 0;
-	}	
+	}
 }
 
 /* Masthead gallery*/
@@ -64,11 +64,11 @@
 .fsn-gallery .masthead	{
 	background-color:transparent;
 	margin:0 auto;
-	width:100%;	
+	width:100%;
 	max-width:100%;
 	position:relative;
 	overflow:hidden;
-	border:none;	
+	border:none;
 	-moz-border-radius:0;
 	-webkit-border-radius:0;
 	border-radius:0;
@@ -81,7 +81,7 @@
 	opacity: inherit; filter: inherit;
 }
 
-.fsn-gallery .masthead .preloader	{	
+.fsn-gallery .masthead .preloader	{
 	margin-top:-25px;
 	margin-left:-40px;
 	position:absolute;
@@ -341,7 +341,7 @@
 	}
 	.fsn-gallery .masthead .gallery-item-logo	{
 		height:auto !important;
-	}	
+	}
 }
 
 /* Small devices (tablets, 768px and up) */
@@ -375,7 +375,7 @@
  * Inline Gallery
  */
 
-.fsn-gallery .inline	{	
+.fsn-gallery .inline	{
 	margin:0 auto;
 	width: 100%;
 	min-width:100%;
@@ -441,7 +441,7 @@
 	visibility:hidden;
 }
 
-.fsn-gallery .inline .preloader	{	
+.fsn-gallery .inline .preloader	{
 	margin-top:-25px;
 	margin-left:-40px;
 	position:absolute;
@@ -491,8 +491,8 @@
 }
 
 /* Small devices (tablets, 768px and up) */
-@media (min-width: 768px) {	
-	.fsn-gallery .inline	{	
+@media (min-width: 768px) {
+	.fsn-gallery .inline	{
 		height:500px;
 	}
 	.fsn-gallery .inline ul.slides .inline-image,
@@ -649,7 +649,7 @@
 		background-color:#000000;
 		-moz-transform: translateY(0);
 	}
-	
+
 	100% {
 		width: 24px;
 		height: 24px;
@@ -666,7 +666,7 @@
 		background-color:#000000;
 		-webkit-transform: translateY(0);
 	}
-	
+
 	100% {
 		width: 24px;
 		height: 24px;
@@ -683,7 +683,7 @@
 		background-color:#000000;
 		-ms-transform: translateY(0);
 	}
-	
+
 	100% {
 		width: 24px;
 		height: 24px;
@@ -700,7 +700,7 @@
 		background-color:#000000;
 		-o-transform: translateY(0);
 	}
-	
+
 	100% {
 		width: 24px;
 		height: 24px;
@@ -717,7 +717,7 @@
 		background-color:#000000;
 		transform: translateY(0);
 	}
-	
+
 	100% {
 		width: 24px;
 		height: 24px;
@@ -732,8 +732,8 @@
  */
 
 @media (min-width: 768px) {
-	.kenburns .flex-active-slide img.masthead-image	{
-		animation:kenburns 30s cubic-bezier(0, 0, .80, .90) infinite alternate;	
+	.kenburns .animating-visible img.masthead-image	{
+		animation:kenburns 30s cubic-bezier(0, 0, .80, .90) infinite alternate;
 	}
 }
 
