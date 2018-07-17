@@ -1375,7 +1375,7 @@ function fsn_get_masthead_gallery_item($atts = false, $content = false) {
 			return;
 		}
 	} else if ($fsn_masthead_item_layout == 'masthead_item') {
-		if (empty($atts['media_type']) || $detect->isMobile()) {
+		if (empty($atts['media_type']) || ($detect->isMobile() && !$detect->isTablet())) {
 			$atts['media_type'] = 'image';
 			if ($detect->isMobile() && !empty($atts['video_poster'])) {
 				$atts['image_id'] = $atts['video_poster'];
@@ -1474,7 +1474,7 @@ function fsn_get_masthead_gallery_item($atts = false, $content = false) {
 			$fsn_masthead_item_counter++;
 		$output .= '</li>';
 	} elseif ($fsn_masthead_item_layout == 'photoswipe_item') {
-		if (empty($atts['media_type']) || $detect->isMobile()) {
+		if (empty($atts['media_type']) || ($detect->isMobile() && !$detect->isTablet())) {
 			$atts['media_type'] = 'image';
 			if ($detect->isMobile() && !empty($atts['video_poster'])) {
 				$atts['image_id'] = $atts['video_poster'];
