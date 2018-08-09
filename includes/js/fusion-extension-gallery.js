@@ -1027,7 +1027,7 @@ jQuery(window).on('load', function() {
 });
 
 function fsnCenterGalleryVideos() {
-	jQuery('.flexslider').each(function() {
+	jQuery('.flexslider.masthead').each(function() {
 		var slideVideos = jQuery(this).find('.video-element');
 		slideVideos.each(function() {
 			var slideVideo = jQuery(this);
