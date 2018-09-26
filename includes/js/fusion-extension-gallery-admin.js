@@ -5,20 +5,22 @@
 //init gallery
 jQuery(document).ready(function() {
 	jQuery('body').on('show.bs.modal', '#fsn_gallery_modal', function() {
-		var gallery = jQuery('.gallery-sort');
-		var selectLayoutElement = jQuery('[name="gallery_layout"]');
+		var galleryModal = jQuery(this);
+		var gallery = galleryModal.find('.gallery-sort');
+		var selectLayoutElement = galleryModal.find('[name="gallery_layout"]');
 		var selectedLayout = selectLayoutElement.val();
-		
+
 		gallery.attr('data-layout', selectedLayout);
 	});
 
 	jQuery('body').on('shown.bs.modal', '#fsn_gallery_modal', function() {
-		var gallery = jQuery('.gallery-sort');
-		var selectTypeElement = jQuery('[name="gallery_type"]');
+		var galleryModal = jQuery(this);
+		var gallery = galleryModal.find('.gallery-sort');
+		var selectTypeElement = galleryModal.find('[name="gallery_type"]');
 		var selectedType = selectTypeElement.find('option:selected').val();
-		
+
 		if (selectedType == 'smart') {
-			gallery.closest('.form-group').hide();	
+			gallery.closest('.form-group').hide();
 		}
 	});
 });
@@ -38,9 +40,9 @@ jQuery(document).ready(function() {
 });
 
 function fsnUpdateGallery(event) {
-	var selectLayoutElement = jQuery(event.target);		
+	var selectLayoutElement = jQuery(event.target);
 	var selectedLayout = selectLayoutElement.val();
-	var gallery = jQuery('.gallery-sort');
+	var gallery = selectLayoutElement.closest('.modal').find('.gallery-sort');
 	var currentLayout = gallery.attr('data-layout');
 	var galleryItems = gallery.find('.gallery-item');
 	if (galleryItems.length > 0 && currentLayout != selectedLayout) {
@@ -48,19 +50,19 @@ function fsnUpdateGallery(event) {
 		if (r == true) {
 			gallery.empty();
 			gallery.attr('data-layout', selectedLayout);
-			fsnUpdateGalleryLayout();
+			fsnUpdateGalleryLayout(gallery);
 		} else {
 			selectLayoutElement.find('option[value="'+ currentLayout +'"]').prop('selected', true).change();
 		}
 	} else {
 		gallery.attr('data-layout', selectedLayout);
-		fsnUpdateGalleryLayout();
-	}	
+		fsnUpdateGalleryLayout(gallery);
+	}
 	//hide smart items on empty layout
-	var selectTypeElement = jQuery('select[name="gallery_type"]');
+	var selectTypeElement = gallery.find('select[name="gallery_type"]');
 	if (selectedLayout == '') {
 		selectTypeElement.find('option[value="manual"]').prop('selected', true);
-		jQuery('.form-group[data-dependency-param="gallery_type"][data-dependency-value="smart"]').hide();
+		gallery.find('.form-group[data-dependency-param="gallery_type"][data-dependency-value="smart"]').hide();
 	} else {
 		selectTypeElement.find('option[value="manual"]').prop('selected', true).change();
 	}
@@ -69,7 +71,7 @@ function fsnUpdateGallery(event) {
 function fsnUpdateGalleryType(event) {
 	var selectTypeElement = jQuery(event.target);
 	var selectedType = selectTypeElement.val();
-	var gallery = jQuery('.gallery-sort');
+	var gallery = selectTypeElement.closest('.modal').find('.gallery-sort');
 	var galleryItems = gallery.find('.gallery-item');
 	if (selectedType == 'smart' && galleryItems.length > 0) {
 		var r = confirm(fsnExtGalleryL10n.layout_change_smart);
@@ -78,7 +80,7 @@ function fsnUpdateGalleryType(event) {
 			//hide manual items
 			gallery.closest('.form-group').hide();
 		} else {
-			jQuery('select[name="gallery_type"] option[value="manual"]').prop('selected', true).change();
+			selectTypeElement.find('option[value="manual"]').prop('selected', true).change();
 		}
 	} else if (selectedType == 'smart' && galleryItems.length == 0) {
 		//hide manual items
@@ -90,25 +92,26 @@ function fsnUpdateGalleryType(event) {
 }
 
 //update gallery layout
-function fsnUpdateGalleryLayout() {
+function fsnUpdateGalleryLayout(gallery) {
+	var galleryModal = gallery.closest('.modal');
 	var postID = jQuery('input#post_ID').val();
-	var galleryLayout = jQuery('[name="gallery_layout"]').val();
-	
+	var galleryLayout = galleryModal.find('[name="gallery_layout"]').val();
+
 	var data = {
 		action: 'gallery_load_layout',
 		gallery_layout: galleryLayout,
 		post_id: postID,
 		security: fsnExtGalleryJS.fsnEditGalleryNonce
 	};
-	jQuery.post(ajaxurl, data, function(response) {		
+	jQuery.post(ajaxurl, data, function(response) {
 		if (response == '-1') {
 			alert(fsnExtGalleryL10n.error);
 			return false;
 		}
-		
-		jQuery('#fsn_gallery_modal .tab-pane .form-group.gallery-layout').remove();
+
+		galleryModal.find('.tab-pane .form-group.gallery-layout').remove();
 		if (response !== null) {
-			jQuery('#fsn_gallery_modal .tab-pane').each(function() {
+			galleryModal.find('.tab-pane').each(function() {
 				var tabPane = jQuery(this);
 				if (tabPane.attr('data-section-id') == 'general') {
 					tabPane.find('.form-group').first().after('<div class="layout-fields"></div>');
@@ -117,22 +120,22 @@ function fsnUpdateGalleryLayout() {
 				}
 			});
 			for(i=0; i < response.length; i++) {
-				jQuery('#fsn_gallery_modal .tab-pane[data-section-id="'+ response[i].section +'"] .layout-fields').append(response[i].output);
+				galleryModal.find('.tab-pane[data-section-id="'+ response[i].section +'"] .layout-fields').append(response[i].output);
 			}
-			jQuery('#fsn_gallery_modal .tab-pane').each(function() {
+			galleryModal.find('.tab-pane').each(function() {
 				var tabPane = jQuery(this);
 				tabPane.find('.gallery-layout').first().unwrap();
 				tabPane.find('.layout-fields:empty').remove();
 				//toggle panel tabs visibility
-				var tabPaneId = tabPane.attr('id'); 
+				var tabPaneId = tabPane.attr('id');
 				if (tabPane.is(':empty')) {
-					jQuery('a[data-toggle="tab"][href="#'+ tabPaneId +'"]').parent('li').hide();
+					galleryModal.find('a[data-toggle="tab"][href="#'+ tabPaneId +'"]').parent('li').hide();
 				} else {
-					jQuery('a[data-toggle="tab"][href="#'+ tabPaneId +'"]').parent('li').show();
+					galleryModal.find('a[data-toggle="tab"][href="#'+ tabPaneId +'"]').parent('li').show();
 				}
 			});
 		}
-		var modalSelector = jQuery('#fsn_gallery_modal');
+		var modalSelector = galleryModal;
 		//reinit tinyMCE
 		if (jQuery('#fsncontent').length > 0) {
 			//make compatable with TinyMCE 4 which is used starting with WordPress 3.9
@@ -144,9 +147,9 @@ function fsnUpdateGalleryLayout() {
 			var $element = jQuery('#fsncontent');
 	        var qt, textfield_id = $element.attr("id"),
 	            content = '';
-	
+
 	        window.tinyMCEPreInit.mceInit[textfield_id] = _.extend({}, tinyMCEPreInit.mceInit['content']);
-	
+
 	        if(_.isUndefined(tinyMCEPreInit.qtInit[textfield_id])) {
 	            window.tinyMCEPreInit.qtInit[textfield_id] = _.extend({}, tinyMCEPreInit.qtInit['replycontent'], {id: textfield_id})
 	        }
@@ -159,7 +162,7 @@ function fsnUpdateGalleryLayout() {
 	        //focus on this RTE
 	        tinyMCE.get('fsncontent').focus();
 			//destroy tinyMCE
-			modalSelector.on('hidden.bs.modal', function() {					
+			modalSelector.on('hidden.bs.modal', function() {
 				//make compatable with TinyMCE 4 which is used starting with WordPress 3.9
 				if(tinymce.majorVersion === "4") {
 					tinymce.execCommand('mceRemoveEditor', true, 'fsncontent');
@@ -174,17 +177,17 @@ function fsnUpdateGalleryLayout() {
 		setDependencies(modalSelector);
 		//trigger item added event
 		jQuery('body').trigger('fsnGalleryUpdated');
-	});	
+	});
 }
 
 //add gallery item
-jQuery(document).ready(function() {	
+jQuery(document).ready(function() {
 	jQuery('body').on('click', '.add-gallery-item', function(e) {
 		var postID = jQuery('input#post_ID').val();
 		var galleryItemsContainer = jQuery(this).siblings('.gallery-sort');
-		
-		var galleryLayout = jQuery('[name="gallery_layout"]').val();
-		
+		var galleryModal = jQuery(this).closest('.modal');
+		var galleryLayout = galleryModal.find('[name="gallery_layout"]').val();
+
 		e.preventDefault();
 		var data = {
 			action: 'gallery_add_item',
@@ -200,7 +203,7 @@ jQuery(document).ready(function() {
 			setDependencies(galleryItemsContainer);
 			//trigger item added event
 			galleryItemsContainer.trigger('fsnAddGalleryItem');
-		});	
+		});
 	});
 });
 
@@ -267,14 +270,15 @@ jQuery(document).ready(function() {
 //generate gallery item shortcode (uses custom save event)
 jQuery('body').on('fsnSave', function(event, shortcodeTag) {
 	if (shortcodeTag == 'fsn_gallery') {
-		galleryItemShortcodes();
+		var galleryModal = jQuery(event.target);
+		galleryItemShortcodes(galleryModal);
 	}
 });
 
-function galleryItemShortcodes() {
-	var shortcodesString = '';	
-	var galleryItems = jQuery('.gallery-sort').find('.gallery-item');
-	var galleryLayout = jQuery('[name="gallery_layout"]').val();
+function galleryItemShortcodes(galleryModal) {
+	var shortcodesString = '';
+	var galleryItems = galleryModal.find('.gallery-sort .gallery-item');
+	var galleryLayout = galleryModal.find('[name="gallery_layout"]').val();
 	var i = 0;
 	galleryItems.each(function() {
 		shortcodesString += '[fsn_gallery_item gallery_layout="'+ galleryLayout +'"'+ (i > 0 ? ' lazy_load="true"' : '');
@@ -290,7 +294,7 @@ function galleryItemShortcodes() {
 				case 'checkbox':
 					if (jQuery(this).is(':checked')) {
 						newParamValue = 'on';
-					} 
+					}
 					break;
 				case 'select':
 					newParamValue = jQuery(this).find('option:selected').val();
@@ -303,13 +307,13 @@ function galleryItemShortcodes() {
 					}
 					break;
 				default:
-					newParamValue = jQuery(this).val();							
+					newParamValue = jQuery(this).val();
 			}
 			//do not save hidden dependenent field values
 			if (jQuery(this).closest('.form-group').hasClass('no-save')) {
 				newParamValue = '';
 			}
-								
+
 			if (newParamValue != '') {
 				if (jQuery(this).hasClass('encode-base64')) {
 					newParamValue = btoa(newParamValue);
@@ -318,18 +322,18 @@ function galleryItemShortcodes() {
 				}
 				newParamValue = fsnCustomEntitiesEncode(newParamValue);
 				shortcodesString += ' '+ paramName +'="'+ newParamValue +'"';
-				
+
 			}
 		});
 		shortcodesString += ']';
 		i++;
 	});
-	var galleryInput = jQuery('[name="gallery_items"]');	
+	var galleryInput = galleryModal.find('[name="gallery_items"]');
 	galleryInput.val(shortcodesString);
 }
 
 //For select2 fields inside gallery layouts and items
-jQuery(document).ready(function() {	
+jQuery(document).ready(function() {
 	jQuery('body').on('fsnGalleryUpdated', function(e) {
 		fsnInitPostSelect();
 	});
