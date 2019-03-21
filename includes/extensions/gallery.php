@@ -1882,10 +1882,15 @@ function fsn_get_carousel_gallery_item($atts = false, $content = false) {
 	$output = '';
 	$output .= '<li class="slide col-sm-12">';
 		$output .= '<div class="carousel-item">';
+			//prepend carousel item action hook
+			ob_start();
+			do_action('fsn_carousel_item_prepend', $atts);
+			$output .= ob_get_clean();
 			if (!empty($image_output) && $fsn_carousel_view_options['image'] === true) {
-				$output .= !empty($button_object) ? '<a'.fsn_get_button_anchor_attributes($button_object, 'carousel-item-image') .'>' : '<div class="carousel-item-image">';
-				$output .= $image_output;
-				$output .= !empty($button_object) ? '</a>' : '</div>';
+				$carousel_item_image_output = !empty($button_object) ? '<a'.fsn_get_button_anchor_attributes($button_object, 'carousel-item-image') .'>' : '<div class="carousel-item-image">';
+				$carousel_item_image_output .= $image_output;
+				$carousel_item_image_output .= !empty($button_object) ? '</a>' : '</div>';
+				$output .= apply_filters('fsn_carousel_item_image_output', $carousel_item_image_output, $atts, $image_output);
 			}
 			$output .= '<div class="carousel-item-detail">';
 				$carousel_item_content_output = '';
@@ -1899,6 +1904,10 @@ function fsn_get_carousel_gallery_item($atts = false, $content = false) {
 				}
 				$output .= apply_filters('fsn_carousel_item_content_output', $carousel_item_content_output, $atts, $fsn_carousel_view_options);
 			$output .= '</div>';
+			//append carousel item action hook
+			ob_start();
+			do_action('fsn_carousel_item_append', $atts);
+			$output .= ob_get_clean();
 		$output .= '</div>';
 	$output .= '</li>';
 
