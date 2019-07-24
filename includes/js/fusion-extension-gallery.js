@@ -878,6 +878,8 @@ jQuery(window).on('load', function() {
 					var controlsOffset = controls.outerWidth() / 2;
 					controls.css('margin-left','-'+ controlsOffset +'px');
 				}
+				//accessibility
+				fsnGalleryCarouselInitSliderAccessibility(slider);
 			}
 		});
 	});
@@ -932,6 +934,8 @@ jQuery(window).on('load', function() {
 			controlNav: carouselControlNav,
 			start: function(slider) {
 				slider.resize(); //fixes slide width bug
+				//accessibility
+				fsnGalleryCarouselInitSliderAccessibility(slider);
 			}
 		});
 	});
@@ -1064,4 +1068,18 @@ function fsnCenterGalleryVideos() {
 			}
 		});
 	});
+}
+
+function fsnGalleryCarouselInitSliderAccessibility(slider) {
+  //add button roles
+	if (slider.directionNav !== undefined) {
+		slider.directionNav.each(function() {
+	    jQuery(this).attr('role', 'button');
+	  });
+	}
+  if (slider.controlNav !== undefined) {
+		slider.controlNav.each(function() {
+	    jQuery(this).attr('role', 'button');
+	  });
+	}
 }
