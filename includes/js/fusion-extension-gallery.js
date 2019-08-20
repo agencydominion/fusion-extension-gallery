@@ -168,6 +168,10 @@ jQuery(document).ready(function() {
 				if(currentGalleryControlNav){
 					fsnInitMastheadControls(currentGallery);
 				}
+				//set ARIA
+				slider.slides.not(':eq(0)').each(function() {
+					jQuery(this).attr('aria-hidden', true);
+				});
 			},
 			before: function(slider) {
 				var incomingSlide = slider.find('.slide').eq(slider.animatingTo);
@@ -263,6 +267,10 @@ jQuery(document).ready(function() {
 						);
 					}
 				}
+				slider.slides.not(':eq('+ slider.animatingTo +')').each(function() {
+					jQuery(this).attr('aria-hidden', true);
+				});
+				incomingSlide.removeAttr('aria-hidden');
 			},
 			after: function(slider) {
 				if(currentGalleryControlNav){
