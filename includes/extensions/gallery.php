@@ -1864,7 +1864,7 @@ function fsn_get_carousel_gallery_item($atts = false, $content = false) {
 		$attachment_attrs = wp_get_attachment_image_src( $attachment->ID, $image_size );
 		$attachment_alt = get_post_meta($attachment->ID, '_wp_attachment_image_alt', true);
 
-		$image_output .= '<img src="'. esc_url($attachment_attrs[0]) .'" alt="'. esc_attr($attachment_alt) .'" class="wp-post-image">';
+		$image_output .= '<img src="'. esc_url($attachment_attrs[0]) .'" width="'. esc_attr($attachment_attrs[1]) .'" height="'. esc_attr($attachment_attrs[2]) .'" alt="'. esc_attr($attachment_alt) .'" class="wp-post-image" loading="lazy">';
 		//after carousel item attachment action hook
 		ob_start();
 		do_action('fsn_after_get_carousel_item_attachment');
