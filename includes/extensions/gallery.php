@@ -1262,7 +1262,7 @@ function fsn_get_masthead_gallery($atts = false, $content = false) {
 			ob_start();
 			do_action('fsn_before_masthead', $atts);
 			$output .= ob_get_clean();
-			$output .= '<aside class="flexslider masthead'. (!empty($enable_kenburns) ? ' kenburns' : '') . ($gallery_dimensions['galleryHeightMobile']['unit'] == 'flex' ? ' mobile-flex' : '') .'" data-gallery-id="'. esc_attr($gallery_id) .'"'. (!empty($enable_slideshow) ? ' data-gallery-auto="true"' : '') . (!empty($slideshow_speed) ? ' data-gallery-speed="'. esc_attr($slideshow_speed) .'"' : '') . (!empty($atts['controls']) ? ' data-controls="'. esc_attr($atts['controls']) .'"' : ' data-controls="direction"') .'>';
+			$output .= '<div class="flexslider masthead'. (!empty($enable_kenburns) ? ' kenburns' : '') . ($gallery_dimensions['galleryHeightMobile']['unit'] == 'flex' ? ' mobile-flex' : '') .'" data-gallery-id="'. esc_attr($gallery_id) .'"'. (!empty($enable_slideshow) ? ' data-gallery-auto="true"' : '') . (!empty($slideshow_speed) ? ' data-gallery-speed="'. esc_attr($slideshow_speed) .'"' : '') . (!empty($atts['controls']) ? ' data-controls="'. esc_attr($atts['controls']) .'"' : ' data-controls="direction"') .'>';
 				$fsn_masthead_item_layout = 'masthead_placeholder';
 				$fsn_masthead_item_counter = 0;
 				$output .= do_shortcode($content);
@@ -1293,7 +1293,7 @@ function fsn_get_masthead_gallery($atts = false, $content = false) {
 				$output .= ob_get_clean();
 				//controls
 				$output .= '<div class="masthead-controls controls-'. esc_attr($gallery_id) . (!empty($enable_fullscreen) ? ' fullscreen-enabled' : '') .'">'. (!empty($enable_fullscreen) ? '<div class="fullscreen-trigger" data-gallery-length="'. count($fsn_masthead_photoswipe_array) .'" aria-label="'. __('Open Gallery', 'fusion-extension-gallery') .'"><span class="material-icons">&#xE145;</span></div>' : '') . ((!empty($atts['controls']) && ($atts['controls']=='direction' || $atts['controls']=='both')) ? '<ul class="placeholder-controls flex-direction-nav"><li class="flex-nav-prev"><a href="#" class="flex-prev'. ($fsn_masthead_item_counter === 1 ? ' flex-disabled' : '') .'">Previous</a></li><li class="flex-nav-next"><a href="#" class="flex-next'. ($fsn_masthead_item_counter === 1 ? ' flex-disabled' : '') .'">Next</a></li></ul>' : '') .'</div>';
-			$output .= '</aside>';
+			$output .= '</div>';
 			ob_start();
 			do_action('fsn_after_masthead', $atts);
 			$output .= ob_get_clean();
@@ -1525,7 +1525,7 @@ function fsn_get_inline_gallery($atts = false, $content = false) {
 		global $fsn_inline_switch, $fsn_inline_photoswipe_array, $fsn_inline_item_counter;
 
 		$output .= '<div class="inline-container">';
-			$output .= '<aside class="flexslider inline" data-gallery-id="'. esc_attr($gallery_id) .'"'. (!empty($enable_slideshow) ? ' data-gallery-auto="true"' : '') . (!empty($slideshow_speed) ? ' data-gallery-speed="'. esc_attr($slideshow_speed) .'"' : '') . (!empty($enable_thumbnails) ? ' data-gallery-thumbs="true"' : '') .'>';
+			$output .= '<div class="flexslider inline" data-gallery-id="'. esc_attr($gallery_id) .'"'. (!empty($enable_slideshow) ? ' data-gallery-auto="true"' : '') . (!empty($slideshow_speed) ? ' data-gallery-speed="'. esc_attr($slideshow_speed) .'"' : '') . (!empty($enable_thumbnails) ? ' data-gallery-thumbs="true"' : '') .'>';
 				if (!empty($enable_fullscreen)) {
 					$fsn_inline_photoswipe_array = array();
 					$fsn_inline_switch = 'photoswipe_item';
@@ -1584,7 +1584,7 @@ function fsn_get_inline_gallery($atts = false, $content = false) {
 				$output .= ob_get_clean();
 				//controls
 				$output .= '<div class="inline-controls controls-'. esc_attr($gallery_id) . (!empty($enable_fullscreen) ? ' fullscreen-enabled' : '') .'">'. (!empty($enable_fullscreen) ? '<div class="fullscreen-trigger" data-gallery-length="'. count($fsn_inline_photoswipe_array) .'" aria-label="'. __('Open Gallery', 'fusion-extension-gallery') .'"><span class="material-icons">&#xE145;</span></div>' : '') .'<ul class="placeholder-controls flex-direction-nav"><li class="flex-nav-prev"><a href="#" class="flex-prev'. ($fsn_inline_item_counter === 1 ? ' flex-disabled' : '') .'">Previous</a></li><li class="flex-nav-next"><a href="#" class="flex-next'. ($fsn_inline_item_counter === 1 ? ' flex-disabled' : '') .'">Next</a></li></ul></div>';
-			$output .= '</aside>';
+			$output .= '</div>';
 			//thumbnails carousel nav
 			if (!empty($enable_thumbnails)) {
 				$output .= '<div class="inline-nav-container">';
