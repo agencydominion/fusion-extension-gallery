@@ -12,7 +12,7 @@ jQuery(document).ready(function() {
  * Masthead Gallery
  */
 
-jQuery(window).on('load', function() {
+jQuery(document).ready(function() {
 	var mastheadGalleries = jQuery('.fsn-gallery .masthead');
 	mastheadGalleries.each(function() {
 		var currentGallery = jQuery(this);
@@ -534,14 +534,11 @@ function fsnCenterMastheadImages() {
 //Set masthead dimensions
 jQuery(document).ready(function() {
 	fsnSetMastheadDimensions();
-	jQuery(window).on('load', function() {
-		fsnSetMastheadDimensions();
-		setTimeout(function() {
-			jQuery(window).resize(function() {
-				fsnSetMastheadDimensions();
-			});
-		}, 1000);
-	});
+	setTimeout(function() {
+		jQuery(window).resize(function() {
+			fsnSetMastheadDimensions();
+		});
+	}, 1000);
 	jQuery('.fsn-gallery .masthead').on('fsnGalleryReady', function() {
 		fsnSetMastheadDimensions();
 	});
@@ -595,7 +592,7 @@ function fsnSetMastheadDimensions() {
  * Inline Gallery
  */
 
-jQuery(window).on('load', function() {
+jQuery(document).ready(function() {
 	var galleryWithThumbnails = jQuery('.fsn-gallery .inline');
 	galleryWithThumbnails.each(function() {
 		//trigger load gallery event
@@ -1029,7 +1026,7 @@ function fsnGalleryPauseVideo(video) {
 }
 
 //video centering
-jQuery(window).on('load', function() {
+jQuery(document).ready(function() {
 	fsnCenterGalleryVideos();
 	setTimeout(function() {
 		jQuery(window).resize(function() {
