@@ -170,7 +170,7 @@ jQuery(document).ready(function() {
 				}
 				//set ARIA
 				slider.slides.not(':eq(0)').each(function() {
-					jQuery(this).attr('aria-hidden', true);
+					jQuery(this).attr('aria-hidden', true).find('.gallery-item-button').attr('tabindex', '-1');
 				});
 			},
 			before: function(slider) {
@@ -268,9 +268,9 @@ jQuery(document).ready(function() {
 					}
 				}
 				slider.slides.not(':eq('+ slider.animatingTo +')').each(function() {
-					jQuery(this).attr('aria-hidden', true);
+					jQuery(this).attr('aria-hidden', true).find('.gallery-item-button').attr('tabindex', '-1');
 				});
-				incomingSlide.removeAttr('aria-hidden');
+				incomingSlide.removeAttr('aria-hidden').find('.gallery-item-button').removeAttr('tabindex');;
 			},
 			after: function(slider) {
 				if(currentGalleryControlNav){
