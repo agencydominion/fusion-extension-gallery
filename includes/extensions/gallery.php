@@ -1355,7 +1355,7 @@ function fsn_get_masthead_gallery_item($atts = false, $content = false) {
 						}
 						$item_content_output .= !empty($gallery_item_headline) ? '<h2 class="gallery-item-headline">' . esc_html($gallery_item_headline) . '</h2>' : '';
 						$item_content_output .= !empty($gallery_item_subheadline) ? '<h3 class="gallery-item-subheadline">' . esc_html($gallery_item_subheadline) . '</h3>' : '';
-						$item_content_output .= !empty($gallery_item_description) ? '<div class="gallery-item-desc">'. do_shortcode($gallery_item_description) .'</div>' : '';
+						$item_content_output .= !empty($gallery_item_description) ? '<div class="gallery-item-desc">'. do_shortcode(wp_kses_post($gallery_item_description)) .'</div>' : '';
 						if (!empty($button_object)) {
 							$button_classes = apply_filters('fsn_masthead_button_class', 'gallery-item-button', $atts);
 							$item_content_output .= '<a'.fsn_get_button_anchor_attributes($button_object, $button_classes) .'>'. esc_html($button_object['button_label']) .'</a>';
@@ -1457,7 +1457,7 @@ function fsn_get_masthead_gallery_item($atts = false, $content = false) {
 					}
 					$item_content_output .= !empty($gallery_item_headline) ? '<h2 class="gallery-item-headline">' . esc_html($gallery_item_headline) . '</h2>' : '';
 					$item_content_output .= !empty($gallery_item_subheadline) ? '<h3 class="gallery-item-subheadline">' . esc_html($gallery_item_subheadline) . '</h3>' : '';
-					$item_content_output .= !empty($gallery_item_description) ? '<div class="gallery-item-desc">'. do_shortcode($gallery_item_description) .'</div>' : '';
+					$item_content_output .= !empty($gallery_item_description) ? '<div class="gallery-item-desc">'. do_shortcode(wp_kses_post($gallery_item_description)) .'</div>' : '';
 					if (!empty($button_object)) {
 						$button_classes = apply_filters('fsn_masthead_button_class', 'gallery-item-button', $atts);
 						$item_content_output .= '<a'.fsn_get_button_anchor_attributes($button_object, $button_classes) .'>'. esc_html($button_object['button_label']) .'</a>';
@@ -1487,6 +1487,8 @@ function fsn_get_masthead_gallery_item($atts = false, $content = false) {
 				$gallery_item_description = apply_filters('fsn_masthead_item_photoswipe_caption', (!empty($atts['item_description']) ? $atts['item_description'] : ''), $atts);
 				//decode custom entities to avoid JS errors
 				$gallery_item_description = FusionCore::decode_custom_entities($gallery_item_description);
+				//sanitize for safe output in JavaScript
+				$gallery_item_description = wp_kses_post($gallery_item_description);
 				$fsn_masthead_photoswipe_array[] = array(
 					'src' => esc_url($attachment_attrs[0]),
 					'w' => esc_attr($attachment_attrs[1]),
@@ -1615,6 +1617,8 @@ function fsn_get_inline_gallery_item($atts = false, $content = false) {
 		$attachment = get_post($atts['image_id']);
 		$attachment_attrs = wp_get_attachment_image_src( $attachment->ID, 'hi-res' );
 		$gallery_item_description = apply_filters('fsn_inline_item_photoswipe_caption', $attachment->post_excerpt, $atts);
+		//sanitize for safe output in JavaScript
+		$gallery_item_description = wp_kses_post($gallery_item_description);
 		$fsn_inline_photoswipe_array[] = array(
 			'src' => esc_url($attachment_attrs[0]),
 			'w' => esc_attr($attachment_attrs[1]),
@@ -1897,7 +1901,7 @@ function fsn_get_carousel_gallery_item($atts = false, $content = false) {
 				if (!empty($gallery_item_headline) && $fsn_carousel_view_options['headline'] === true) {
 					$carousel_item_content_output .= '<'. $fsn_carousel_view_options['headline_size'] .'>'. (!empty($button_object) ? '<a'. fsn_get_button_anchor_attributes($button_object) .'>' : '') . esc_html($gallery_item_headline) . (!empty($button_object) ? '</a>' : '') .'</'. $fsn_carousel_view_options['headline_size'] .'>';
 				}
-				$carousel_item_content_output .= !empty($gallery_item_description) && $fsn_carousel_view_options['description'] === true ? do_shortcode($gallery_item_description) : '';
+				$carousel_item_content_output .= !empty($gallery_item_description) && $fsn_carousel_view_options['description'] === true ? do_shortcode(wp_kses_post($gallery_item_description)) : '';
 				if (!empty($button_object) && $fsn_carousel_view_options['button'] === true) {
 					$button_classes = apply_filters('fsn_carousel_button_class', 'carousel-item-button');
 					$carousel_item_content_output .= '<a'.fsn_get_button_anchor_attributes($button_object, $button_classes) .'>'. esc_html($button_object['button_label']) .'</a>';
