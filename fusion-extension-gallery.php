@@ -7,7 +7,7 @@
  * Plugin Name: Fusion : Extension - Gallery
  * Plugin URI: http://www.agencydominion.com/fusion/
  * Description: Gallery Extension Package for Fusion.
- * Version: 1.7.7
+ * Version: 1.8.0
  * Author: Agency Dominion
  * Author URI: http://agencydominion.com
  * Text Domain: fusion-extension-gallery
@@ -105,7 +105,11 @@ class FusionExtensionGallery	{
 		//styles
 		wp_enqueue_style('flexslider', plugin_dir_url( __FILE__ ) .'includes/utilities/flexslider/flexslider.css');
 		wp_enqueue_style('photoswipe', plugin_dir_url( __FILE__ ) .'includes/utilities/photoswipe/photoswipe.css');
-		wp_enqueue_style('photoswipe_skin', plugin_dir_url( __FILE__ ) .'includes/utilities/photoswipe/default-skin/default-skin.css');				wp_enqueue_style( 'video_js', plugin_dir_url( __FILE__ ) . 'includes/utilities/video-js/video-js.min.css', false, '4.11.2' );
+		wp_enqueue_style('photoswipe_skin', plugin_dir_url( __FILE__ ) .'includes/utilities/photoswipe/default-skin/default-skin.css');
+		//fsn_perf_video_on_demand (default off): no gallery markup uses video-js; fusion-extension-video loads it with its player
+		if (!apply_filters('fsn_perf_video_on_demand', false)) {
+			wp_enqueue_style( 'video_js', plugin_dir_url( __FILE__ ) . 'includes/utilities/video-js/video-js.min.css', false, '4.11.2' );
+		}
 		wp_enqueue_style( 'fsn_gallery', plugin_dir_url( __FILE__ ) . 'includes/css/fusion-extension-gallery.css', false, '1.0.0' );
 
 		//setup front end script for use with AJAX
