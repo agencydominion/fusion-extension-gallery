@@ -420,7 +420,7 @@ class FusionGallery	{
         //filter gallery content
         $content = apply_filters('fsn_gallery_filter_content', $content, $atts);
 				//get gallery
-				$output .= call_user_func($callback_function, $atts, $content);
+				$output .= is_callable($callback_function) ? call_user_func($callback_function, $atts, $content) : '';
 				//after gallery action hook
 				ob_start();
 				do_action('fsn_after_gallery', $atts);
@@ -509,7 +509,7 @@ class FusionGallery	{
 		} else {
 			$output = '';
 			$callback_function = 'fsn_get_'. sanitize_text_field($selected_layout) .'_gallery_item';
-			$output .= call_user_func($callback_function, $atts, $content);
+			$output .= is_callable($callback_function) ? call_user_func($callback_function, $atts, $content) : '';
 		}
 
 		return $output;
@@ -1333,7 +1333,7 @@ function fsn_get_masthead_gallery_item($atts = false, $content = false) {
 				do_action('fsn_prepend_masthead_item', $atts);
 				$output .= ob_get_clean();
 				$desktop_init = !$detect->isMobile() || $detect->isTablet() ? true : false;
-				$output .= fsn_get_dynamic_image($atts['image_id'], 'masthead-placeholder masthead-image', 'masthead-desktop', 'masthead-mobile', $desktop_init);
+				$output .= fsn_get_dynamic_image($atts['image_id'] ?? null, 'masthead-placeholder masthead-image', 'masthead-desktop', 'masthead-mobile', $desktop_init);
 				if (!empty($gallery_item_logo_id) || !empty($gallery_item_headline) || !empty($gallery_item_subheadline) || !empty($gallery_item_description) || !empty($gallery_item_button)) {
 					$item_show_content = true;
 				} else {
@@ -1348,6 +1348,9 @@ function fsn_get_masthead_gallery_item($atts = false, $content = false) {
 						if (!empty($gallery_item_logo_id)) {
 							//get image
 							$attachment_attrs = wp_get_attachment_image_src( $gallery_item_logo_id, 'full' );
+							if (!is_array($attachment_attrs)) {
+								$attachment_attrs = array('', '', '', false); //attachment missing: same empty output as before, without the warnings
+							}
 							$attachment_alt = get_post_meta($gallery_item_logo_id, '_wp_attachment_image_alt', true);
 							$attachment_width = round(intval($attachment_attrs[1])/2, 0, PHP_ROUND_HALF_DOWN);
 							$attachment_height = round(intval($attachment_attrs[2])/2, 0, PHP_ROUND_HALF_DOWN);
@@ -1450,6 +1453,9 @@ function fsn_get_masthead_gallery_item($atts = false, $content = false) {
 					if (!empty($gallery_item_logo_id)) {
 						//get image
 						$attachment_attrs = wp_get_attachment_image_src( $gallery_item_logo_id, 'full' );
+						if (!is_array($attachment_attrs)) {
+							$attachment_attrs = array('', '', '', false); //attachment missing: same empty output as before, without the warnings
+						}
 						$attachment_alt = get_post_meta($gallery_item_logo_id, '_wp_attachment_image_alt', true);
 						$attachment_width = round(intval($attachment_attrs[1])/2, 0, PHP_ROUND_HALF_DOWN);
 						$attachment_height = round(intval($attachment_attrs[2])/2, 0, PHP_ROUND_HALF_DOWN);
@@ -1482,7 +1488,7 @@ function fsn_get_masthead_gallery_item($atts = false, $content = false) {
 		}
 		if ($atts['media_type'] == 'image' && !empty($atts['image_id'])) {
 			$attachment = get_post($atts['image_id']);
-			$attachment_attrs = wp_get_attachment_image_src( $attachment->ID, 'hi-res' );
+			$attachment_attrs = wp_get_attachment_image_src( $attachment->ID ?? null, 'hi-res' );
 			if (!empty($attachment_attrs)) {
 				$gallery_item_description = apply_filters('fsn_masthead_item_photoswipe_caption', (!empty($atts['item_description']) ? $atts['item_description'] : ''), $atts);
 				//decode custom entities to avoid JS errors
@@ -1614,9 +1620,12 @@ function fsn_get_inline_gallery_item($atts = false, $content = false) {
 	$detect = new Mobile_Detect();
 	if ($fsn_inline_switch == 'photoswipe_item') {
 		global $fsn_inline_photoswipe_array;
-		$attachment = get_post($atts['image_id']);
-		$attachment_attrs = wp_get_attachment_image_src( $attachment->ID, 'hi-res' );
-		$gallery_item_description = apply_filters('fsn_inline_item_photoswipe_caption', $attachment->post_excerpt, $atts);
+		$attachment = get_post($atts['image_id'] ?? null);
+		$attachment_attrs = wp_get_attachment_image_src( $attachment->ID ?? null, 'hi-res' );
+		if (!is_array($attachment_attrs)) {
+			$attachment_attrs = array('', '', '', false); //attachment missing: same empty output as before, without the warnings
+		}
+		$gallery_item_description = apply_filters('fsn_inline_item_photoswipe_caption', $attachment->post_excerpt ?? null, $atts);
 		//sanitize for safe output in JavaScript
 		$gallery_item_description = wp_kses_post($gallery_item_description);
 		$fsn_inline_photoswipe_array[] = array(
@@ -1630,7 +1639,7 @@ function fsn_get_inline_gallery_item($atts = false, $content = false) {
 			$output = '';
 			$output .= '<div class="inline-placeholder-container">';
 				$desktop_init = !$detect->isMobile() || $detect->isTablet() ? true : false;
-				$output .= fsn_get_dynamic_image($atts['image_id'], 'inline-image', 'inline-desktop', 'inline-mobile', $desktop_init);
+				$output .= fsn_get_dynamic_image($atts['image_id'] ?? null, 'inline-image', 'inline-desktop', 'inline-mobile', $desktop_init);
 				ob_start();
 				do_action('fsn_after_inline_image', $atts);
 				$output .= ob_get_clean();
@@ -1649,9 +1658,9 @@ function fsn_get_inline_gallery_item($atts = false, $content = false) {
 				break;
 		}
 		$output = '';
-		$output .= '<li class="slide"'. (!empty($atts['lazy_load']) ? ' data-lazy-load="true" data-image-id="'. esc_attr($atts['image_id']) .'" data-image-size-desktop="'. esc_attr($image_size) .'-desktop" data-image-size-mobile="'. esc_attr($image_size) .'-mobile"' : '') .'>';
+		$output .= '<li class="slide"'. (!empty($atts['lazy_load']) ? ' data-lazy-load="true" data-image-id="'. esc_attr($atts['image_id'] ?? null) .'" data-image-size-desktop="'. esc_attr($image_size) .'-desktop" data-image-size-mobile="'. esc_attr($image_size) .'-mobile"' : '') .'>';
 			if (empty($atts['lazy_load'])) {
-				$output .= fsn_get_dynamic_image($atts['image_id'], 'inline-image', esc_attr($image_size). '-desktop', esc_attr($image_size). '-mobile');
+				$output .= fsn_get_dynamic_image($atts['image_id'] ?? null, 'inline-image', esc_attr($image_size). '-desktop', esc_attr($image_size). '-mobile');
 			} else {
 				$output .= '<div class="bubblingG preloader">';
 					$output .= '<span id="bubblingG_1"></span>';
@@ -1777,7 +1786,7 @@ function fsn_get_carousel_smart_gallery_items($atts = false) {
 	$query_args['posts_per_page'] = intval($item_count);
 	$query_args['post_type'] = $post_type;
 	//exclude current post
-	$query_args['post__not_in'] = array($post->ID);
+	$query_args['post__not_in'] = array($post->ID ?? null);
 
 	//set order
 	switch($item_order) {
@@ -1865,8 +1874,11 @@ function fsn_get_carousel_gallery_item($atts = false, $content = false) {
 				$image_size = 'carousel-mobile';
 				break;
 		}
-		$attachment_attrs = wp_get_attachment_image_src( $attachment->ID, $image_size );
-		$attachment_alt = get_post_meta($attachment->ID, '_wp_attachment_image_alt', true);
+		$attachment_attrs = wp_get_attachment_image_src( $attachment->ID ?? null, $image_size );
+		if (!is_array($attachment_attrs)) {
+			$attachment_attrs = array('', '', '', false); //attachment missing: same empty output as before, without the warnings
+		}
+		$attachment_alt = get_post_meta($attachment->ID ?? null, '_wp_attachment_image_alt', true);
 
 		$image_output .= '<img src="'. esc_url($attachment_attrs[0]) .'" width="'. esc_attr($attachment_attrs[1]) .'" height="'. esc_attr($attachment_attrs[2]) .'" alt="'. esc_attr($attachment_alt) .'" class="wp-post-image" loading="lazy">';
 		//after carousel item attachment action hook
